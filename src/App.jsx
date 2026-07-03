@@ -15,69 +15,223 @@ import { supabase, supabaseConfigured } from './lib/supabaseClient';
 
 const APP_NAME = 'Dovroyn';
 const APP_DOMAIN = 'dovroyn.com';
-
-const LANDING_FEATURES = [
-  {
-    title: 'AI Assistant',
-    description:
-      'Capture ideas, ask questions, and turn messy thoughts into clear next steps.',
-  },
-  {
-    title: 'Idea Tracker',
-    description:
-      'Save business ideas, app concepts, product plans, and random sparks before they disappear.',
-  },
-  {
-    title: 'Project Dashboard',
-    description: 'See what you’re building, what matters next, and what needs attention.',
-  },
-  {
-    title: 'Task Planning',
-    description: 'Break ideas into tasks, priorities, and simple execution steps.',
-  },
-  {
-    title: 'Conversation Memory',
-    description: 'Keep useful AI outputs connected to your projects and decisions.',
-  },
-  {
-    title: 'Cloud Sync',
-    description: 'Use Supabase-backed login and data storage so your workspace stays connected.',
-  },
-];
+const COMPANY_NAME = 'Anglow Digital PTY LTD';
 
 const NAV_ITEMS = [
-  { to: '/dashboard', label: 'Dashboard' },
   { to: '/assistant', label: 'Assistant' },
+  { to: '/brand-pods', label: 'Brand Pods' },
   { to: '/ideas', label: 'Ideas' },
   { to: '/projects', label: 'Projects' },
   { to: '/tasks', label: 'Tasks' },
+  { to: '/dashboard', label: 'Dashboard' },
   { to: '/settings', label: 'Settings' },
 ];
 
-const IDEA_STATUS = ['New', 'Reviewing', 'Building', 'Paused', 'Launched'];
-
-const SAMPLE_IDEAS = [
-  { title: 'Client onboarding flow with AI handoff', status: 'Reviewing' },
-  { title: 'Family logistics dashboard', status: 'Building' },
-  { title: 'Brand voice system for content ops', status: 'New' },
-  { title: 'Internal admin automations', status: 'Paused' },
-  { title: 'Weekly planning ritual template', status: 'Launched' },
+const HERO_PODS = [
+  {
+    name: 'Gidgee & Co',
+    status: 'Building',
+    nextTask: 'Finalize winter launch storyboard',
+    aiNotes: 'Refined hero narrative for seasonal campaign.',
+    progress: 62,
+  },
+  {
+    name: 'Luxara',
+    status: 'Planning',
+    nextTask: 'Approve editorial shoot list',
+    aiNotes: 'Suggested premium channel mix for launch phase.',
+    progress: 44,
+  },
+  {
+    name: 'Cheeky Drawers',
+    status: 'Testing',
+    nextTask: 'Review conversion copy sprint',
+    aiNotes: 'Drafted playful tone options with CTA variants.',
+    progress: 73,
+  },
+  {
+    name: 'The Cleaning Hub',
+    status: 'Launched',
+    nextTask: 'Schedule post-launch recap',
+    aiNotes: 'Surface top retention opportunities this week.',
+    progress: 86,
+  },
+  {
+    name: 'Anglow Digital',
+    status: 'Planning',
+    nextTask: 'Map Q3 service packaging',
+    aiNotes: 'Outlined consultancy bundle structure.',
+    progress: 38,
+  },
+  {
+    name: 'Dovroyn',
+    status: 'Building',
+    nextTask: 'Prioritize dashboard release scope',
+    aiNotes: 'Ranked critical UX flows by impact.',
+    progress: 67,
+  },
 ];
 
-const SAMPLE_PROJECTS = [
-  { name: 'Revenue Command Center', category: 'business', progress: 72, status: 'Active' },
-  { name: 'Mobile Launch Tracker', category: 'app', progress: 48, status: 'In Planning' },
-  { name: 'Identity Refresh System', category: 'brand', progress: 64, status: 'Active' },
-  { name: 'Household Ops Board', category: 'family', progress: 33, status: 'At Risk' },
-  { name: 'Quarterly Admin Pipeline', category: 'admin', progress: 82, status: 'Stable' },
-  { name: 'Personal Growth Map', category: 'personal', progress: 57, status: 'Active' },
+const LANDING_FEATURES = [
+  {
+    title: 'Brand Pods',
+    description: 'Each business, idea, or project gets its own organised workspace.',
+  },
+  {
+    title: 'AI Strategy Assistant',
+    description:
+      'Ask Dovroyn to turn messy thoughts into plans, copy, campaigns, or next steps.',
+  },
+  {
+    title: 'Content Calendar',
+    description: 'Plan posts, campaigns, launches, and platform activity across brands.',
+  },
+  {
+    title: 'Project Tracker',
+    description: 'Track what is planning, building, testing, launched, or paused.',
+  },
+  {
+    title: 'Business Vault',
+    description: 'Save supplier notes, product ideas, brand copy, links, and useful decisions.',
+  },
+  {
+    title: 'Next Move Board',
+    description: 'See what matters today and what needs action next.',
+  },
+];
+
+const DASHBOARD_NEXT_MOVES = [
+  'Approve Luxara launch narrative',
+  'Confirm campaign hooks for Gidgee & Co',
+  'Review AI brief for Dovroyn onboarding update',
+];
+
+const DASHBOARD_LAUNCHES = [
+  { name: 'Cheeky Drawers Awareness Sprint', window: '2 days', stage: 'Testing' },
+  { name: 'Anglow Digital Offer Stack', window: '5 days', stage: 'Planning' },
+  { name: 'Dovroyn Product Narrative', window: '7 days', stage: 'Building' },
+];
+
+const DASHBOARD_CONVERSATIONS = [
+  'Launch sequence for a new service bundle',
+  'Organise notes into a quarterly content campaign',
+  'Decide this week’s highest impact growth task',
+];
+
+const CONTENT_CALENDAR_PREVIEW = [
+  { day: 'Mon', level: 'full' },
+  { day: 'Tue', level: 'mid' },
+  { day: 'Wed', level: 'mid' },
+  { day: 'Thu', level: 'low' },
+  { day: 'Fri', level: 'full' },
+  { day: 'Sat', level: 'low' },
+  { day: 'Sun', level: 'none' },
+];
+
+const IDEA_STATUS = ['New', 'Reviewing', 'Building', 'Paused', 'Launched'];
+const IDEA_PRIORITY = ['High', 'Medium', 'Low'];
+
+const SAMPLE_IDEAS = [
+  {
+    title: 'Premium referral partnership program',
+    category: 'Growth',
+    status: 'Reviewing',
+    priority: 'High',
+    nextAction: 'Prepare partner shortlist and outreach note.',
+  },
+  {
+    title: 'Podcast-backed brand authority series',
+    category: 'Content',
+    status: 'New',
+    priority: 'Medium',
+    nextAction: 'Outline pilot episode themes and guests.',
+  },
+  {
+    title: 'AI-powered onboarding concierge',
+    category: 'Product',
+    status: 'Building',
+    priority: 'High',
+    nextAction: 'Validate the first guided setup flow.',
+  },
+  {
+    title: 'Supplier intelligence vault template',
+    category: 'Operations',
+    status: 'Paused',
+    priority: 'Low',
+    nextAction: 'Archive notes and revisit next sprint.',
+  },
+];
+
+const BRAND_PODS = [
+  {
+    name: 'Gidgee & Co',
+    status: 'Building',
+    nextAction: 'Lock the launch content arc.',
+    notesCount: 14,
+    tasksCount: 8,
+    progress: 62,
+  },
+  {
+    name: 'Luxara',
+    status: 'Planning',
+    nextAction: 'Approve campaign concept moodboard.',
+    notesCount: 11,
+    tasksCount: 6,
+    progress: 44,
+  },
+  {
+    name: 'Cheeky Drawers',
+    status: 'Testing',
+    nextAction: 'Finalize paid social test variants.',
+    notesCount: 18,
+    tasksCount: 10,
+    progress: 73,
+  },
+  {
+    name: 'The Cleaning Hub',
+    status: 'Launched',
+    nextAction: 'Prepare retention content sprint.',
+    notesCount: 9,
+    tasksCount: 4,
+    progress: 86,
+  },
+  {
+    name: 'Anglow Digital',
+    status: 'Planning',
+    nextAction: 'Define offer stack landing sequence.',
+    notesCount: 13,
+    tasksCount: 7,
+    progress: 38,
+  },
+  {
+    name: 'Dovroyn',
+    status: 'Building',
+    nextAction: 'Ship command centre dashboard polish.',
+    notesCount: 22,
+    tasksCount: 12,
+    progress: 67,
+  },
 ];
 
 const TASK_COLUMNS = {
-  Today: ['Refine onboarding checklist', 'Review AI assistant output for sprint scope'],
-  'This week': ['Ship dashboard KPI cards', 'Plan copy for dovroyn.com launch page'],
-  Later: ['Map automation integrations', 'Document workspace playbooks'],
-  Completed: ['Organise current project backlog'],
+  Today: [
+    'Approve Dovroyn onboarding copy',
+    'Ask Dovroyn for launch priority stack',
+    'Review Luxara campaign timeline',
+  ],
+  'This week': [
+    'Map content sequence for Gidgee & Co',
+    'Ship Brand Pod status update',
+    'Organise supplier notes in Business Vault',
+  ],
+  Waiting: [
+    'Client feedback on The Cleaning Hub assets',
+    'Final artwork exports for Cheeky Drawers',
+  ],
+  Completed: [
+    'Defined command centre navigation model',
+    'Set premium dashboard copy direction',
+  ],
 };
 
 function createLocalId() {
@@ -153,6 +307,7 @@ function App() {
             <Route path="/dashboard" element={<DashboardPage user={session?.user} />} />
             <Route path="/assistant" element={<AssistantPage user={session?.user} />} />
             <Route path="/ideas" element={<IdeasPage />} />
+            <Route path="/brand-pods" element={<ProjectsPage />} />
             <Route path="/projects" element={<ProjectsPage />} />
             <Route path="/tasks" element={<TasksPage />} />
             <Route path="/settings" element={<SettingsPage user={session?.user} />} />
@@ -180,14 +335,24 @@ function ProtectedRoute({ session }) {
   return <Outlet />;
 }
 
-function Wordmark() {
+function Wordmark({ darkOnCream = false }) {
   return (
-    <span className="logo-wordmark" aria-label="Dovroyn logo">
+    <span className={`logo-wordmark ${darkOnCream ? 'dark-wordmark' : ''}`} aria-label="Dovroyn logo">
       <span className="logo-mark" aria-hidden="true">
         <span className="logo-orbit" />
       </span>
       <span>DOVROYN</span>
     </span>
+  );
+}
+
+function PodCalendarDots({ compact = false }) {
+  return (
+    <div className={`calendar-dots ${compact ? 'compact' : ''}`}>
+      {CONTENT_CALENDAR_PREVIEW.map((item) => (
+        <span key={item.day} className={`dot ${item.level}`} title={item.day} />
+      ))}
+    </div>
   );
 }
 
@@ -201,41 +366,90 @@ function LandingPage({ session }) {
             Login
           </NavLink>
           <NavLink className="button button-primary" to={session ? '/dashboard' : '/signup'}>
-            Get started
+            Get Started
           </NavLink>
         </div>
       </header>
 
       <section className="hero-block panel">
-        <p className="eyebrow">AI operations workspace — {APP_DOMAIN}</p>
-        <h1>Turn scattered ideas into organised action.</h1>
+        <p className="eyebrow">Premium AI workspace · {APP_DOMAIN}</p>
+        <h1>
+          YOUR AI COMMAND CENTRE
+          <br />
+          FOR EVERY IDEA, BRAND &amp; PROJECT
+        </h1>
         <p className="lede">
-          Dovroyn helps you plan, track, and build your ideas with AI support, project memory,
-          dashboards, and task management in one focused workspace.
+          Dovroyn helps you capture ideas, organise projects, plan content, track tasks, and build
+          your business ecosystem without the agency overhead.
         </p>
         <div className="hero-actions">
-          <NavLink className="button button-primary" to="/signup">
-            Get started
-          </NavLink>
-          <NavLink className="button button-ghost" to={session ? '/assistant' : '/login'}>
-            Open AI assistant
+          <NavLink className="button button-primary" to={session ? '/assistant' : '/login'}>
+            Start with AI
           </NavLink>
           <NavLink className="button button-ghost" to={session ? '/dashboard' : '/login'}>
-            Explore dashboard
+            Open Dashboard
+          </NavLink>
+          <NavLink className="button button-ghost" to={session ? '/signup' : '/signup'}>
+            Get Started
           </NavLink>
         </div>
       </section>
 
-      <section className="features-grid">
-        {LANDING_FEATURES.map((feature) => (
-          <article key={feature.title} className="panel feature-card">
-            <h3>{feature.title}</h3>
-            <p>{feature.description}</p>
+      <section className="pod-preview-grid">
+        {HERO_PODS.map((pod) => (
+          <article key={pod.name} className="pod-card cream-card">
+            <div className="pod-card-header">
+              <h3>{pod.name}</h3>
+              <span className="status-tag">{pod.status}</span>
+            </div>
+            <p className="card-label">Next task</p>
+            <p className="subtle dark">{pod.nextTask}</p>
+            <p className="card-label">AI notes</p>
+            <p className="subtle dark">{pod.aiNotes}</p>
+            <p className="card-label">Content calendar</p>
+            <PodCalendarDots compact />
+            <div className="pod-meta-row">
+              <span className="platform-pill">IG</span>
+              <span className="platform-pill">FB</span>
+              <span className="platform-pill">TT</span>
+              <span className="platform-pill">YT</span>
+            </div>
+            <div className="progress-track dark-track" role="progressbar" aria-valuemin={0} aria-valuemax={100} aria-valuenow={pod.progress} aria-label={`${pod.name} progress`}>
+              <span style={{ width: `${pod.progress}%` }} />
+            </div>
           </article>
         ))}
       </section>
 
-      <footer className="landing-footer">Dovroyn by Anglow Digital PTY LTD.</footer>
+      <section className="statement-grid">
+        <article className="panel statement-card">
+          <p className="eyebrow">Section 1</p>
+          <h2>YOUR DEDICATED BRAND POD ECOSYSTEM</h2>
+          <p>
+            Manage every brand, project, idea, launch, and AI conversation inside one calm command
+            centre.
+          </p>
+        </article>
+        <article className="panel statement-card">
+          <p className="eyebrow">Section 2</p>
+          <h2>DITCH THE AGENCY OVERHEAD</h2>
+          <p>
+            Use AI to plan campaigns, write content, organise ideas, track launches, and map your
+            next business move without juggling ten different tools.
+          </p>
+        </article>
+      </section>
+
+      <section className="feature-grid">
+        {LANDING_FEATURES.map((feature) => (
+          <article key={feature.title} className="cream-card feature-card">
+            <h3>{feature.title}</h3>
+            <p className="subtle dark">{feature.description}</p>
+          </article>
+        ))}
+      </section>
+
+      <footer className="landing-footer">{APP_NAME} by {COMPANY_NAME}.</footer>
     </main>
   );
 }
@@ -381,7 +595,7 @@ function AppLayout({ user, onSignOut }) {
       </aside>
       <section className="content">
         <header className="content-header panel">
-          <p className="eyebrow">Dovroyn workspace</p>
+          <p className="eyebrow">Brand Command Centre</p>
           <h2>{user?.email}</h2>
         </header>
         <Outlet />
@@ -430,35 +644,60 @@ function DashboardPage({ user }) {
   return (
     <div className="page-stack">
       {status && <p className="subtle">{status}</p>}
+
       <section className="cards-grid cards-grid-wide">
-        <article className="panel welcome-card">
-          <p className="eyebrow">Welcome card</p>
-          <h3>Welcome to Dovroyn</h3>
-          <p>Focus your ideas, tasks, and projects in one coordinated workspace.</p>
+        <article className="cream-card welcome-card">
+          <Wordmark darkOnCream />
+          <h3>Welcome back</h3>
+          <p className="subtle dark">Your ecosystem is ready. Here is what needs focus today.</p>
         </article>
 
         <article className="panel quick-actions">
           <p className="eyebrow">Quick actions</p>
           <div className="action-buttons">
+            <NavLink className="button button-ghost" to="/assistant">
+              Ask Dovroyn
+            </NavLink>
+            <NavLink className="button button-ghost" to="/brand-pods">
+              New brand pod
+            </NavLink>
             <NavLink className="button button-ghost" to="/ideas">
               New idea
             </NavLink>
             <NavLink className="button button-ghost" to="/tasks">
               New task
             </NavLink>
-            <NavLink className="button button-ghost" to="/assistant">
-              Open assistant
-            </NavLink>
-            <NavLink className="button button-ghost" to="/projects">
-              View projects
+            <NavLink className="button button-primary" to="/assistant">
+              Plan campaign
             </NavLink>
           </div>
         </article>
       </section>
 
-      <section className="cards-grid">
+      <section className="cards-grid cards-grid-wide">
         <article className="panel">
-          <h3>Recent ideas</h3>
+          <h3>Today’s next move</h3>
+          <ul className="simple-list">
+            {DASHBOARD_NEXT_MOVES.map((move) => (
+              <li key={move}>{move}</li>
+            ))}
+          </ul>
+        </article>
+
+        <article className="panel">
+          <h3>Active launches</h3>
+          <ul className="simple-list">
+            {DASHBOARD_LAUNCHES.map((launch) => (
+              <li key={launch.name}>
+                <span>{launch.name}</span>
+                <span className="status-tag">{launch.stage}</span>
+              </li>
+            ))}
+          </ul>
+        </article>
+
+        <article className="panel">
+          <h3>Saved ideas</h3>
           <ul className="simple-list">
             {recentIdeas.map((idea) => (
               <li key={idea.title}>
@@ -468,29 +707,37 @@ function DashboardPage({ user }) {
             ))}
           </ul>
         </article>
+      </section>
+
+      <section className="cards-grid cards-grid-wide">
+        <article className="panel">
+          <h3>Brand pod grid</h3>
+          <div className="mini-pod-grid">
+            {BRAND_PODS.slice(0, 6).map((pod) => (
+              <article key={pod.name} className="mini-pod-card">
+                <h4>{pod.name}</h4>
+                <p className="subtle">{pod.status}</p>
+                <div className="progress-track" role="progressbar" aria-label={`${pod.name} progress`} aria-valuemin={0} aria-valuemax={100} aria-valuenow={pod.progress}>
+                  <span style={{ width: `${pod.progress}%` }} />
+                </div>
+              </article>
+            ))}
+          </div>
+        </article>
 
         <article className="panel">
-          <h3>Active projects</h3>
+          <h3>Recent AI conversations</h3>
           <ul className="simple-list">
-            {SAMPLE_PROJECTS.slice(0, 3).map((project) => (
-              <li key={project.name}>
-                <span>{project.name}</span>
-                <span className="subtle">{project.progress}%</span>
-              </li>
+            {DASHBOARD_CONVERSATIONS.map((item) => (
+              <li key={item}>{item}</li>
             ))}
           </ul>
         </article>
 
-        <article className="panel">
-          <h3>Today’s tasks</h3>
-          <ul className="simple-list">
-            {TASK_COLUMNS.Today.map((task) => (
-              <li key={task}>{task}</li>
-            ))}
-          </ul>
-          <NavLink className="button button-ghost" to="/assistant">
-            AI assistant shortcut
-          </NavLink>
+        <article className="cream-card">
+          <h3>Content calendar preview</h3>
+          <p className="subtle dark">Weekly campaign rhythm across your active brand pods.</p>
+          <PodCalendarDots />
         </article>
       </section>
     </div>
@@ -576,11 +823,18 @@ function AssistantPage({ user }) {
 
   return (
     <div className="page-stack">
+      <header className="section-header panel">
+        <div>
+          <p className="eyebrow">Assistant</p>
+          <h3>Heart of your product workflow</h3>
+        </div>
+      </header>
+
       <div className="panel chat-window">
         {messages.length === 0 ? (
           <p className="subtle">
-            Ask Dovroyn to organise an idea, create a plan, write copy, break down a task, or
-            track your next move.
+            Ask Dovroyn to plan a launch, organise an idea, write brand copy, build a campaign, or
+            decide your next move.
           </p>
         ) : (
           messages.map((message) => (
@@ -593,7 +847,7 @@ function AssistantPage({ user }) {
 
       <form onSubmit={handleSend} className="panel chat-form">
         <input
-          placeholder="Ask Dovroyn to organise an idea, create a plan, write copy, break down a task, or track your next move."
+          placeholder="Ask Dovroyn to plan a launch, organise an idea, write brand copy, build a campaign, or decide your next move."
           value={prompt}
           onChange={(event) => setPrompt(event.target.value)}
         />
@@ -613,25 +867,44 @@ function IdeasPage() {
       <header className="section-header panel">
         <div>
           <p className="eyebrow">Ideas</p>
-          <h3>Idea cards</h3>
+          <h3>Idea board</h3>
         </div>
         <button className="button button-primary" type="button">
           Add idea
         </button>
       </header>
 
-      <section className="cards-grid">
+      <section className="cards-grid cards-grid-wide">
         {SAMPLE_IDEAS.map((idea) => (
-          <article key={idea.title} className="panel">
+          <article key={idea.title} className="cream-card idea-card">
             <h3>{idea.title}</h3>
-            <p className="subtle">Capture and move this idea into focused execution.</p>
+            <p className="subtle dark">{idea.nextAction}</p>
+            <div className="idea-fields">
+              <p>
+                <strong>Category:</strong> {idea.category}
+              </p>
+              <p>
+                <strong>Status:</strong> {idea.status}
+              </p>
+              <p>
+                <strong>Priority:</strong> {idea.priority}
+              </p>
+              <p>
+                <strong>Next action:</strong> {idea.nextAction}
+              </p>
+            </div>
             <div className="status-row">
               {IDEA_STATUS.map((status) => (
-                <span
-                  key={status}
-                  className={`status-tag ${status === idea.status ? 'active-tag' : ''}`}
-                >
+                <span key={status} className={`status-tag ${status === idea.status ? 'active-tag' : ''}`}>
                   {status}
+                </span>
+              ))}
+              {IDEA_PRIORITY.map((priority) => (
+                <span
+                  key={priority}
+                  className={`status-tag muted ${priority === idea.priority ? 'active-tag' : ''}`}
+                >
+                  {priority}
                 </span>
               ))}
             </div>
@@ -647,28 +920,32 @@ function ProjectsPage() {
     <div className="page-stack">
       <header className="section-header panel">
         <div>
-          <p className="eyebrow">Projects</p>
-          <h3>Project cards</h3>
+          <p className="eyebrow">Brand Pods</p>
+          <h3>Business ecosystem cards</h3>
         </div>
       </header>
 
-      <section className="cards-grid">
-        {SAMPLE_PROJECTS.map((project) => (
-          <article key={project.name} className="panel">
-            <p className="eyebrow">{project.category}</p>
-            <h3>{project.name}</h3>
-            <p className="subtle">Status: {project.status}</p>
-            <div
-              className="progress-track"
-              role="progressbar"
-              aria-label={`${project.name} progress`}
-              aria-valuemin={0}
-              aria-valuemax={100}
-              aria-valuenow={project.progress}
-            >
-              <span style={{ width: `${project.progress}%` }} />
+      <section className="cards-grid cards-grid-wide">
+        {BRAND_PODS.map((pod) => (
+          <article key={pod.name} className="cream-card">
+            <div className="pod-card-header">
+              <h3>{pod.name}</h3>
+              <span className="status-tag">{pod.status}</span>
             </div>
-            <p className="subtle">Progress: {project.progress}%</p>
+            <p className="subtle dark">
+              <strong>Next action:</strong> {pod.nextAction}
+            </p>
+            <p className="subtle dark">
+              <strong>Notes:</strong> {pod.notesCount}
+            </p>
+            <p className="subtle dark">
+              <strong>Tasks:</strong> {pod.tasksCount}
+            </p>
+            <p className="card-label">Content calendar preview</p>
+            <PodCalendarDots compact />
+            <div className="progress-track dark-track" role="progressbar" aria-label={`${pod.name} progress`} aria-valuemin={0} aria-valuemax={100} aria-valuenow={pod.progress}>
+              <span style={{ width: `${pod.progress}%` }} />
+            </div>
           </article>
         ))}
       </section>
@@ -688,7 +965,7 @@ function TasksPage() {
 
       <section className="task-board">
         {Object.entries(TASK_COLUMNS).map(([title, items]) => (
-          <article key={title} className="panel task-column">
+          <article key={title} className="cream-card task-column">
             <h3>{title}</h3>
             <ul>
               {items.map((item) => (
@@ -781,28 +1058,30 @@ function SettingsPage({ user }) {
       </label>
 
       <label>
+        Brand name
+        <input value={APP_NAME} readOnly />
+      </label>
+
+      <label>
+        Domain
+        <input value={APP_DOMAIN} readOnly />
+      </label>
+
+      <label>
+        Connected account
+        <input value={supabaseConfigured ? 'Supabase connected' : 'Supabase not configured'} readOnly />
+      </label>
+
+      <label>
         Theme
         <select
           value={settings.theme}
           onChange={(e) => setSettings((prev) => ({ ...prev, theme: e.target.value }))}
         >
           <option value="Premium Dark">Premium Dark</option>
-          <option value="Midnight Blue">Midnight Blue</option>
-          <option value="Electric Violet">Electric Violet</option>
+          <option value="Olive Editorial">Olive Editorial</option>
+          <option value="Cream Contrast">Cream Contrast</option>
         </select>
-      </label>
-
-      <label>
-        Connected account
-        <input
-          value={supabaseConfigured ? 'Supabase connected' : 'Supabase not configured'}
-          readOnly
-        />
-      </label>
-
-      <label>
-        Domain
-        <input value="dovroyn.com" readOnly />
       </label>
 
       <label>
@@ -822,9 +1101,7 @@ function SettingsPage({ user }) {
         <input
           type="checkbox"
           checked={settings.email_notifications}
-          onChange={(e) =>
-            setSettings((prev) => ({ ...prev, email_notifications: e.target.checked }))
-          }
+          onChange={(e) => setSettings((prev) => ({ ...prev, email_notifications: e.target.checked }))}
         />
         Email notifications
       </label>
