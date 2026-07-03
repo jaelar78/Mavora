@@ -8,6 +8,7 @@ import {
   Routes,
   useLocation,
   useNavigate,
+  useParams,
 } from 'react-router-dom';
 import { Analytics } from '@vercel/analytics/react';
 import './index.css';
@@ -18,75 +19,253 @@ const APP_DOMAIN = 'dovroyn.com';
 
 const LANDING_FEATURES = [
   {
-    title: 'AI Assistant',
-    description:
-      'Capture ideas, ask questions, and turn messy thoughts into clear next steps.',
+    title: 'Dedicated AI Pods',
+    description: 'One pod per brand, business, website, offer, or project so every strategy stays focused.',
   },
   {
-    title: 'Idea Tracker',
-    description:
-      'Save business ideas, app concepts, product plans, and random sparks before they disappear.',
+    title: 'Website Intelligence',
+    description: 'Pods analyse site structure, aesthetic, product focus, audience signals, and promotion angles.',
   },
   {
-    title: 'Project Dashboard',
-    description: 'See what you’re building, what matters next, and what needs attention.',
+    title: 'Campaign Guidance',
+    description: 'Get recommended hooks, creative direction, landing pages, and budget placeholders.',
   },
   {
-    title: 'Task Planning',
-    description: 'Break ideas into tasks, priorities, and simple execution steps.',
+    title: 'Competitor Watch',
+    description: 'Track observed ad angles and get suggested responses without faking live integrations.',
   },
   {
-    title: 'Conversation Memory',
-    description: 'Keep useful AI outputs connected to your projects and decisions.',
+    title: 'Content Planning',
+    description: 'Generate weekly post and ad ideas linked to pod goals and target market priorities.',
   },
   {
-    title: 'Cloud Sync',
-    description: 'Use Supabase-backed login and data storage so your workspace stays connected.',
+    title: 'Secure Pod Access',
+    description: 'Authentication and workspace continuity are powered by Supabase for each account.',
   },
 ];
 
-const NAV_ITEMS = [
+const SIDEBAR_NAV_ITEMS = [
+  { to: '/pods', label: 'Pods' },
+  { to: '/website-analysis', label: 'Website Analysis' },
+  { to: '/campaigns', label: 'Campaigns' },
+  { to: '/competitor-watch', label: 'Competitor Watch' },
+  { to: '/content-planner', label: 'Content Planner' },
   { to: '/dashboard', label: 'Dashboard' },
-  { to: '/assistant', label: 'Assistant' },
-  { to: '/ideas', label: 'Ideas' },
-  { to: '/projects', label: 'Projects' },
-  { to: '/tasks', label: 'Tasks' },
   { to: '/settings', label: 'Settings' },
 ];
 
-const IDEA_STATUS = ['New', 'Reviewing', 'Building', 'Paused', 'Launched'];
-
-const SAMPLE_IDEAS = [
-  { title: 'Client onboarding flow with AI handoff', status: 'Reviewing' },
-  { title: 'Family logistics dashboard', status: 'Building' },
-  { title: 'Brand voice system for content ops', status: 'New' },
-  { title: 'Internal admin automations', status: 'Paused' },
-  { title: 'Weekly planning ritual template', status: 'Launched' },
+const SAMPLE_PODS = [
+  {
+    id: 'aurora-skincare',
+    brandName: 'Aurora Skincare',
+    websiteUrl: 'https://auroraskincare.co',
+    industry: 'Skincare',
+    status: 'Analysed',
+    lastAnalysis: '2 hours ago',
+    targetMarketSummary: 'Women 24-40 seeking clean anti-ageing routines',
+    nextRecommendedAction: 'Launch hydration-focused ad set to warm traffic',
+    postsAvailableThisWeek: 6,
+    connectedSocialsStatus: 'Instagram connected • TikTok setup required',
+    brandColours: ['#A47B4A', '#E9DFC9', '#324033', '#1D211C'],
+    brandAesthetic: 'Editorial minimalist with botanical luxury cues',
+    toneOfVoice: 'Expert, reassuring, modern luxury',
+    productsOrServices: 'Serums, moisturisers, seasonal treatment bundles',
+    bestPagesToPromote: ['/collections/anti-ageing', '/quiz/skin-routine', '/products/night-serum'],
+    recommendedPosts: [
+      'Before/after hydration reel with derm-backed caption',
+      'Myth-busting carousel on retinol and barrier repair',
+      'Founder story short video with product stack CTA',
+    ],
+    recommendedAds: [
+      'UGC style testimonial ad for winter repair kit',
+      'Problem-solution static ad for night serum',
+      'Lead magnet ad driving to skin routine quiz',
+    ],
+    competitorInsights: [
+      {
+        competitor: 'Luma Botanics',
+        angle: 'Ingredient transparency and quick routine formats',
+        whyWorking: 'Clear transformation promise and visual simplicity',
+        response: 'Publish side-by-side ingredient education reels',
+      },
+      {
+        competitor: 'PureDerm Lab',
+        angle: 'Doctor-style authority hooks',
+        whyWorking: 'Trust-led creative lowers purchase hesitation',
+        response: 'Use practitioner-backed quote cards and FAQ ads',
+      },
+    ],
+    performanceNotes: 'Quiz landing page converts strongest from social traffic. Product grid page has high bounce on mobile.',
+    learningHistory: [
+      'Week 1: Hydration hooks outperformed anti-ageing claims by 27%.',
+      'Week 2: Evening skincare creative generated best saves and shares.',
+      'Week 3: Landing page with shorter form increased lead conversion.',
+    ],
+    audienceProfile: 'Urban professionals who value premium but practical skincare',
+    strongestPages: ['/quiz/skin-routine', '/products/night-serum'],
+    weakPages: ['/blog', '/shipping-policy'],
+    seoContentOpportunities: 'Expand ingredient education cluster and FAQ schema',
+    conversionSuggestions: 'Shorten hero copy and test single primary CTA above fold',
+    socialPlatforms: ['Instagram', 'TikTok', 'Pinterest'],
+    mainGoal: 'Increase qualified leads and repeat purchases',
+  },
+  {
+    id: 'forge-fitness',
+    brandName: 'Forge Fitness Studio',
+    websiteUrl: 'https://forgefitnessstudio.com',
+    industry: 'Fitness',
+    status: 'Learning',
+    lastAnalysis: 'Yesterday',
+    targetMarketSummary: 'Busy professionals 25-45 wanting structured programs',
+    nextRecommendedAction: 'Push trial class landing page for commuter districts',
+    postsAvailableThisWeek: 4,
+    connectedSocialsStatus: 'Meta connected • YouTube coming soon',
+    brandColours: ['#BC8A4B', '#EEE4D0', '#34322E', '#121210'],
+    brandAesthetic: 'Industrial premium gym with disciplined performance style',
+    toneOfVoice: 'Direct, motivating, no fluff',
+    productsOrServices: 'Group classes, nutrition coaching, personal training',
+    bestPagesToPromote: ['/trial-class', '/coaching', '/schedule'],
+    recommendedPosts: [
+      'Coach tip reel: 20-minute strength routine for office workers',
+      'Client transformation carousel with weekly milestone proof',
+      'Nutrition myth breakdown with call to book consult',
+    ],
+    recommendedAds: [
+      'Trial class lead ad by suburb segment',
+      'Transformation story video ad with urgency offer',
+      'Retargeting ad for abandoned booking flow',
+    ],
+    competitorInsights: [
+      {
+        competitor: 'Atlas Strength Club',
+        angle: 'Community challenge campaigns',
+        whyWorking: 'Strong social proof and accountability positioning',
+        response: 'Launch 21-day pod-tracked challenge creative',
+      },
+    ],
+    performanceNotes: 'Trial class page has strong click-through but checkout drop-off remains high.',
+    learningHistory: [
+      'Week 1: Morning-focused hooks produced strongest CTR.',
+      'Week 2: Suburb-specific copy lifted qualified leads.',
+    ],
+    audienceProfile: 'Time-poor workers aiming for strength and consistency',
+    strongestPages: ['/trial-class', '/coaching'],
+    weakPages: ['/about'],
+    seoContentOpportunities: 'Create intent pages for suburb + personal training searches',
+    conversionSuggestions: 'Add social proof near booking CTA and reduce checkout steps',
+    socialPlatforms: ['Facebook', 'Instagram'],
+    mainGoal: 'Increase trial-to-membership conversion rate',
+  },
 ];
 
-const SAMPLE_PROJECTS = [
-  { name: 'Revenue Command Center', category: 'business', progress: 72, status: 'Active' },
-  { name: 'Mobile Launch Tracker', category: 'app', progress: 48, status: 'In Planning' },
-  { name: 'Identity Refresh System', category: 'brand', progress: 64, status: 'Active' },
-  { name: 'Household Ops Board', category: 'family', progress: 33, status: 'At Risk' },
-  { name: 'Quarterly Admin Pipeline', category: 'admin', progress: 82, status: 'Stable' },
-  { name: 'Personal Growth Map', category: 'personal', progress: 57, status: 'Active' },
+const CAMPAIGN_SUGGESTIONS = [
+  {
+    campaignName: 'Winter Barrier Reset',
+    targetMarket: 'Dry-skin skincare buyers 24-40',
+    platform: 'Instagram Reels',
+    hook: 'Your evening routine is missing one recovery step',
+    creativeDirection: 'Soft lighting, close-up textures, dermatologist cue cards',
+    landingPage: '/quiz/skin-routine',
+    suggestedBudget: 'Setup required',
+    status: 'Ready for review',
+  },
+  {
+    campaignName: 'Commuter Strength Sprint',
+    targetMarket: 'Office professionals near CBD gyms',
+    platform: 'Meta Feed + Stories',
+    hook: 'Get stronger in 45 minutes before work',
+    creativeDirection: 'High-contrast training clips with progress overlays',
+    landingPage: '/trial-class',
+    suggestedBudget: 'Coming soon',
+    status: 'Drafting creative',
+  },
 ];
 
-const TASK_COLUMNS = {
-  Today: ['Refine onboarding checklist', 'Review AI assistant output for sprint scope'],
-  'This week': ['Ship dashboard KPI cards', 'Plan copy for dovroyn.com launch page'],
-  Later: ['Map automation integrations', 'Document workspace playbooks'],
-  Completed: ['Organise current project backlog'],
-};
+const COMPETITOR_WATCH = [
+  {
+    competitorName: 'Luma Botanics',
+    observedAngle: 'Ingredient transparency as premium proof',
+    whyItMayBeWorking: 'Builds trust fast and handles objections in-feed',
+    suggestedResponse: 'Publish ingredient comparison cards and testimonial overlays',
+    recommendedIdea: 'Ad idea: “Know what your serum actually does.”',
+  },
+  {
+    competitorName: 'Atlas Strength Club',
+    observedAngle: 'Challenge-based offer with countdown urgency',
+    whyItMayBeWorking: 'Clear deadline pushes immediate signups',
+    suggestedResponse: 'Run pod-specific 14-day challenge with weekly social proof',
+    recommendedIdea: 'Content idea: coach-led challenge kickoff short video',
+  },
+];
 
-function createLocalId() {
-  if (typeof crypto !== 'undefined' && crypto.randomUUID) {
-    return crypto.randomUUID();
-  }
+const CONTENT_PLAN = [
+  {
+    title: 'Monday authority reel',
+    type: 'Post idea',
+    platform: 'Instagram',
+    captionDraft: 'Three signs your current skincare routine is costing results.',
+    creativeDirection: 'Close-up product texture clips with overlay tips',
+    linkedLandingPage: '/collections/anti-ageing',
+  },
+  {
+    title: 'Wednesday conversion ad',
+    type: 'Ad idea',
+    platform: 'Meta Ads',
+    captionDraft: 'Start with one trial class. Leave with your 8-week roadmap.',
+    creativeDirection: 'Fast cuts: warm-up, coaching cue, member win quote',
+    linkedLandingPage: '/trial-class',
+  },
+  {
+    title: 'Friday objection post',
+    type: 'Post idea',
+    platform: 'TikTok',
+    captionDraft: '“I don’t have time” is exactly why this routine works.',
+    creativeDirection: 'Point-of-view style with text-first storytelling',
+    linkedLandingPage: '/quiz/skin-routine',
+  },
+];
 
-  return `local-${Date.now()}-${Math.random().toString(16).slice(2)}`;
-}
+const PRICING_TIERS = [
+  {
+    name: 'Starter',
+    features: [
+      '2 pods',
+      '2 posts per week',
+      'Basic website analysis',
+      'Basic content suggestions',
+    ],
+  },
+  {
+    name: 'Growth',
+    features: [
+      '5 pods',
+      '5 posts per week',
+      'Deeper website analysis',
+      'Content planner',
+      'Social connection placeholders',
+    ],
+  },
+  {
+    name: 'Scale',
+    features: [
+      '10 pods',
+      'Daily content suggestions',
+      'Competitor watch',
+      'Campaign recommendations',
+      'Pod learning history',
+    ],
+  },
+  {
+    name: 'Empire',
+    features: [
+      'Custom or unlimited pods',
+      'Advanced competitor intelligence',
+      'Ad campaign automation placeholders',
+      'Team/client access',
+      'Priority features',
+    ],
+  },
+];
 
 function App() {
   const [session, setSession] = useState(null);
@@ -137,6 +316,7 @@ function App() {
         <Route path="/login" element={<AuthPage session={session} defaultMode="login" />} />
         <Route path="/signup" element={<AuthPage session={session} defaultMode="signup" />} />
         <Route path="/auth" element={<AuthPage session={session} defaultMode="login" />} />
+        <Route path="/pricing" element={<PricingPage />} />
 
         <Route element={<ProtectedRoute session={session} />}>
           <Route
@@ -150,12 +330,20 @@ function App() {
               />
             )}
           >
-            <Route path="/dashboard" element={<DashboardPage user={session?.user} />} />
-            <Route path="/assistant" element={<AssistantPage user={session?.user} />} />
-            <Route path="/ideas" element={<IdeasPage />} />
-            <Route path="/projects" element={<ProjectsPage />} />
-            <Route path="/tasks" element={<TasksPage />} />
+            <Route path="/dashboard" element={<DashboardPage />} />
+            <Route path="/pods" element={<PodsPage />} />
+            <Route path="/pods/new" element={<CreatePodPage />} />
+            <Route path="/pods/:podId" element={<PodDashboardPage />} />
+            <Route path="/website-analysis" element={<WebsiteAnalysisPage />} />
+            <Route path="/campaigns" element={<CampaignsPage />} />
+            <Route path="/competitor-watch" element={<CompetitorWatchPage />} />
+            <Route path="/content-planner" element={<ContentPlannerPage />} />
             <Route path="/settings" element={<SettingsPage user={session?.user} />} />
+
+            <Route path="/assistant" element={<Navigate to="/pods" replace />} />
+            <Route path="/ideas" element={<Navigate to="/pods" replace />} />
+            <Route path="/projects" element={<Navigate to="/campaigns" replace />} />
+            <Route path="/tasks" element={<Navigate to="/content-planner" replace />} />
             <Route path="/profile" element={<Navigate to="/settings" replace />} />
           </Route>
         </Route>
@@ -197,31 +385,35 @@ function LandingPage({ session }) {
       <header className="top-nav">
         <Wordmark />
         <div className="top-nav-actions">
+          <NavLink className="button button-ghost" to="/pricing">
+            Pricing
+          </NavLink>
           <NavLink className="button button-ghost" to="/login">
             Login
           </NavLink>
-          <NavLink className="button button-primary" to={session ? '/dashboard' : '/signup'}>
-            Get started
+          <NavLink className="button button-primary" to={session ? '/pods/new' : '/signup'}>
+            Create Your First Pod
           </NavLink>
         </div>
       </header>
 
       <section className="hero-block panel">
-        <p className="eyebrow">AI operations workspace — {APP_DOMAIN}</p>
-        <h1>Turn scattered ideas into organised action.</h1>
+        <p className="eyebrow">AI ad-intelligence platform — {APP_DOMAIN}</p>
+        <h1>EVERY BRAND GETS ITS OWN AI BRAIN</h1>
+        <h2 className="hero-supporting">
+          Dedicated AI pods that analyse, advertise and improve every brand you run.
+        </h2>
         <p className="lede">
-          Dovroyn helps you plan, track, and build your ideas with AI support, project memory,
-          dashboards, and task management in one focused workspace.
+          Dovroyn creates dedicated AI pods for your brands. Each pod analyses your website, learns
+          your market, studies your aesthetic, suggests what to post, finds the best pages to
+          promote, and improves over time by watching what works.
         </p>
         <div className="hero-actions">
-          <NavLink className="button button-primary" to="/signup">
-            Get started
-          </NavLink>
-          <NavLink className="button button-ghost" to={session ? '/assistant' : '/login'}>
-            Open AI assistant
+          <NavLink className="button button-primary" to={session ? '/pods/new' : '/signup'}>
+            Create Your First Pod
           </NavLink>
           <NavLink className="button button-ghost" to={session ? '/dashboard' : '/login'}>
-            Explore dashboard
+            View Demo Dashboard
           </NavLink>
         </div>
       </section>
@@ -303,8 +495,8 @@ function AuthPage({ session, defaultMode = 'login' }) {
     <main className="auth-shell">
       <div className="auth-card panel">
         <Wordmark />
-        <h1>{mode === 'login' ? 'Welcome back to Dovroyn' : 'Create your Dovroyn workspace'}</h1>
-        <p>Secure access powered by Supabase authentication.</p>
+        <h1>{mode === 'login' ? 'Welcome back to Dovroyn' : 'Create your first Dovroyn pod'}</h1>
+        <p>Secure pod access powered by Supabase authentication.</p>
 
         {!supabaseConfigured && (
           <div className="alert">
@@ -369,19 +561,22 @@ function AppLayout({ user, onSignOut }) {
       <aside className="sidebar panel">
         <Wordmark />
         <nav>
-          {NAV_ITEMS.map((item) => (
+          {SIDEBAR_NAV_ITEMS.map((item) => (
             <NavLink key={item.to} to={item.to} className="nav-item">
               {item.label}
             </NavLink>
           ))}
         </nav>
+        <NavLink className="button button-primary" to="/pods/new">
+          Create Pod
+        </NavLink>
         <button className="button button-ghost" type="button" onClick={onSignOut}>
           Sign out
         </button>
       </aside>
       <section className="content">
         <header className="content-header panel">
-          <p className="eyebrow">Dovroyn workspace</p>
+          <p className="eyebrow">Dovroyn AI pod command centre</p>
           <h2>{user?.email}</h2>
         </header>
         <Outlet />
@@ -390,251 +585,409 @@ function AppLayout({ user, onSignOut }) {
   );
 }
 
-function DashboardPage({ user }) {
-  const [status, setStatus] = useState('');
-  const [recentIdeas, setRecentIdeas] = useState(SAMPLE_IDEAS.slice(0, 3));
-
-  useEffect(() => {
-    let ignore = false;
-
-    const loadIdeas = async () => {
-      if (!supabaseConfigured || !user?.id) {
-        setStatus('Showing sample workspace data until Supabase is configured.');
-        return;
-      }
-
-      const { data, error } = await supabase
-        .from('ideas')
-        .select('title, status')
-        .eq('user_id', user.id)
-        .order('created_at', { ascending: false })
-        .limit(3);
-
-      if (ignore) return;
-
-      if (error || !data?.length) {
-        setStatus('Connect an ideas table in Supabase to replace sample content.');
-      } else {
-        setRecentIdeas(data);
-        setStatus('Connected to Supabase workspace data.');
-      }
-    };
-
-    loadIdeas();
-
-    return () => {
-      ignore = true;
-    };
-  }, [user?.id]);
+function DashboardPage() {
+  const primaryPod = SAMPLE_PODS[0];
 
   return (
     <div className="page-stack">
-      {status && <p className="subtle">{status}</p>}
-      <section className="cards-grid cards-grid-wide">
-        <article className="panel welcome-card">
-          <p className="eyebrow">Welcome card</p>
-          <h3>Welcome to Dovroyn</h3>
-          <p>Focus your ideas, tasks, and projects in one coordinated workspace.</p>
-        </article>
+      <header className="section-header panel">
+        <div>
+          <p className="eyebrow">Dashboard</p>
+          <h3>{primaryPod.brandName} pod dashboard</h3>
+          <p className="subtle">Every brand gets its own AI brain. This dashboard tracks what to run next.</p>
+        </div>
+        <NavLink className="button button-ghost" to={`/pods/${primaryPod.id}`}>
+          Open full pod dashboard
+        </NavLink>
+      </header>
 
-        <article className="panel quick-actions">
-          <p className="eyebrow">Quick actions</p>
-          <div className="action-buttons">
-            <NavLink className="button button-ghost" to="/ideas">
-              New idea
-            </NavLink>
-            <NavLink className="button button-ghost" to="/tasks">
-              New task
-            </NavLink>
-            <NavLink className="button button-ghost" to="/assistant">
-              Open assistant
-            </NavLink>
-            <NavLink className="button button-ghost" to="/projects">
-              View projects
-            </NavLink>
+      <section className="cards-grid cards-grid-wide">
+        <article className="panel detail-card">
+          <h4>Website analysed</h4>
+          <p>{primaryPod.websiteUrl}</p>
+        </article>
+        <article className="panel detail-card">
+          <h4>Brand colours</h4>
+          <div className="palette-row">
+            {primaryPod.brandColours.map((colour) => (
+              <span key={colour} className="palette-swatch" style={{ backgroundColor: colour }} title={colour} />
+            ))}
           </div>
         </article>
+        <article className="panel detail-card">
+          <h4>Brand aesthetic</h4>
+          <p>{primaryPod.brandAesthetic}</p>
+        </article>
+        <article className="panel detail-card">
+          <h4>Target audience</h4>
+          <p>{primaryPod.audienceProfile}</p>
+        </article>
+        <article className="panel detail-card">
+          <h4>Best pages to promote</h4>
+          <ul className="simple-list compact-list">
+            {primaryPod.bestPagesToPromote.map((page) => (
+              <li key={page}>{page}</li>
+            ))}
+          </ul>
+        </article>
+        <article className="panel detail-card">
+          <h4>Next best action</h4>
+          <p>{primaryPod.nextRecommendedAction}</p>
+        </article>
       </section>
 
       <section className="cards-grid">
         <article className="panel">
-          <h3>Recent ideas</h3>
-          <ul className="simple-list">
-            {recentIdeas.map((idea) => (
-              <li key={idea.title}>
-                <span>{idea.title}</span>
-                <span className="status-tag">{idea.status}</span>
-              </li>
+          <h3>Recommended posts</h3>
+          <ul className="simple-list compact-list">
+            {primaryPod.recommendedPosts.map((item) => (
+              <li key={item}>{item}</li>
             ))}
           </ul>
         </article>
-
         <article className="panel">
-          <h3>Active projects</h3>
-          <ul className="simple-list">
-            {SAMPLE_PROJECTS.slice(0, 3).map((project) => (
-              <li key={project.name}>
-                <span>{project.name}</span>
-                <span className="subtle">{project.progress}%</span>
-              </li>
+          <h3>Recommended ads</h3>
+          <ul className="simple-list compact-list">
+            {primaryPod.recommendedAds.map((item) => (
+              <li key={item}>{item}</li>
             ))}
           </ul>
         </article>
-
         <article className="panel">
-          <h3>Today’s tasks</h3>
-          <ul className="simple-list">
-            {TASK_COLUMNS.Today.map((task) => (
-              <li key={task}>{task}</li>
-            ))}
-          </ul>
-          <NavLink className="button button-ghost" to="/assistant">
-            AI assistant shortcut
-          </NavLink>
+          <h3>Performance notes</h3>
+          <p className="subtle">{primaryPod.performanceNotes}</p>
+          <p className="status-chip">Learning history active</p>
         </article>
       </section>
     </div>
   );
 }
 
-function AssistantPage({ user }) {
-  const [messages, setMessages] = useState([]);
-  const [prompt, setPrompt] = useState('');
-  const [status, setStatus] = useState('');
-  const [submitting, setSubmitting] = useState(false);
+function PodsPage() {
+  return (
+    <div className="page-stack">
+      <header className="section-header panel">
+        <div>
+          <p className="eyebrow">Pods</p>
+          <h3>All AI pods</h3>
+        </div>
+        <NavLink className="button button-primary" to="/pods/new">
+          Create Pod
+        </NavLink>
+      </header>
 
-  useEffect(() => {
-    let ignore = false;
+      <section className="cards-grid cards-grid-wide">
+        {SAMPLE_PODS.map((pod) => (
+          <article key={pod.id} className="panel pod-card">
+            <div className="pod-card-head">
+              <h3>{pod.brandName}</h3>
+              <span className="status-tag">{pod.status}</span>
+            </div>
+            <div className="pod-card-meta">
+              <p><strong>Website URL:</strong> {pod.websiteUrl}</p>
+              <p><strong>Last analysis:</strong> {pod.lastAnalysis}</p>
+              <p><strong>Target market summary:</strong> {pod.targetMarketSummary}</p>
+              <p><strong>Next recommended action:</strong> {pod.nextRecommendedAction}</p>
+              <p><strong>Posts available this week:</strong> {pod.postsAvailableThisWeek}</p>
+              <p><strong>Connected socials status:</strong> {pod.connectedSocialsStatus}</p>
+            </div>
+            <div className="action-buttons">
+              <NavLink className="button button-ghost" to={`/pods/${pod.id}`}>
+                Open pod dashboard
+              </NavLink>
+            </div>
+          </article>
+        ))}
+      </section>
+    </div>
+  );
+}
 
-    const loadMessages = async () => {
-      if (!supabaseConfigured || !user?.id) return;
-
-      const { data, error } = await supabase
-        .from('assistant_messages')
-        .select('id, role, content, created_at')
-        .eq('user_id', user.id)
-        .order('created_at', { ascending: true });
-
-      if (ignore) return;
-
-      if (error) {
-        setStatus('Create assistant_messages in Supabase to persist chats.');
-      } else {
-        setMessages(data ?? []);
-      }
-    };
-
-    loadMessages();
-
-    return () => {
-      ignore = true;
-    };
-  }, [user?.id]);
-
-  const handleSend = async (event) => {
-    event.preventDefault();
-    const content = prompt.trim();
-    if (!content) return;
-
-    const userMessage = {
-      id: createLocalId(),
-      role: 'user',
-      content,
-      created_at: new Date().toISOString(),
-    };
-
-    const assistantMessage = {
-      id: createLocalId(),
-      role: 'assistant',
-      content: `Here’s a suggested action plan for: "${content}".`,
-      created_at: new Date().toISOString(),
-    };
-
-    setPrompt('');
-    setSubmitting(true);
-    setMessages((prev) => [...prev, userMessage, assistantMessage]);
-
-    if (supabaseConfigured && user?.id) {
-      const payload = [userMessage, assistantMessage].map((message) => ({
-        user_id: user.id,
-        role: message.role,
-        content: message.content,
-      }));
-
-      const { error } = await supabase.from('assistant_messages').insert(payload);
-      if (error) {
-        setStatus('Messages shown locally. Create assistant_messages table to persist history.');
-      } else {
-        setStatus('Conversation synced to Supabase.');
-      }
-    } else {
-      setStatus('Running in local mode until Supabase is configured.');
-    }
-
-    setSubmitting(false);
-  };
+function CreatePodPage() {
+  const [form, setForm] = useState({
+    brandName: '',
+    websiteUrl: '',
+    industry: '',
+    mainGoal: '',
+    preferredPlatforms: '',
+    toneStyleNotes: '',
+  });
 
   return (
     <div className="page-stack">
-      <div className="panel chat-window">
-        {messages.length === 0 ? (
-          <p className="subtle">
-            Ask Dovroyn to organise an idea, create a plan, write copy, break down a task, or
-            track your next move.
-          </p>
-        ) : (
-          messages.map((message) => (
-            <article key={message.id} className={`chat-bubble ${message.role}`}>
-              <p>{message.content}</p>
-            </article>
-          ))
-        )}
-      </div>
+      <header className="section-header panel">
+        <div>
+          <p className="eyebrow">Create Pod</p>
+          <h3>Create a dedicated AI pod</h3>
+          <p className="subtle">Pod provisioning saves to frontend placeholder state until backend creation is wired.</p>
+        </div>
+      </header>
 
-      <form onSubmit={handleSend} className="panel chat-form">
-        <input
-          placeholder="Ask Dovroyn to organise an idea, create a plan, write copy, break down a task, or track your next move."
-          value={prompt}
-          onChange={(event) => setPrompt(event.target.value)}
-        />
-        <button className="button button-primary" type="submit" disabled={submitting}>
-          {submitting ? 'Sending...' : 'Send'}
+      <form className="card-form panel" onSubmit={(event) => event.preventDefault()}>
+        <div className="field-grid">
+          <label>
+            Brand/business name
+            <input
+              value={form.brandName}
+              onChange={(event) => setForm((prev) => ({ ...prev, brandName: event.target.value }))}
+              placeholder="Example: Aurora Skincare"
+            />
+          </label>
+
+          <label>
+            Website URL
+            <input
+              value={form.websiteUrl}
+              onChange={(event) => setForm((prev) => ({ ...prev, websiteUrl: event.target.value }))}
+              placeholder="https://yourbrand.com"
+            />
+          </label>
+
+          <label>
+            Industry
+            <input
+              value={form.industry}
+              onChange={(event) => setForm((prev) => ({ ...prev, industry: event.target.value }))}
+              placeholder="Skincare, fitness, SaaS, ecommerce..."
+            />
+          </label>
+
+          <label>
+            Main goal
+            <input
+              value={form.mainGoal}
+              onChange={(event) => setForm((prev) => ({ ...prev, mainGoal: event.target.value }))}
+              placeholder="Lead generation, sales, awareness..."
+            />
+          </label>
+
+          <label>
+            Preferred platforms
+            <input
+              value={form.preferredPlatforms}
+              onChange={(event) =>
+                setForm((prev) => ({ ...prev, preferredPlatforms: event.target.value }))
+              }
+              placeholder="Meta, Instagram, TikTok, YouTube..."
+            />
+          </label>
+
+          <label>
+            Tone/style notes
+            <textarea
+              rows={4}
+              value={form.toneStyleNotes}
+              onChange={(event) => setForm((prev) => ({ ...prev, toneStyleNotes: event.target.value }))}
+              placeholder="Luxury, direct-response, conversational, technical..."
+            />
+          </label>
+        </div>
+
+        <section className="cards-grid">
+          <article className="panel detail-card">
+            <h4>Website scrape</h4>
+            <p className="status-chip">Analyse</p>
+            <p className="subtle">Setup required</p>
+          </article>
+          <article className="panel detail-card">
+            <h4>Social publishing</h4>
+            <p className="status-chip">Connect</p>
+            <p className="subtle">Coming soon</p>
+          </article>
+          <article className="panel detail-card">
+            <h4>Ad account publishing</h4>
+            <p className="status-chip">Connect</p>
+            <p className="subtle">Setup required</p>
+          </article>
+        </section>
+
+        <button className="button button-primary" type="submit">
+          Save pod details (placeholder)
         </button>
       </form>
-
-      {status && <p className="subtle">{status}</p>}
     </div>
   );
 }
 
-function IdeasPage() {
+function PodDashboardPage() {
+  const { podId } = useParams();
+  const pod = SAMPLE_PODS.find((item) => item.id === podId) ?? SAMPLE_PODS[0];
+
   return (
     <div className="page-stack">
       <header className="section-header panel">
         <div>
-          <p className="eyebrow">Ideas</p>
-          <h3>Idea cards</h3>
+          <p className="eyebrow">Pod Dashboard</p>
+          <h3>{pod.brandName}</h3>
+          <p className="subtle">Dedicated AI analysis hub for this single brand.</p>
         </div>
-        <button className="button button-primary" type="button">
-          Add idea
-        </button>
+        <span className="status-tag">{pod.status}</span>
       </header>
 
+      <section className="detail-grid">
+        <article className="panel detail-card">
+          <h4>Website analysis</h4>
+          <p>{pod.websiteUrl}</p>
+          <p className="subtle">Last analysis: {pod.lastAnalysis}</p>
+        </article>
+        <article className="panel detail-card">
+          <h4>Brand profile</h4>
+          <p>{pod.brandAesthetic}</p>
+          <p className="subtle">Tone: {pod.toneOfVoice}</p>
+          <p className="subtle">Products/services: {pod.productsOrServices}</p>
+        </article>
+        <article className="panel detail-card">
+          <h4>Audience profile</h4>
+          <p>{pod.audienceProfile}</p>
+          <p className="subtle">Target market: {pod.targetMarketSummary}</p>
+        </article>
+        <article className="panel detail-card">
+          <h4>Best pages to promote</h4>
+          <ul className="simple-list compact-list">
+            {pod.bestPagesToPromote.map((page) => (
+              <li key={page}>{page}</li>
+            ))}
+          </ul>
+        </article>
+        <article className="panel detail-card">
+          <h4>Recommended content</h4>
+          <ul className="simple-list compact-list">
+            {pod.recommendedPosts.map((item) => (
+              <li key={item}>{item}</li>
+            ))}
+          </ul>
+        </article>
+        <article className="panel detail-card">
+          <h4>Recommended ads</h4>
+          <ul className="simple-list compact-list">
+            {pod.recommendedAds.map((item) => (
+              <li key={item}>{item}</li>
+            ))}
+          </ul>
+        </article>
+      </section>
+
       <section className="cards-grid">
-        {SAMPLE_IDEAS.map((idea) => (
-          <article key={idea.title} className="panel">
-            <h3>{idea.title}</h3>
-            <p className="subtle">Capture and move this idea into focused execution.</p>
-            <div className="status-row">
-              {IDEA_STATUS.map((status) => (
-                <span
-                  key={status}
-                  className={`status-tag ${status === idea.status ? 'active-tag' : ''}`}
-                >
-                  {status}
-                </span>
-              ))}
-            </div>
+        <article className="panel">
+          <h3>Competitor insights</h3>
+          <ul className="simple-list compact-list">
+            {pod.competitorInsights.map((insight) => (
+              <li key={insight.competitor}>
+                <div>
+                  <strong>{insight.competitor}</strong>
+                  <p className="subtle">{insight.angle}</p>
+                  <p className="subtle">Why it may be working: {insight.whyWorking}</p>
+                  <p className="subtle">Suggested response: {insight.response}</p>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </article>
+
+        <article className="panel">
+          <h3>Learning history</h3>
+          <ul className="simple-list compact-list">
+            {pod.learningHistory.map((entry) => (
+              <li key={entry}>{entry}</li>
+            ))}
+          </ul>
+        </article>
+
+        <article className="panel">
+          <h3>Connected socials</h3>
+          <p>{pod.connectedSocialsStatus}</p>
+          <p className="status-chip">Connect</p>
+          <h3>Performance summary</h3>
+          <p className="subtle">{pod.performanceNotes}</p>
+          <h3>Next best action</h3>
+          <p>{pod.nextRecommendedAction}</p>
+        </article>
+      </section>
+    </div>
+  );
+}
+
+function WebsiteAnalysisPage() {
+  const pod = SAMPLE_PODS[0];
+
+  return (
+    <div className="page-stack">
+      <header className="section-header panel">
+        <div>
+          <p className="eyebrow">Website Analysis</p>
+          <h3>{pod.brandName}</h3>
+          <p className="subtle">Website intelligence snapshot from pod analysis.</p>
+        </div>
+      </header>
+
+      <section className="cards-grid cards-grid-wide">
+        <article className="panel detail-card">
+          <h4>Colour palette pulled from site</h4>
+          <div className="palette-row">
+            {pod.brandColours.map((colour) => (
+              <span key={colour} className="palette-swatch" style={{ backgroundColor: colour }} title={colour} />
+            ))}
+          </div>
+        </article>
+        <article className="panel detail-card">
+          <h4>Aesthetic summary</h4>
+          <p>{pod.brandAesthetic}</p>
+        </article>
+        <article className="panel detail-card">
+          <h4>Product/service summary</h4>
+          <p>{pod.productsOrServices}</p>
+        </article>
+        <article className="panel detail-card">
+          <h4>Strongest pages</h4>
+          <ul className="simple-list compact-list">
+            {pod.strongestPages.map((page) => (
+              <li key={page}>{page}</li>
+            ))}
+          </ul>
+        </article>
+        <article className="panel detail-card">
+          <h4>Weak pages</h4>
+          <ul className="simple-list compact-list">
+            {pod.weakPages.map((page) => (
+              <li key={page}>{page}</li>
+            ))}
+          </ul>
+        </article>
+        <article className="panel detail-card">
+          <h4>SEO/content opportunities</h4>
+          <p>{pod.seoContentOpportunities}</p>
+        </article>
+        <article className="panel detail-card">
+          <h4>Conversion suggestions</h4>
+          <p>{pod.conversionSuggestions}</p>
+          <p className="status-chip">Analyse</p>
+        </article>
+      </section>
+    </div>
+  );
+}
+
+function CampaignsPage() {
+  return (
+    <div className="page-stack">
+      <header className="section-header panel">
+        <div>
+          <p className="eyebrow">Campaigns</p>
+          <h3>Suggested ad and post campaigns</h3>
+        </div>
+      </header>
+
+      <section className="cards-grid cards-grid-wide">
+        {CAMPAIGN_SUGGESTIONS.map((campaign) => (
+          <article key={campaign.campaignName} className="panel detail-card">
+            <h4>{campaign.campaignName}</h4>
+            <p><strong>Target market:</strong> {campaign.targetMarket}</p>
+            <p><strong>Platform:</strong> {campaign.platform}</p>
+            <p><strong>Hook:</strong> {campaign.hook}</p>
+            <p><strong>Creative direction:</strong> {campaign.creativeDirection}</p>
+            <p><strong>Landing page:</strong> {campaign.landingPage}</p>
+            <p><strong>Suggested budget placeholder:</strong> {campaign.suggestedBudget}</p>
+            <p><strong>Status:</strong> {campaign.status}</p>
           </article>
         ))}
       </section>
@@ -642,33 +995,24 @@ function IdeasPage() {
   );
 }
 
-function ProjectsPage() {
+function CompetitorWatchPage() {
   return (
     <div className="page-stack">
       <header className="section-header panel">
         <div>
-          <p className="eyebrow">Projects</p>
-          <h3>Project cards</h3>
+          <p className="eyebrow">Competitor Watch</p>
+          <h3>Competitor and ad insight cards</h3>
         </div>
       </header>
 
-      <section className="cards-grid">
-        {SAMPLE_PROJECTS.map((project) => (
-          <article key={project.name} className="panel">
-            <p className="eyebrow">{project.category}</p>
-            <h3>{project.name}</h3>
-            <p className="subtle">Status: {project.status}</p>
-            <div
-              className="progress-track"
-              role="progressbar"
-              aria-label={`${project.name} progress`}
-              aria-valuemin={0}
-              aria-valuemax={100}
-              aria-valuenow={project.progress}
-            >
-              <span style={{ width: `${project.progress}%` }} />
-            </div>
-            <p className="subtle">Progress: {project.progress}%</p>
+      <section className="cards-grid cards-grid-wide">
+        {COMPETITOR_WATCH.map((item) => (
+          <article key={item.competitorName} className="panel detail-card">
+            <h4>{item.competitorName}</h4>
+            <p><strong>Observed angle:</strong> {item.observedAngle}</p>
+            <p><strong>Why it may be working:</strong> {item.whyItMayBeWorking}</p>
+            <p><strong>Suggested response:</strong> {item.suggestedResponse}</p>
+            <p><strong>Recommended content/ad idea:</strong> {item.recommendedIdea}</p>
           </article>
         ))}
       </section>
@@ -676,36 +1020,75 @@ function ProjectsPage() {
   );
 }
 
-function TasksPage() {
+function ContentPlannerPage() {
   return (
     <div className="page-stack">
       <header className="section-header panel">
         <div>
-          <p className="eyebrow">Tasks</p>
-          <h3>Execution board</h3>
+          <p className="eyebrow">Content Planner</p>
+          <h3>Weekly content plan per pod</h3>
         </div>
       </header>
 
-      <section className="task-board">
-        {Object.entries(TASK_COLUMNS).map(([title, items]) => (
-          <article key={title} className="panel task-column">
-            <h3>{title}</h3>
-            <ul>
-              {items.map((item) => (
-                <li key={item}>{item}</li>
+      <section className="cards-grid cards-grid-wide">
+        {CONTENT_PLAN.map((item) => (
+          <article key={item.title} className="panel detail-card">
+            <h4>{item.title}</h4>
+            <p><strong>Type:</strong> {item.type}</p>
+            <p><strong>Platform:</strong> {item.platform}</p>
+            <p><strong>Caption draft:</strong> {item.captionDraft}</p>
+            <p><strong>Creative direction:</strong> {item.creativeDirection}</p>
+            <p><strong>Linked landing page:</strong> {item.linkedLandingPage}</p>
+          </article>
+        ))}
+      </section>
+    </div>
+  );
+}
+
+function PricingPage() {
+  return (
+    <main className="landing-shell pricing-shell">
+      <header className="top-nav">
+        <Wordmark />
+        <div className="top-nav-actions">
+          <NavLink className="button button-ghost" to="/">
+            Home
+          </NavLink>
+          <NavLink className="button button-primary" to="/signup">
+            Create Your First Pod
+          </NavLink>
+        </div>
+      </header>
+
+      <section className="hero-block panel">
+        <p className="eyebrow">Pricing</p>
+        <h1>Choose the pod capacity for your brand portfolio.</h1>
+        <p className="lede">Scale from a few focused pod strategies to multi-brand ad intelligence operations.</p>
+      </section>
+
+      <section className="cards-grid cards-grid-wide">
+        {PRICING_TIERS.map((tier) => (
+          <article key={tier.name} className="panel detail-card">
+            <h3>{tier.name}</h3>
+            <ul className="simple-list compact-list">
+              {tier.features.map((feature) => (
+                <li key={feature}>{feature}</li>
               ))}
             </ul>
           </article>
         ))}
       </section>
-    </div>
+
+      <footer className="landing-footer">Dovroyn by Anglow Digital PTY LTD.</footer>
+    </main>
   );
 }
 
 function SettingsPage({ user }) {
   const [settings, setSettings] = useState({
-    workspace_name: 'Dovroyn Workspace',
-    theme: 'Premium Dark',
+    workspace_name: 'Dovroyn Pod Command Centre',
+    theme: 'Dark Olive Luxury',
     timezone: 'UTC',
     email_notifications: true,
     weekly_digest: true,
@@ -730,8 +1113,8 @@ function SettingsPage({ user }) {
         setStatus('Create user_settings table to persist preferences.');
       } else if (data) {
         setSettings({
-          workspace_name: data.workspace_name ?? 'Dovroyn Workspace',
-          theme: data.theme ?? 'Premium Dark',
+          workspace_name: data.workspace_name ?? 'Dovroyn Pod Command Centre',
+          theme: data.theme ?? 'Dark Olive Luxury',
           timezone: data.timezone ?? 'UTC',
           email_notifications: Boolean(data.email_notifications),
           weekly_digest: Boolean(data.weekly_digest),
@@ -768,7 +1151,7 @@ function SettingsPage({ user }) {
       <h3>Settings</h3>
 
       <label>
-        Profile
+        Account
         <input value={user?.email ?? 'Not signed in'} readOnly />
       </label>
 
@@ -786,23 +1169,20 @@ function SettingsPage({ user }) {
           value={settings.theme}
           onChange={(e) => setSettings((prev) => ({ ...prev, theme: e.target.value }))}
         >
-          <option value="Premium Dark">Premium Dark</option>
-          <option value="Midnight Blue">Midnight Blue</option>
-          <option value="Electric Violet">Electric Violet</option>
+          <option value="Dark Olive Luxury">Dark Olive Luxury</option>
+          <option value="Charcoal Gold">Charcoal Gold</option>
+          <option value="Ivory Contrast">Ivory Contrast</option>
         </select>
       </label>
 
       <label>
         Connected account
-        <input
-          value={supabaseConfigured ? 'Supabase connected' : 'Supabase not configured'}
-          readOnly
-        />
+        <input value={supabaseConfigured ? 'Supabase connected' : 'Supabase not configured'} readOnly />
       </label>
 
       <label>
         Domain
-        <input value="dovroyn.com" readOnly />
+        <input value={APP_DOMAIN} readOnly />
       </label>
 
       <label>
