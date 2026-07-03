@@ -212,7 +212,7 @@ function AuthPage({ session, mode = 'login' }) {
   const isSignup = authMode === 'signup';
 
   useEffect(() => {
-    document.title = isSignup ? 'Sign up | Mavora' : 'Log in | Mavora';
+    document.title = authMode === 'signup' ? 'Sign up | Mavora' : 'Log in | Mavora';
   }, [authMode]);
 
   const handleSubmit = async (event) => {

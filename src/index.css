@@ -3,6 +3,7 @@
   font-family: Inter, system-ui, -apple-system, Segoe UI, sans-serif;
   background: #070912;
   color: #eef2ff;
+  --feature-card-min-height: 132px;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -126,7 +127,7 @@ p {
 .feature-card {
   display: grid;
   gap: 0.45rem;
-  min-height: 132px;
+  min-height: var(--feature-card-min-height);
   transition: border-color 0.2s ease, background-color 0.2s ease;
 }
 
