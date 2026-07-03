@@ -25,6 +25,14 @@ const NAV_ITEMS = [
   { to: '/settings', label: 'Settings' },
 ];
 
+function createLocalId() {
+  if (typeof crypto !== 'undefined' && crypto.randomUUID) {
+    return crypto.randomUUID();
+  }
+
+  return `local-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+}
+
 function App() {
   const [session, setSession] = useState(null);
   const [bootstrapping, setBootstrapping] = useState(true);
@@ -162,6 +170,7 @@ function AuthPage({ session }) {
   const [password, setPassword] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
+  const [message, setMessage] = useState('');
 
   useEffect(() => {
     if (session) {
@@ -181,6 +190,7 @@ function AuthPage({ session }) {
 
     setSubmitting(true);
     setError('');
+    setMessage('');
 
     const action =
       mode === 'login'
@@ -198,7 +208,7 @@ function AuthPage({ session }) {
     if (authError) {
       setError(authError.message);
     } else if (mode === 'signup') {
-      setError('Check your inbox to confirm your email, then log in.');
+      setMessage('Check your inbox to confirm your email, then log in.');
       setMode('login');
     } else {
       navigate('/dashboard', { replace: true });
@@ -250,6 +260,7 @@ function AuthPage({ session }) {
           </label>
 
           {error && <p className="form-message">{error}</p>}
+          {message && <p className="subtle">{message}</p>}
 
           <button className="button button-primary" type="submit" disabled={submitting}>
             {submitting ? 'Working...' : submitLabel}
@@ -261,6 +272,7 @@ function AuthPage({ session }) {
           type="button"
           onClick={() => {
             setError('');
+            setMessage('');
             setMode((prev) => (prev === 'login' ? 'signup' : 'login'));
           }}
         >
@@ -394,14 +406,14 @@ function AssistantPage({ user }) {
     if (!content) return;
 
     const userMessage = {
-      id: `local-user-${Date.now()}`,
+      id: createLocalId(),
       role: 'user',
       content,
       created_at: new Date().toISOString(),
     };
 
     const assistantMessage = {
-      id: `local-assistant-${Date.now() + 1}`,
+      id: createLocalId(),
       role: 'assistant',
       content: `Here's a suggested next step for: "${content}".`,
       created_at: new Date().toISOString(),
