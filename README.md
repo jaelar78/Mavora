@@ -1,12 +1,12 @@
 # Dovroyn
 
-Dovroyn is a deploy-ready React + Vite application with:
+Dovroyn is a deploy-ready React + Vite application for AI ad-intelligence pods, with:
 
-- Modern landing page
+- Dedicated pod-first landing and navigation experience
 - Login and signup with Supabase Auth
-- Dashboard, AI assistant, profile, and settings pages
-- Responsive dark UI with app navigation
-- Supabase database integration for metrics, profile, settings, and chat history
+- Pod dashboards, website analysis, campaigns, competitor watch, content planner, and pricing pages
+- Responsive premium dark luxury UI
+- Supabase-backed settings persistence and placeholder states for upcoming integrations
 
 ## Setup
 
@@ -34,11 +34,8 @@ npm run build
 
 ## Supabase tables
 
-Create these tables with `user_id` columns tied to `auth.users.id`:
+Create this table with a `user_id` column tied to `auth.users.id`:
 
-- `dashboard_metrics` (`label`, `value`, `delta`)
-- `assistant_messages` (`role`, `content`, `created_at`)
-- `profiles` (`full_name`, `role`, `bio`, `updated_at`)
-- `user_settings` (`timezone`, `email_notifications`, `weekly_digest`, `updated_at`)
+- `user_settings` (`timezone`, `email_notifications`, `weekly_digest`, `workspace_name`, `theme`, `updated_at`)
 
-Enable row-level security and policies so users can only access their own records.
+Enable row-level security and policies so users can only access their own rows.
