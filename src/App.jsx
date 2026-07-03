@@ -13,15 +13,49 @@ import './index.css';
 import { supabase, supabaseConfigured } from './lib/supabaseClient';
 
 const FALLBACK_METRICS = [
-  { label: 'Active campaigns', value: '4', delta: '+18%' },
-  { label: 'Automations', value: '12', delta: '+7%' },
-  { label: 'Team velocity', value: '92%', delta: '+4%' },
+  { label: 'Ideas in progress', value: '14', delta: '+6 this week' },
+  { label: 'Open tasks', value: '27', delta: '9 due soon' },
+  { label: 'Plans drafted', value: '5', delta: '+2 this month' },
+];
+
+const LANDING_FEATURES = [
+  {
+    title: 'AI Assistant',
+    description: 'Brainstorm, break down work, and turn rough notes into action plans instantly.',
+    to: '/assistant',
+  },
+  {
+    title: 'Idea Tracker',
+    description: 'Capture opportunities, prioritise them, and keep momentum across every project.',
+    to: '/ideas',
+  },
+  {
+    title: 'Business Dashboard',
+    description: 'Track the numbers and signals that matter without losing strategic context.',
+    to: '/dashboard',
+  },
+  {
+    title: 'Task Planning',
+    description: 'Convert plans into clear tasks with owners, progress updates, and deadlines.',
+    to: '/tasks',
+  },
+  {
+    title: 'Conversation Memory',
+    description: 'Keep AI conversations and decisions searchable so every session builds forward.',
+    to: '/assistant',
+  },
+  {
+    title: 'Supabase Login & Sync',
+    description: 'Secure sign-in and synced workspace data backed by Supabase authentication.',
+    to: '/login',
+  },
 ];
 
 const NAV_ITEMS = [
   { to: '/dashboard', label: 'Dashboard' },
   { to: '/assistant', label: 'AI Assistant' },
-  { to: '/profile', label: 'Profile' },
+  { to: '/ideas', label: 'Ideas' },
+  { to: '/tasks', label: 'Tasks' },
   { to: '/settings', label: 'Settings' },
 ];
 
@@ -72,7 +106,8 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<LandingPage session={session} />} />
-        <Route path="/auth" element={<AuthPage session={session} />} />
+        <Route path="/login" element={<AuthPage session={session} mode="login" />} />
+        <Route path="/signup" element={<AuthPage session={session} mode="signup" />} />
 
         <Route element={<ProtectedRoute session={session} />}>
           <Route
@@ -88,15 +123,13 @@ function App() {
           >
             <Route path="/dashboard" element={<DashboardPage user={session?.user} />} />
             <Route path="/assistant" element={<AssistantPage user={session?.user} />} />
-            <Route path="/profile" element={<ProfilePage user={session?.user} />} />
+            <Route path="/ideas" element={<IdeasPage user={session?.user} />} />
+            <Route path="/tasks" element={<TasksPage user={session?.user} />} />
             <Route path="/settings" element={<SettingsPage user={session?.user} />} />
           </Route>
         </Route>
 
-        <Route
-          path="*"
-          element={<Navigate to={session ? '/dashboard' : '/'} replace />}
-        />
+        <Route path="*" element={<Navigate to={session ? '/dashboard' : '/'} replace />} />
       </Routes>
     </BrowserRouter>
   );
@@ -105,12 +138,8 @@ function App() {
 function ProtectedRoute({ session }) {
   const location = useLocation();
 
-  if (!supabaseConfigured) {
-    return <Navigate to="/auth" replace state={{ from: location }} />;
-  }
-
-  if (!session) {
-    return <Navigate to="/auth" replace state={{ from: location }} />;
+  if (!supabaseConfigured || !session) {
+    return <Navigate to="/login" replace state={{ from: location }} />;
   }
 
   return <Outlet />;
@@ -122,49 +151,50 @@ function LandingPage({ session }) {
       <header className="top-nav">
         <span className="brand">Mavora</span>
         <div className="top-nav-actions">
-          <NavLink className="button button-ghost" to="/auth">
+          <NavLink className="button button-ghost" to="/login">
             Login
           </NavLink>
-          <NavLink className="button button-primary" to={session ? '/dashboard' : '/auth'}>
-            {session ? 'Go to dashboard' : 'Get started'}
+          <NavLink className="button button-primary" to={session ? '/dashboard' : '/signup'}>
+            Get started
           </NavLink>
         </div>
       </header>
 
       <section className="hero-grid">
         <div>
-          <p className="eyebrow">Deploy-ready workspace</p>
-          <h1>Ship ideas faster with your AI-powered operations hub.</h1>
+          <p className="eyebrow">AI operations workspace</p>
+          <h1>Turn scattered ideas into organised action.</h1>
           <p className="lede">
-            Mavora combines planning, execution, and AI collaboration in one responsive dark
-            interface backed by Supabase auth and real-time data.
+            Mavora helps you plan, track, and build your ideas with AI support, dashboards, and
+            project memory in one workspace.
           </p>
           <div className="hero-actions">
-            <NavLink className="button button-primary" to={session ? '/assistant' : '/auth'}>
-              Open AI assistant
+            <NavLink className="button button-primary" to="/signup">
+              Get started
             </NavLink>
-            <NavLink className="button button-ghost" to={session ? '/dashboard' : '/auth'}>
-              Explore dashboard
+            <NavLink className="button button-ghost" to="/assistant">
+              Open AI assistant
             </NavLink>
           </div>
         </div>
-        <aside className="glass-panel">
-          <h2>Everything included</h2>
-          <ul>
-            <li>Supabase authentication with session persistence</li>
-            <li>Dashboard and profile data integration</li>
-            <li>AI assistant conversation storage</li>
-            <li>Mobile-first responsive navigation</li>
-          </ul>
-        </aside>
+
+        <div className="feature-grid">
+          {LANDING_FEATURES.map((feature) => (
+            <NavLink key={feature.title} className="glass-panel feature-card" to={feature.to}>
+              <h2>{feature.title}</h2>
+              <p>{feature.description}</p>
+            </NavLink>
+          ))}
+        </div>
       </section>
+
+      <footer className="landing-footer">Mavora by Anglow Digital PTY LTD</footer>
     </main>
   );
 }
 
-function AuthPage({ session }) {
+function AuthPage({ session, mode }) {
   const navigate = useNavigate();
-  const [mode, setMode] = useState('login');
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -178,7 +208,7 @@ function AuthPage({ session }) {
     }
   }, [navigate, session]);
 
-  const submitLabel = mode === 'login' ? 'Log in' : 'Create account';
+  const isSignup = mode === 'signup';
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -192,24 +222,23 @@ function AuthPage({ session }) {
     setError('');
     setMessage('');
 
-    const action =
-      mode === 'login'
-        ? supabase.auth.signInWithPassword({ email, password })
-        : supabase.auth.signUp({
-            email,
-            password,
-            options: {
-              data: { full_name: name.trim() },
-            },
-          });
+    const action = isSignup
+      ? supabase.auth.signUp({
+          email,
+          password,
+          options: {
+            data: { full_name: name.trim() },
+          },
+        })
+      : supabase.auth.signInWithPassword({ email, password });
 
     const { error: authError } = await action;
 
     if (authError) {
       setError(authError.message);
-    } else if (mode === 'signup') {
-      setMessage('Check your inbox to confirm your email, then log in.');
-      setMode('login');
+    } else if (isSignup) {
+      setMessage('Account created. Check your email to confirm, then log in.');
+      navigate('/login', { replace: true });
     } else {
       navigate('/dashboard', { replace: true });
     }
@@ -220,8 +249,8 @@ function AuthPage({ session }) {
   return (
     <main className="auth-shell">
       <div className="auth-card">
-        <h1>{mode === 'login' ? 'Welcome back' : 'Create your Mavora account'}</h1>
-        <p>Secure access powered by Supabase authentication.</p>
+        <h1>{isSignup ? 'Create your Mavora account' : 'Welcome back to Mavora'}</h1>
+        <p>Secure login and synced workspace data powered by Supabase.</p>
 
         {!supabaseConfigured && (
           <div className="alert">
@@ -231,7 +260,7 @@ function AuthPage({ session }) {
         )}
 
         <form onSubmit={handleSubmit} className="stack">
-          {mode === 'signup' && (
+          {isSignup && (
             <label>
               Name
               <input value={name} onChange={(e) => setName(e.target.value)} required />
@@ -240,12 +269,7 @@ function AuthPage({ session }) {
 
           <label>
             Email
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
+            <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
           </label>
 
           <label>
@@ -263,21 +287,13 @@ function AuthPage({ session }) {
           {message && <p className="subtle">{message}</p>}
 
           <button className="button button-primary" type="submit" disabled={submitting}>
-            {submitting ? 'Working...' : submitLabel}
+            {submitting ? 'Working...' : isSignup ? 'Create account' : 'Log in'}
           </button>
         </form>
 
-        <button
-          className="button button-link"
-          type="button"
-          onClick={() => {
-            setError('');
-            setMessage('');
-            setMode((prev) => (prev === 'login' ? 'signup' : 'login'));
-          }}
-        >
-          {mode === 'login' ? 'Need an account? Sign up' : 'Already have an account? Log in'}
-        </button>
+        <NavLink className="button button-link" to={isSignup ? '/login' : '/signup'}>
+          {isSignup ? 'Already have an account? Log in' : 'Need an account? Sign up'}
+        </NavLink>
       </div>
     </main>
   );
@@ -314,14 +330,14 @@ function AppLayout({ user, onSignOut }) {
 
 function DashboardPage({ user }) {
   const [metrics, setMetrics] = useState(FALLBACK_METRICS);
-  const [status, setStatus] = useState('Loading metrics...');
+  const [status, setStatus] = useState('Loading dashboard...');
 
   useEffect(() => {
     let ignore = false;
 
     const load = async () => {
       if (!supabaseConfigured || !user?.id) {
-        setStatus('Showing demo metrics until Supabase is configured.');
+        setStatus('Showing demo metrics until Supabase is connected.');
         return;
       }
 
@@ -334,12 +350,12 @@ function DashboardPage({ user }) {
       if (ignore) return;
 
       if (error) {
-        setStatus('Using fallback metrics. Create dashboard_metrics to customize this view.');
+        setStatus('Using fallback metrics. Create dashboard_metrics to customise this view.');
       } else if (data?.length) {
         setMetrics(data);
-        setStatus('Connected to Supabase database.');
+        setStatus('Connected to Supabase dashboard metrics.');
       } else {
-        setStatus('No metrics yet. Insert rows into dashboard_metrics to populate this view.');
+        setStatus('No metrics yet. Add rows in dashboard_metrics to populate this dashboard.');
       }
     };
 
@@ -415,7 +431,7 @@ function AssistantPage({ user }) {
     const assistantMessage = {
       id: createLocalId(),
       role: 'assistant',
-      content: `Here's a suggested next step for: "${content}".`,
+      content: `Mavora suggests this next action: break "${content}" into milestones and assign a first task today.`,
       created_at: new Date().toISOString(),
     };
 
@@ -432,7 +448,7 @@ function AssistantPage({ user }) {
 
       const { error } = await supabase.from('assistant_messages').insert(payload);
       if (error) {
-        setStatus('Messages shown locally. Create assistant_messages table to persist history.');
+        setStatus('Messages shown locally. Create assistant_messages to persist history.');
       } else {
         setStatus('Conversation synced to Supabase.');
       }
@@ -447,7 +463,7 @@ function AssistantPage({ user }) {
     <div className="page-stack">
       <div className="chat-window">
         {messages.length === 0 ? (
-          <p className="subtle">Ask Mavora AI to outline your next launch, campaign, or sprint.</p>
+          <p className="subtle">Ask Mavora AI to turn an idea into a practical action plan.</p>
         ) : (
           messages.map((message) => (
             <article key={message.id} className={`chat-bubble ${message.role}`}>
@@ -473,88 +489,115 @@ function AssistantPage({ user }) {
   );
 }
 
-function ProfilePage({ user }) {
-  const [form, setForm] = useState({ full_name: '', role: '', bio: '' });
+function IdeasPage({ user }) {
+  const [ideas, setIdeas] = useState([
+    { id: 'local-1', title: 'Launch onboarding template library', stage: 'Planning' },
+    { id: 'local-2', title: 'Create AI-powered weekly review workflow', stage: 'Research' },
+  ]);
   const [status, setStatus] = useState('');
 
   useEffect(() => {
     let ignore = false;
 
-    const loadProfile = async () => {
-      if (!supabaseConfigured || !user?.id) return;
+    const loadIdeas = async () => {
+      if (!supabaseConfigured || !user?.id) {
+        setStatus('Showing local ideas until Supabase is connected.');
+        return;
+      }
 
       const { data, error } = await supabase
-        .from('profiles')
-        .select('full_name, role, bio')
+        .from('ideas')
+        .select('id, title, stage')
         .eq('user_id', user.id)
-        .maybeSingle();
+        .order('created_at', { ascending: false });
 
       if (ignore) return;
 
       if (error) {
-        setStatus('Create profiles table to load profile data from Supabase.');
-      } else if (data) {
-        setForm({
-          full_name: data.full_name ?? '',
-          role: data.role ?? '',
-          bio: data.bio ?? '',
-        });
+        setStatus('Create an ideas table in Supabase to sync this view.');
+      } else if (data?.length) {
+        setIdeas(data);
+        setStatus('Ideas synced from Supabase.');
+      } else {
+        setStatus('No ideas yet. Add rows in your ideas table to populate this page.');
       }
     };
 
-    loadProfile();
+    loadIdeas();
 
     return () => {
       ignore = true;
     };
   }, [user?.id]);
 
-  const saveProfile = async (event) => {
-    event.preventDefault();
+  return (
+    <section className="page-stack">
+      <p className="subtle">{status}</p>
+      <div className="card-list">
+        {ideas.map((idea) => (
+          <article key={idea.id} className="glass-panel">
+            <p className="subtle">{idea.stage}</p>
+            <h3>{idea.title}</h3>
+          </article>
+        ))}
+      </div>
+    </section>
+  );
+}
 
-    if (!supabaseConfigured || !user?.id) {
-      setStatus('Configure Supabase to save profile changes.');
-      return;
-    }
+function TasksPage({ user }) {
+  const [tasks, setTasks] = useState([
+    { id: 'task-1', title: 'Draft business plan milestones', state: 'In progress' },
+    { id: 'task-2', title: 'Review AI assistant prompts', state: 'Next up' },
+  ]);
+  const [status, setStatus] = useState('');
 
-    const { error } = await supabase.from('profiles').upsert({
-      user_id: user.id,
-      ...form,
-      updated_at: new Date().toISOString(),
-    });
+  useEffect(() => {
+    let ignore = false;
 
-    setStatus(error ? error.message : 'Profile saved.');
-  };
+    const loadTasks = async () => {
+      if (!supabaseConfigured || !user?.id) {
+        setStatus('Showing local tasks until Supabase is connected.');
+        return;
+      }
+
+      const { data, error } = await supabase
+        .from('tasks')
+        .select('id, title, state')
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: false });
+
+      if (ignore) return;
+
+      if (error) {
+        setStatus('Create a tasks table in Supabase to sync this view.');
+      } else if (data?.length) {
+        setTasks(data);
+        setStatus('Tasks synced from Supabase.');
+      } else {
+        setStatus('No tasks yet. Add rows in your tasks table to populate this page.');
+      }
+    };
+
+    loadTasks();
+
+    return () => {
+      ignore = true;
+    };
+  }, [user?.id]);
 
   return (
-    <form onSubmit={saveProfile} className="card-form">
-      <label>
-        Full name
-        <input
-          value={form.full_name}
-          onChange={(e) => setForm((prev) => ({ ...prev, full_name: e.target.value }))}
-        />
-      </label>
-      <label>
-        Role
-        <input
-          value={form.role}
-          onChange={(e) => setForm((prev) => ({ ...prev, role: e.target.value }))}
-        />
-      </label>
-      <label>
-        Bio
-        <textarea
-          rows={4}
-          value={form.bio}
-          onChange={(e) => setForm((prev) => ({ ...prev, bio: e.target.value }))}
-        />
-      </label>
-      <button className="button button-primary" type="submit">
-        Save profile
-      </button>
-      {status && <p className="subtle">{status}</p>}
-    </form>
+    <section className="page-stack">
+      <p className="subtle">{status}</p>
+      <div className="card-list">
+        {tasks.map((task) => (
+          <article key={task.id} className="glass-panel">
+            <p className="subtle">{task.state}</p>
+            <h3>{task.title}</h3>
+          </article>
+        ))}
+      </div>
+    </section>
   );
 }
 

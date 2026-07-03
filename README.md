@@ -1,12 +1,25 @@
 # Mavora
 
-Mavora is a deploy-ready React + Vite application with:
+Mavora is an AI-powered operations workspace for turning ideas into organised action.
 
-- Modern landing page
-- Login and signup with Supabase Auth
-- Dashboard, AI assistant, profile, and settings pages
-- Responsive dark UI with app navigation
-- Supabase database integration for metrics, profile, settings, and chat history
+## What the app includes
+
+- Branded Mavora homepage with product-focused messaging
+- Supabase authentication routes (`/login` and `/signup`)
+- Workspace routes for dashboard, assistant, ideas, tasks, and settings
+- Responsive dark premium interface with blue/purple/teal gradient styling
+- Supabase-backed sync for dashboard metrics, AI messages, and settings
+
+## Routes
+
+- `/`
+- `/login`
+- `/signup`
+- `/dashboard`
+- `/assistant`
+- `/ideas`
+- `/tasks`
+- `/settings`
 
 ## Setup
 
@@ -38,7 +51,8 @@ Create these tables with `user_id` columns tied to `auth.users.id`:
 
 - `dashboard_metrics` (`label`, `value`, `delta`)
 - `assistant_messages` (`role`, `content`, `created_at`)
-- `profiles` (`full_name`, `role`, `bio`, `updated_at`)
+- `ideas` (`title`, `stage`, `created_at`)
+- `tasks` (`title`, `state`, `created_at`)
 - `user_settings` (`timezone`, `email_notifications`, `weekly_digest`, `updated_at`)
 
 Enable row-level security and policies so users can only access their own records.

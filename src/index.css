@@ -43,9 +43,9 @@ select {
 }
 
 .landing-shell {
-  width: min(1080px, calc(100% - 2rem));
+  width: min(1120px, calc(100% - 2rem));
   margin: 0 auto;
-  padding: 2rem 0 4rem;
+  padding: 1.4rem 0 2.5rem;
 }
 
 .top-nav {
@@ -69,10 +69,11 @@ select {
 }
 
 .hero-grid {
-  margin-top: 4rem;
+  margin-top: 2.2rem;
   display: grid;
-  gap: 1.25rem;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.2rem;
+  align-items: start;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
 }
 
 .eyebrow {
@@ -86,7 +87,7 @@ select {
 h1 {
   font-size: clamp(2rem, 5vw, 4rem);
   margin: 0.75rem 0;
-  line-height: 1;
+  line-height: 1.05;
 }
 
 h2,
@@ -98,8 +99,14 @@ p {
 .lede {
   color: #c8d0e5;
   line-height: 1.7;
-  max-width: 45ch;
+  max-width: 52ch;
   margin-bottom: 1.5rem;
+}
+
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.8rem;
 }
 
 .glass-panel,
@@ -113,23 +120,48 @@ p {
 }
 
 .glass-panel {
-  padding: 1.5rem;
+  padding: 1.1rem;
 }
 
-.glass-panel ul {
-  margin: 1rem 0 0;
-  padding-left: 1.1rem;
+.feature-card {
+  display: grid;
+  gap: 0.45rem;
+  min-height: 132px;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.feature-card:hover,
+.feature-card:focus-visible {
+  border-color: rgba(143, 123, 255, 0.7);
+  background: rgba(143, 123, 255, 0.14);
+}
+
+.feature-card h2 {
+  font-size: 1.02rem;
+}
+
+.feature-card p {
   color: #c8d0e5;
-  line-height: 1.7;
+  font-size: 0.92rem;
+  line-height: 1.5;
+}
+
+.landing-footer {
+  margin-top: 2rem;
+  color: #aeb9da;
+  font-size: 0.9rem;
 }
 
 .button {
   border: 0;
   border-radius: 999px;
-  min-height: 42px;
-  padding: 0 1rem;
+  min-height: 46px;
+  padding: 0 1.15rem;
   font-weight: 700;
   cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .button-primary {
@@ -147,6 +179,7 @@ p {
   color: #a7b8ff;
   padding: 0;
   margin-top: 0.75rem;
+  min-height: auto;
 }
 
 .auth-card {
@@ -247,14 +280,16 @@ select {
   gap: 1rem;
 }
 
-.metrics-grid {
+.metrics-grid,
+.card-list {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 1rem;
 }
 
-.metrics-grid .glass-panel h3 {
-  font-size: 1.75rem;
+.metrics-grid .glass-panel h3,
+.card-list .glass-panel h3 {
+  font-size: 1.35rem;
   margin-top: 0.4rem;
 }
 
@@ -303,7 +338,12 @@ select {
 
 @media (max-width: 900px) {
   .hero-grid,
-  .metrics-grid {
+  .metrics-grid,
+  .card-list {
+    grid-template-columns: 1fr;
+  }
+
+  .feature-grid {
     grid-template-columns: 1fr;
   }
 
@@ -325,5 +365,48 @@ select {
 
   .chat-form {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .landing-shell {
+    width: calc(100% - 1.2rem);
+    padding-top: 1rem;
+    padding-bottom: 2rem;
+  }
+
+  .top-nav {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .top-nav-actions,
+  .hero-actions {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .button {
+    width: 100%;
+    min-height: 50px;
+  }
+
+  .landing-footer {
+    margin-top: 1.4rem;
+    text-align: center;
+  }
+
+  .content,
+  .sidebar {
+    padding: 1rem;
+  }
+
+  .sidebar nav {
+    grid-template-columns: 1fr;
+  }
+
+  .auth-card {
+    padding: 1.4rem;
   }
 }
