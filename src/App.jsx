@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   BrowserRouter,
   Navigate,
@@ -120,7 +120,13 @@ function App() {
   }, []);
 
   if (bootstrapping) {
-    return <div className="center-screen">Loading {APP_NAME}...</div>;
+    return (
+      <div className="center-screen" aria-busy="true">
+        <span role="status" aria-live="polite">
+          Loading {APP_NAME}...
+        </span>
+      </div>
+    );
   }
 
   return (
@@ -201,7 +207,7 @@ function LandingPage({ session }) {
       </header>
 
       <section className="hero-block panel">
-        <p className="eyebrow">AI operations workspace · {APP_DOMAIN}</p>
+        <p className="eyebrow">AI operations workspace — {APP_DOMAIN}</p>
         <h1>Turn scattered ideas into organised action.</h1>
         <p className="lede">
           Dovroyn helps you plan, track, and build your ideas with AI support, project memory,
@@ -211,10 +217,10 @@ function LandingPage({ session }) {
           <NavLink className="button button-primary" to="/signup">
             Get started
           </NavLink>
-          <NavLink className="button button-ghost" to="/assistant">
+          <NavLink className="button button-ghost" to={session ? '/assistant' : '/login'}>
             Open AI assistant
           </NavLink>
-          <NavLink className="button button-ghost" to="/dashboard">
+          <NavLink className="button button-ghost" to={session ? '/dashboard' : '/login'}>
             Explore dashboard
           </NavLink>
         </div>
@@ -331,7 +337,7 @@ function AuthPage({ session, defaultMode = 'login' }) {
             />
           </label>
 
-          {error && <p className="form-message">{error}</p>}
+          {error && <p className="form-error">{error}</p>}
           {message && <p className="subtle">{message}</p>}
 
           <button className="button button-primary" type="submit" disabled={submitting}>
@@ -347,7 +353,7 @@ function AuthPage({ session, defaultMode = 'login' }) {
             setMessage('');
             const nextMode = mode === 'login' ? 'signup' : 'login';
             setMode(nextMode);
-            navigate(nextMode === 'login' ? '/login' : '/signup');
+            navigate(`/${nextMode}`);
           }}
         >
           {mode === 'login' ? 'Need an account? Sign up' : 'Already have an account? Log in'}
@@ -652,7 +658,14 @@ function ProjectsPage() {
             <p className="eyebrow">{project.category}</p>
             <h3>{project.name}</h3>
             <p className="subtle">Status: {project.status}</p>
-            <div className="progress-track" aria-label={`${project.name} progress`}>
+            <div
+              className="progress-track"
+              role="progressbar"
+              aria-label={`${project.name} progress`}
+              aria-valuemin={0}
+              aria-valuemax={100}
+              aria-valuenow={project.progress}
+            >
               <span style={{ width: `${project.progress}%` }} />
             </div>
             <p className="subtle">Progress: {project.progress}%</p>
@@ -664,8 +677,6 @@ function ProjectsPage() {
 }
 
 function TasksPage() {
-  const columns = useMemo(() => Object.entries(TASK_COLUMNS), []);
-
   return (
     <div className="page-stack">
       <header className="section-header panel">
@@ -676,7 +687,7 @@ function TasksPage() {
       </header>
 
       <section className="task-board">
-        {columns.map(([title, items]) => (
+        {Object.entries(TASK_COLUMNS).map(([title, items]) => (
           <article key={title} className="panel task-column">
             <h3>{title}</h3>
             <ul>
@@ -758,7 +769,7 @@ function SettingsPage({ user }) {
 
       <label>
         Profile
-        <input value={user?.email ?? 'Not signed in'} disabled />
+        <input value={user?.email ?? 'Not signed in'} readOnly />
       </label>
 
       <label>
@@ -783,12 +794,15 @@ function SettingsPage({ user }) {
 
       <label>
         Connected account
-        <input value={supabaseConfigured ? 'Supabase connected' : 'Supabase not configured'} disabled />
+        <input
+          value={supabaseConfigured ? 'Supabase connected' : 'Supabase not configured'}
+          readOnly
+        />
       </label>
 
       <label>
         Domain
-        <input value="dovroyn.com" disabled />
+        <input value="dovroyn.com" readOnly />
       </label>
 
       <label>
