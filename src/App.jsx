@@ -819,7 +819,7 @@ function PodDashboardPage() {
         <div>
           <p className="eyebrow">Pod Dashboard</p>
           <h3>{pod.brandName}</h3>
-          <p className="subtle">Dedicated AI assistant for one brand AI brain.</p>
+          <p className="subtle">Dedicated AI analysis hub for this single brand.</p>
         </div>
         <span className="status-tag">{pod.status}</span>
       </header>
