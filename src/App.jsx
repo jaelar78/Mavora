@@ -425,7 +425,7 @@ function LandingPage({ session }) {
           </div>
           <aside
             className="hero-preview"
-            aria-label="Preview of dashboard metrics including portfolio pods, campaign readiness, and performance data"
+            aria-label="Dashboard metrics preview"
           >
             <article className="preview-card">
               <p className="preview-label">Portfolio pods</p>
