@@ -172,7 +172,7 @@ function LandingPage({ session }) {
             <NavLink className="button button-primary" to="/signup">
               Get started
             </NavLink>
-            <NavLink className="button button-ghost" to="/assistant">
+            <NavLink className="button button-ghost" to={session ? '/assistant' : '/signup'}>
               Open AI assistant
             </NavLink>
           </div>
@@ -193,7 +193,7 @@ function LandingPage({ session }) {
   );
 }
 
-function AuthPage({ session, mode }) {
+function AuthPage({ session, mode = 'login' }) {
   const navigate = useNavigate();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -209,6 +209,10 @@ function AuthPage({ session, mode }) {
   }, [navigate, session]);
 
   const isSignup = mode === 'signup';
+
+  useEffect(() => {
+    document.title = isSignup ? 'Sign up | Mavora' : 'Log in | Mavora';
+  }, [isSignup]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
