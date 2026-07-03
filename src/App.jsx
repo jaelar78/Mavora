@@ -1118,7 +1118,7 @@ function PricingPage() {
 function SettingsPage({ user }) {
   const [settings, setSettings] = useState({
     workspace_name: 'Dovroyn Pod Command Centre',
-    theme: 'Editorial Ivory & Navy',
+    theme: 'Editorial Ivory and Navy',
     timezone: 'UTC',
     email_notifications: true,
     weekly_digest: true,
@@ -1144,7 +1144,7 @@ function SettingsPage({ user }) {
       } else if (data) {
         setSettings({
           workspace_name: data.workspace_name ?? 'Dovroyn Pod Command Centre',
-          theme: data.theme ?? 'Editorial Ivory & Navy',
+          theme: data.theme ?? 'Editorial Ivory and Navy',
           timezone: data.timezone ?? 'UTC',
           email_notifications: Boolean(data.email_notifications),
           weekly_digest: Boolean(data.weekly_digest),
@@ -1199,7 +1199,7 @@ function SettingsPage({ user }) {
           value={settings.theme}
           onChange={(e) => setSettings((prev) => ({ ...prev, theme: e.target.value }))}
         >
-          <option value="Editorial Ivory & Navy">Editorial Ivory & Navy</option>
+          <option value="Editorial Ivory and Navy">Editorial Ivory and Navy</option>
           <option value="Antique Gold Luxe">Antique Gold Luxe</option>
           <option value="Soft Cream Contrast">Soft Cream Contrast</option>
         </select>
