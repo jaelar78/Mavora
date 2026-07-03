@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Analytics } from '@vercel/analytics/react';
 import {
   BrowserRouter,
   Navigate,
@@ -131,6 +132,7 @@ function App() {
 
         <Route path="*" element={<Navigate to={session ? '/dashboard' : '/'} replace />} />
       </Routes>
+      <Analytics />
     </BrowserRouter>
   );
 }
