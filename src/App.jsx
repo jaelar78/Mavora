@@ -350,7 +350,7 @@ function DashboardPage({ user }) {
       if (ignore) return;
 
       if (error) {
-        setStatus('Using fallback metrics. Create dashboard_metrics to customise this view.');
+        setStatus('Using fallback metrics. Create dashboard_metrics to customize this view.');
       } else if (data?.length) {
         setMetrics(data);
         setStatus('Connected to Supabase dashboard metrics.');
@@ -491,8 +491,8 @@ function AssistantPage({ user }) {
 
 function IdeasPage({ user }) {
   const [ideas, setIdeas] = useState([
-    { id: 'local-1', title: 'Launch onboarding template library', stage: 'Planning' },
-    { id: 'local-2', title: 'Create AI-powered weekly review workflow', stage: 'Research' },
+    { id: 'demo-idea-1', title: 'Launch onboarding template library', stage: 'Planning' },
+    { id: 'demo-idea-2', title: 'Create AI-powered weekly review workflow', stage: 'Research' },
   ]);
   const [status, setStatus] = useState('');
 
@@ -547,8 +547,8 @@ function IdeasPage({ user }) {
 
 function TasksPage({ user }) {
   const [tasks, setTasks] = useState([
-    { id: 'task-1', title: 'Draft business plan milestones', state: 'In progress' },
-    { id: 'task-2', title: 'Review AI assistant prompts', state: 'Next up' },
+    { id: 'demo-task-1', title: 'Draft business plan milestones', state: 'In progress' },
+    { id: 'demo-task-2', title: 'Review AI assistant prompts', state: 'Next up' },
   ]);
   const [status, setStatus] = useState('');
 
