@@ -423,7 +423,10 @@ function LandingPage({ session }) {
               </NavLink>
             </div>
           </div>
-          <aside className="hero-preview" aria-label="Dashboard preview">
+          <aside
+            className="hero-preview"
+            aria-label="Preview of dashboard metrics including portfolio pods, campaign readiness, and performance data"
+          >
             <article className="preview-card">
               <p className="preview-label">Portfolio pods</p>
               <p className="preview-metric">12 Active</p>
