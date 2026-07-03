@@ -87,6 +87,13 @@ p {
   box-shadow: 0 0 20px rgba(22, 211, 255, 0.32);
 }
 
+.logo-orbit {
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 999px;
+  border: 2px solid #041421;
+}
+
 .top-nav-actions,
 .hero-actions {
   display: flex;

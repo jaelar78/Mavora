@@ -14,6 +14,7 @@ import './index.css';
 import { supabase, supabaseConfigured } from './lib/supabaseClient';
 
 const APP_NAME = 'Dovroyn';
+const APP_DOMAIN = 'dovroyn.com';
 
 const LANDING_FEATURES = [
   {
@@ -177,7 +178,7 @@ function Wordmark() {
   return (
     <span className="logo-wordmark" aria-label="Dovroyn logo">
       <span className="logo-mark" aria-hidden="true">
-        ◉
+        <span className="logo-orbit" />
       </span>
       <span>DOVROYN</span>
     </span>
@@ -200,7 +201,7 @@ function LandingPage({ session }) {
       </header>
 
       <section className="hero-block panel">
-        <p className="eyebrow">AI operations workspace · dovroyn.com</p>
+        <p className="eyebrow">AI operations workspace · {APP_DOMAIN}</p>
         <h1>Turn scattered ideas into organised action.</h1>
         <p className="lede">
           Dovroyn helps you plan, track, and build your ideas with AI support, project memory,
