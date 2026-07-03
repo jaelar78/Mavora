@@ -17,31 +17,32 @@ import { supabase, supabaseConfigured } from './lib/supabaseClient';
 const APP_NAME = 'Dovroyn';
 const APP_DOMAIN = 'dovroyn.com';
 
-const LANDING_FEATURES = [
+const LANDING_SECTIONS = [
   {
-    title: 'Dedicated AI Pods',
-    description: 'One pod per brand, business, website, offer, or project so every strategy stays focused.',
+    heading: 'From scattered thoughts to structured action.',
+    body: 'Capture ideas before they disappear, organise them into pods, and turn them into clear next steps.',
   },
   {
-    title: 'Website Intelligence',
-    description: 'Pods analyse site structure, aesthetic, product focus, audience signals, and promotion angles.',
+    heading: 'Built for people building more than one thing.',
+    body: 'Track brands, apps, websites, offers, content ideas, business moves, and projects in one calm workspace.',
   },
   {
-    title: 'Campaign Guidance',
-    description: 'Get recommended hooks, creative direction, landing pages, and budget placeholders.',
+    heading: 'Your next move, always visible.',
+    body: 'See what matters now, what is waiting, and what needs action next.',
   },
   {
-    title: 'Competitor Watch',
-    description: 'Track observed ad angles and get suggested responses without faking live integrations.',
+    heading: 'One pod for every idea.',
+    body: 'Create a dedicated space for each brand, app, website, offer, or project so nothing gets buried in messy notes or forgotten tabs.',
   },
-  {
-    title: 'Content Planning',
-    description: 'Generate weekly post and ad ideas linked to pod goals and target market priorities.',
-  },
-  {
-    title: 'Secure Pod Access',
-    description: 'Authentication and workspace continuity are powered by Supabase for each account.',
-  },
+];
+
+const DASHBOARD_PREVIEW_CARDS = [
+  { title: 'Active pods', metric: '12 Active', description: 'Ideas, brands, and projects currently being organised.' },
+  { title: 'Next moves', metric: '6 Ready', description: 'Clear actions waiting for your attention.' },
+  { title: 'Project momentum', metric: '4 Moving', description: 'Priority projects with progress this week.' },
+  { title: 'Ideas waiting', metric: '18 Captured', description: 'Scattered thoughts saved before they disappear.' },
+  { title: 'Business opportunities', metric: '5 Found', description: 'Potential offers, products, or growth moves to review.' },
+  { title: 'Tasks due', metric: '9 Open', description: 'Important actions that need a decision.' },
 ];
 
 const SIDEBAR_NAV_ITEMS = [
@@ -187,7 +188,7 @@ const COMPETITOR_WATCH = [
     observedAngle: 'Ingredient transparency as premium proof',
     whyItMayBeWorking: 'Builds trust fast and handles objections in-feed',
     suggestedResponse: 'Publish ingredient comparison cards and testimonial overlays',
-    recommendedIdea: 'Ad idea: “Know what your serum actually does.”',
+    recommendedIdea: 'Ad idea: "Know what your serum actually does."',
   },
   {
     competitorName: 'Atlas Strength Club',
@@ -219,7 +220,7 @@ const CONTENT_PLAN = [
     title: 'Friday objection post',
     type: 'Post idea',
     platform: 'TikTok',
-    captionDraft: '“I don’t have time” is exactly why this routine works.',
+    captionDraft: '"I don\'t have time" is exactly why this routine works.',
     creativeDirection: 'Point-of-view style with text-first storytelling',
     linkedLandingPage: '/quiz/skin-routine',
   },
@@ -380,82 +381,113 @@ function Wordmark() {
 }
 
 function LandingPage({ session }) {
+  const [waitlistEmail, setWaitlistEmail] = useState('');
+  const [waitlistStatus, setWaitlistStatus] = useState('');
+
+  const handleWaitlist = (e) => {
+    e.preventDefault();
+    if (!waitlistEmail.trim()) return;
+    setWaitlistStatus('Thank you! You will receive early access updates soon.');
+    setWaitlistEmail('');
+  };
+
   return (
     <main className="landing-shell">
+      {/* Header - clean, calm, premium */}
       <header className="top-nav">
         <Wordmark />
-        <div className="top-nav-actions">
-          <NavLink className="button button-ghost" to="/pricing">
+        <nav className="top-nav-links">
+          <NavLink className="nav-link-subtle" to="/pricing">
             Pricing
           </NavLink>
-          <NavLink className="button button-ghost" to="/login">
+          <NavLink className="nav-link-subtle" to="/login">
             Login
           </NavLink>
-          <NavLink className="button button-primary" to={session ? '/pods/new' : '/signup'}>
-            Create Your First Pod
-          </NavLink>
-        </div>
+        </nav>
       </header>
 
+      {/* Hero Section */}
       <section className="hero-block panel">
-        <p className="eyebrow">Luxury AI operations suite — {APP_DOMAIN}</p>
+        <p className="eyebrow">Luxury AI Command Centre</p>
         <div className="divider-line" />
-        <div className="hero-layout">
-          <div className="hero-copy">
-            <h1>
-              Refined <span className="hero-emphasis">intelligence</span> for every brand in your
-              portfolio.
-            </h1>
-            <h2 className="hero-supporting">
-              A polished command centre for AI pods, campaign direction, and growth decisions.
-            </h2>
-            <p className="lede">
-              Dovroyn gives each brand its own AI pod to read your positioning, surface high-value
-              opportunities, and present the next move in a calm executive dashboard built for
-              modern operators.
-            </p>
-            <div className="hero-actions">
-              <NavLink className="button button-primary" to={session ? '/pods/new' : '/signup'}>
-                Create Your First Pod
-              </NavLink>
-              <NavLink className="button button-ghost" to={session ? '/dashboard' : '/login'}>
-                View Demo Dashboard
-              </NavLink>
-            </div>
+        <div className="hero-content-centered">
+          <h1>
+            Refined <span className="hero-emphasis">intelligence</span> for every idea, project, and business move.
+          </h1>
+          <p className="hero-gold-line">
+            Built for beautifully chaotic builders managing more than one thing.
+          </p>
+          <h2 className="hero-supporting">
+            A calm AI workspace for organising your thoughts, tracking projects, planning next steps, and keeping momentum visible.
+          </h2>
+          <p className="lede">
+            Dovroyn gives every idea, brand, or project its own AI pod &mdash; helping you capture scattered thoughts, surface useful opportunities, and turn messy plans into clear action.
+          </p>
+          <div className="hero-actions">
+            <a className="button button-primary" href="#waitlist">
+              Join the Waitlist
+            </a>
+            <NavLink className="button button-ghost" to={session ? '/dashboard' : '/login'}>
+              View Demo Dashboard
+            </NavLink>
           </div>
-          <aside
-            className="hero-preview"
-            aria-label="Dashboard metrics preview"
-          >
-            <article className="preview-card">
-              <p className="preview-label">Portfolio pods</p>
-              <p className="preview-metric">12 Active</p>
-              <p className="preview-note">Priority queue aligned for this week.</p>
-            </article>
-            <article className="preview-card">
-              <p className="preview-label">Campaign readiness</p>
-              <p className="preview-metric">4 Launch-ready</p>
-              <p className="preview-note">Creative direction approved and scheduled.</p>
-            </article>
-            <article className="preview-card">
-              <p className="preview-label">Performance pulse</p>
-              <p className="preview-metric">+27% Lift</p>
-              <p className="preview-note">Top pod recommendations outperforming baseline.</p>
-            </article>
-          </aside>
         </div>
       </section>
 
-      <section className="features-grid">
-        {LANDING_FEATURES.map((feature) => (
-          <article key={feature.title} className="panel feature-card">
-            <h3>{feature.title}</h3>
-            <p>{feature.description}</p>
+      {/* Waitlist / Early Access */}
+      <section className="waitlist-section panel" id="waitlist">
+        <p className="eyebrow">Early Access</p>
+        <h2 className="waitlist-heading">The command centre for builders with more than one idea.</h2>
+        <form className="waitlist-form" onSubmit={handleWaitlist}>
+          <input
+            type="email"
+            placeholder="Enter your email to get early access"
+            value={waitlistEmail}
+            onChange={(e) => setWaitlistEmail(e.target.value)}
+            required
+          />
+          <button className="button button-primary" type="submit">
+            Join the Waitlist
+          </button>
+        </form>
+        {waitlistStatus && <p className="waitlist-confirmation">{waitlistStatus}</p>}
+        <p className="waitlist-note">Free to join. Early users will receive launch updates and first access to Dovroyn.</p>
+      </section>
+
+      {/* Dashboard Preview Cards */}
+      <section className="dashboard-preview">
+        <p className="eyebrow">Your Command Centre</p>
+        <h2 className="section-title">Everything visible. Nothing lost.</h2>
+        <div className="preview-cards-grid">
+          {DASHBOARD_PREVIEW_CARDS.map((card) => (
+            <article key={card.title} className="panel preview-card">
+              <p className="preview-label">{card.title}</p>
+              <p className="preview-metric">{card.metric}</p>
+              <p className="preview-note">{card.description}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      {/* Content Sections */}
+      <section className="landing-sections">
+        {LANDING_SECTIONS.map((section) => (
+          <article key={section.heading} className="landing-section-item">
+            <h2>{section.heading}</h2>
+            <p>{section.body}</p>
           </article>
         ))}
       </section>
 
-      <footer className="landing-footer">Dovroyn by Anglow Digital PTY LTD.</footer>
+      {/* Footer */}
+      <footer className="landing-footer">
+        <p className="footer-copyright">&copy; 2026 Dovroyn. Built by Anglow Digital PTY LTD.</p>
+        <nav className="footer-links">
+          <a href="#privacy">Privacy</a>
+          <a href="#terms">Terms</a>
+          <a href="#contact">Contact</a>
+        </nav>
+      </footer>
     </main>
   );
 }
@@ -1079,20 +1111,23 @@ function PricingPage() {
     <main className="landing-shell pricing-shell">
       <header className="top-nav">
         <Wordmark />
-        <div className="top-nav-actions">
-          <NavLink className="button button-ghost" to="/">
+        <nav className="top-nav-links">
+          <NavLink className="nav-link-subtle" to="/">
             Home
           </NavLink>
-          <NavLink className="button button-primary" to="/signup">
-            Create Your First Pod
+          <NavLink className="nav-link-subtle" to="/login">
+            Login
           </NavLink>
-        </div>
+          <a className="button button-primary button-sm" href="/#waitlist">
+            Join Waitlist
+          </a>
+        </nav>
       </header>
 
       <section className="hero-block panel">
         <p className="eyebrow">Pricing</p>
         <h1>
-          Select the <span className="hero-emphasis">capacity</span> that matches your portfolio.
+          Select the <span className="hero-emphasis">capacity</span> that matches your needs.
         </h1>
         <p className="lede">
           Scale from focused pod support to full multi-brand intelligence operations with an elegant
@@ -1113,7 +1148,14 @@ function PricingPage() {
         ))}
       </section>
 
-      <footer className="landing-footer">Dovroyn by Anglow Digital PTY LTD.</footer>
+      <footer className="landing-footer">
+        <p className="footer-copyright">&copy; 2026 Dovroyn. Built by Anglow Digital PTY LTD.</p>
+        <nav className="footer-links">
+          <a href="#privacy">Privacy</a>
+          <a href="#terms">Terms</a>
+          <a href="#contact">Contact</a>
+        </nav>
+      </footer>
     </main>
   );
 }
