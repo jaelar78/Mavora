@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
   BrowserRouter,
   Navigate,
@@ -13,18 +13,71 @@ import { Analytics } from '@vercel/analytics/react';
 import './index.css';
 import { supabase, supabaseConfigured } from './lib/supabaseClient';
 
-const FALLBACK_METRICS = [
-  { label: 'Active campaigns', value: '4', delta: '+18%' },
-  { label: 'Automations', value: '12', delta: '+7%' },
-  { label: 'Team velocity', value: '92%', delta: '+4%' },
+const APP_NAME = 'Dovroyn';
+
+const LANDING_FEATURES = [
+  {
+    title: 'AI Assistant',
+    description:
+      'Capture ideas, ask questions, and turn messy thoughts into clear next steps.',
+  },
+  {
+    title: 'Idea Tracker',
+    description:
+      'Save business ideas, app concepts, product plans, and random sparks before they disappear.',
+  },
+  {
+    title: 'Project Dashboard',
+    description: 'See what you’re building, what matters next, and what needs attention.',
+  },
+  {
+    title: 'Task Planning',
+    description: 'Break ideas into tasks, priorities, and simple execution steps.',
+  },
+  {
+    title: 'Conversation Memory',
+    description: 'Keep useful AI outputs connected to your projects and decisions.',
+  },
+  {
+    title: 'Cloud Sync',
+    description: 'Use Supabase-backed login and data storage so your workspace stays connected.',
+  },
 ];
 
 const NAV_ITEMS = [
   { to: '/dashboard', label: 'Dashboard' },
-  { to: '/assistant', label: 'AI Assistant' },
-  { to: '/profile', label: 'Profile' },
+  { to: '/assistant', label: 'Assistant' },
+  { to: '/ideas', label: 'Ideas' },
+  { to: '/projects', label: 'Projects' },
+  { to: '/tasks', label: 'Tasks' },
   { to: '/settings', label: 'Settings' },
 ];
+
+const IDEA_STATUS = ['New', 'Reviewing', 'Building', 'Paused', 'Launched'];
+
+const SAMPLE_IDEAS = [
+  { title: 'Client onboarding flow with AI handoff', status: 'Reviewing' },
+  { title: 'Family logistics dashboard', status: 'Building' },
+  { title: 'Brand voice system for content ops', status: 'New' },
+  { title: 'Internal admin automations', status: 'Paused' },
+  { title: 'Weekly planning ritual template', status: 'Launched' },
+];
+
+const SAMPLE_PROJECTS = [
+  { name: 'Revenue Command Center', category: 'business', progress: 72, status: 'Active' },
+  { name: 'Mobile Launch Tracker', category: 'app', progress: 48, status: 'In Planning' },
+  { name: 'Identity Refresh System', category: 'brand', progress: 64, status: 'Active' },
+  { name: 'Household Ops Board', category: 'family', progress: 33, status: 'At Risk' },
+  { name: 'Quarterly Admin Pipeline', category: 'admin', progress: 82, status: 'Stable' },
+  { name: 'Personal Growth Map', category: 'personal', progress: 57, status: 'Active' },
+];
+
+const TASK_COLUMNS = {
+  Today: ['Refine onboarding checklist', 'Review AI assistant output for sprint scope'],
+  'This week': ['Ship dashboard KPI cards', 'Plan copy for dovroyn.com launch page'],
+  Later: ['Map automation integrations', 'Document workspace playbooks'],
+  Completed: ['Organise current project backlog'],
+};
 
 function createLocalId() {
   if (typeof crypto !== 'undefined' && crypto.randomUUID) {
@@ -66,7 +119,7 @@ function App() {
   }, []);
 
   if (bootstrapping) {
-    return <div className="center-screen">Loading Mavora...</div>;
+    return <div className="center-screen">Loading {APP_NAME}...</div>;
   }
 
   return (
@@ -74,7 +127,9 @@ function App() {
       <Analytics />
       <Routes>
         <Route path="/" element={<LandingPage session={session} />} />
-        <Route path="/auth" element={<AuthPage session={session} />} />
+        <Route path="/login" element={<AuthPage session={session} defaultMode="login" />} />
+        <Route path="/signup" element={<AuthPage session={session} defaultMode="signup" />} />
+        <Route path="/auth" element={<AuthPage session={session} defaultMode="login" />} />
 
         <Route element={<ProtectedRoute session={session} />}>
           <Route
@@ -90,15 +145,15 @@ function App() {
           >
             <Route path="/dashboard" element={<DashboardPage user={session?.user} />} />
             <Route path="/assistant" element={<AssistantPage user={session?.user} />} />
-            <Route path="/profile" element={<ProfilePage user={session?.user} />} />
+            <Route path="/ideas" element={<IdeasPage />} />
+            <Route path="/projects" element={<ProjectsPage />} />
+            <Route path="/tasks" element={<TasksPage />} />
             <Route path="/settings" element={<SettingsPage user={session?.user} />} />
+            <Route path="/profile" element={<Navigate to="/settings" replace />} />
           </Route>
         </Route>
 
-        <Route
-          path="*"
-          element={<Navigate to={session ? '/dashboard' : '/'} replace />}
-        />
+        <Route path="*" element={<Navigate to={session ? '/dashboard' : '/'} replace />} />
       </Routes>
     </BrowserRouter>
   );
@@ -108,71 +163,89 @@ function ProtectedRoute({ session }) {
   const location = useLocation();
 
   if (!supabaseConfigured) {
-    return <Navigate to="/auth" replace state={{ from: location }} />;
+    return <Navigate to="/login" replace state={{ from: location }} />;
   }
 
   if (!session) {
-    return <Navigate to="/auth" replace state={{ from: location }} />;
+    return <Navigate to="/login" replace state={{ from: location }} />;
   }
 
   return <Outlet />;
+}
+
+function Wordmark() {
+  return (
+    <span className="logo-wordmark" aria-label="Dovroyn logo">
+      <span className="logo-mark" aria-hidden="true">
+        ◉
+      </span>
+      <span>DOVROYN</span>
+    </span>
+  );
 }
 
 function LandingPage({ session }) {
   return (
     <main className="landing-shell">
       <header className="top-nav">
-        <span className="brand">Mavora</span>
+        <Wordmark />
         <div className="top-nav-actions">
-          <NavLink className="button button-ghost" to="/auth">
+          <NavLink className="button button-ghost" to="/login">
             Login
           </NavLink>
-          <NavLink className="button button-primary" to={session ? '/dashboard' : '/auth'}>
-            {session ? 'Go to dashboard' : 'Get started'}
+          <NavLink className="button button-primary" to={session ? '/dashboard' : '/signup'}>
+            Get started
           </NavLink>
         </div>
       </header>
 
-      <section className="hero-grid">
-        <div>
-          <p className="eyebrow">Deploy-ready workspace</p>
-          <h1>Ship ideas faster with your AI-powered operations hub.</h1>
-          <p className="lede">
-            Mavora combines planning, execution, and AI collaboration in one responsive dark
-            interface backed by Supabase auth and real-time data.
-          </p>
-          <div className="hero-actions">
-            <NavLink className="button button-primary" to={session ? '/assistant' : '/auth'}>
-              Open AI assistant
-            </NavLink>
-            <NavLink className="button button-ghost" to={session ? '/dashboard' : '/auth'}>
-              Explore dashboard
-            </NavLink>
-          </div>
+      <section className="hero-block panel">
+        <p className="eyebrow">AI operations workspace · dovroyn.com</p>
+        <h1>Turn scattered ideas into organised action.</h1>
+        <p className="lede">
+          Dovroyn helps you plan, track, and build your ideas with AI support, project memory,
+          dashboards, and task management in one focused workspace.
+        </p>
+        <div className="hero-actions">
+          <NavLink className="button button-primary" to="/signup">
+            Get started
+          </NavLink>
+          <NavLink className="button button-ghost" to="/assistant">
+            Open AI assistant
+          </NavLink>
+          <NavLink className="button button-ghost" to="/dashboard">
+            Explore dashboard
+          </NavLink>
         </div>
-        <aside className="glass-panel">
-          <h2>Everything included</h2>
-          <ul>
-            <li>Supabase authentication with session persistence</li>
-            <li>Dashboard and profile data integration</li>
-            <li>AI assistant conversation storage</li>
-            <li>Mobile-first responsive navigation</li>
-          </ul>
-        </aside>
       </section>
+
+      <section className="features-grid">
+        {LANDING_FEATURES.map((feature) => (
+          <article key={feature.title} className="panel feature-card">
+            <h3>{feature.title}</h3>
+            <p>{feature.description}</p>
+          </article>
+        ))}
+      </section>
+
+      <footer className="landing-footer">Dovroyn by Anglow Digital PTY LTD.</footer>
     </main>
   );
 }
 
-function AuthPage({ session }) {
+function AuthPage({ session, defaultMode = 'login' }) {
   const navigate = useNavigate();
-  const [mode, setMode] = useState('login');
+  const [mode, setMode] = useState(defaultMode);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
+
+  useEffect(() => {
+    setMode(defaultMode);
+  }, [defaultMode]);
 
   useEffect(() => {
     if (session) {
@@ -211,7 +284,7 @@ function AuthPage({ session }) {
       setError(authError.message);
     } else if (mode === 'signup') {
       setMessage('Check your inbox to confirm your email, then log in.');
-      setMode('login');
+      navigate('/login', { replace: true });
     } else {
       navigate('/dashboard', { replace: true });
     }
@@ -221,8 +294,9 @@ function AuthPage({ session }) {
 
   return (
     <main className="auth-shell">
-      <div className="auth-card">
-        <h1>{mode === 'login' ? 'Welcome back' : 'Create your Mavora account'}</h1>
+      <div className="auth-card panel">
+        <Wordmark />
+        <h1>{mode === 'login' ? 'Welcome back to Dovroyn' : 'Create your Dovroyn workspace'}</h1>
         <p>Secure access powered by Supabase authentication.</p>
 
         {!supabaseConfigured && (
@@ -242,12 +316,7 @@ function AuthPage({ session }) {
 
           <label>
             Email
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
+            <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
           </label>
 
           <label>
@@ -275,7 +344,9 @@ function AuthPage({ session }) {
           onClick={() => {
             setError('');
             setMessage('');
-            setMode((prev) => (prev === 'login' ? 'signup' : 'login'));
+            const nextMode = mode === 'login' ? 'signup' : 'login';
+            setMode(nextMode);
+            navigate(nextMode === 'login' ? '/login' : '/signup');
           }}
         >
           {mode === 'login' ? 'Need an account? Sign up' : 'Already have an account? Log in'}
@@ -288,8 +359,8 @@ function AuthPage({ session }) {
 function AppLayout({ user, onSignOut }) {
   return (
     <div className="app-layout">
-      <aside className="sidebar">
-        <p className="brand">Mavora</p>
+      <aside className="sidebar panel">
+        <Wordmark />
         <nav>
           {NAV_ITEMS.map((item) => (
             <NavLink key={item.to} to={item.to} className="nav-item">
@@ -302,11 +373,9 @@ function AppLayout({ user, onSignOut }) {
         </button>
       </aside>
       <section className="content">
-        <header className="content-header">
-          <div>
-            <p className="eyebrow">Workspace</p>
-            <h2>{user?.email}</h2>
-          </div>
+        <header className="content-header panel">
+          <p className="eyebrow">Dovroyn workspace</p>
+          <h2>{user?.email}</h2>
         </header>
         <Outlet />
       </section>
@@ -315,37 +384,36 @@ function AppLayout({ user, onSignOut }) {
 }
 
 function DashboardPage({ user }) {
-  const [metrics, setMetrics] = useState(FALLBACK_METRICS);
-  const [status, setStatus] = useState('Loading metrics...');
+  const [status, setStatus] = useState('');
+  const [recentIdeas, setRecentIdeas] = useState(SAMPLE_IDEAS.slice(0, 3));
 
   useEffect(() => {
     let ignore = false;
 
-    const load = async () => {
+    const loadIdeas = async () => {
       if (!supabaseConfigured || !user?.id) {
-        setStatus('Showing demo metrics until Supabase is configured.');
+        setStatus('Showing sample workspace data until Supabase is configured.');
         return;
       }
 
       const { data, error } = await supabase
-        .from('dashboard_metrics')
-        .select('label, value, delta')
+        .from('ideas')
+        .select('title, status')
         .eq('user_id', user.id)
-        .order('id', { ascending: true });
+        .order('created_at', { ascending: false })
+        .limit(3);
 
       if (ignore) return;
 
-      if (error) {
-        setStatus('Using fallback metrics. Create dashboard_metrics to customize this view.');
-      } else if (data?.length) {
-        setMetrics(data);
-        setStatus('Connected to Supabase database.');
+      if (error || !data?.length) {
+        setStatus('Connect an ideas table in Supabase to replace sample content.');
       } else {
-        setStatus('No metrics yet. Insert rows into dashboard_metrics to populate this view.');
+        setRecentIdeas(data);
+        setStatus('Connected to Supabase workspace data.');
       }
     };
 
-    load();
+    loadIdeas();
 
     return () => {
       ignore = true;
@@ -354,15 +422,69 @@ function DashboardPage({ user }) {
 
   return (
     <div className="page-stack">
-      <p className="subtle">{status}</p>
-      <section className="metrics-grid">
-        {metrics.map((metric) => (
-          <article key={metric.label} className="glass-panel">
-            <p className="subtle">{metric.label}</p>
-            <h3>{metric.value}</h3>
-            <p className="positive">{metric.delta}</p>
-          </article>
-        ))}
+      {status && <p className="subtle">{status}</p>}
+      <section className="cards-grid cards-grid-wide">
+        <article className="panel welcome-card">
+          <p className="eyebrow">Welcome card</p>
+          <h3>Welcome to Dovroyn</h3>
+          <p>Focus your ideas, tasks, and projects in one coordinated workspace.</p>
+        </article>
+
+        <article className="panel quick-actions">
+          <p className="eyebrow">Quick actions</p>
+          <div className="action-buttons">
+            <NavLink className="button button-ghost" to="/ideas">
+              New idea
+            </NavLink>
+            <NavLink className="button button-ghost" to="/tasks">
+              New task
+            </NavLink>
+            <NavLink className="button button-ghost" to="/assistant">
+              Open assistant
+            </NavLink>
+            <NavLink className="button button-ghost" to="/projects">
+              View projects
+            </NavLink>
+          </div>
+        </article>
+      </section>
+
+      <section className="cards-grid">
+        <article className="panel">
+          <h3>Recent ideas</h3>
+          <ul className="simple-list">
+            {recentIdeas.map((idea) => (
+              <li key={idea.title}>
+                <span>{idea.title}</span>
+                <span className="status-tag">{idea.status}</span>
+              </li>
+            ))}
+          </ul>
+        </article>
+
+        <article className="panel">
+          <h3>Active projects</h3>
+          <ul className="simple-list">
+            {SAMPLE_PROJECTS.slice(0, 3).map((project) => (
+              <li key={project.name}>
+                <span>{project.name}</span>
+                <span className="subtle">{project.progress}%</span>
+              </li>
+            ))}
+          </ul>
+        </article>
+
+        <article className="panel">
+          <h3>Today’s tasks</h3>
+          <ul className="simple-list">
+            {TASK_COLUMNS.Today.map((task) => (
+              <li key={task}>{task}</li>
+            ))}
+          </ul>
+          <NavLink className="button button-ghost" to="/assistant">
+            AI assistant shortcut
+          </NavLink>
+        </article>
       </section>
     </div>
   );
@@ -417,7 +539,7 @@ function AssistantPage({ user }) {
     const assistantMessage = {
       id: createLocalId(),
       role: 'assistant',
-      content: `Here's a suggested next step for: "${content}".`,
+      content: `Here’s a suggested action plan for: "${content}".`,
       created_at: new Date().toISOString(),
     };
 
@@ -447,9 +569,12 @@ function AssistantPage({ user }) {
 
   return (
     <div className="page-stack">
-      <div className="chat-window">
+      <div className="panel chat-window">
         {messages.length === 0 ? (
-          <p className="subtle">Ask Mavora AI to outline your next launch, campaign, or sprint.</p>
+          <p className="subtle">
+            Ask Dovroyn to organise an idea, create a plan, write copy, break down a task, or
+            track your next move.
+          </p>
         ) : (
           messages.map((message) => (
             <article key={message.id} className={`chat-bubble ${message.role}`}>
@@ -459,9 +584,9 @@ function AssistantPage({ user }) {
         )}
       </div>
 
-      <form onSubmit={handleSend} className="chat-form">
+      <form onSubmit={handleSend} className="panel chat-form">
         <input
-          placeholder="Ask Mavora AI anything..."
+          placeholder="Ask Dovroyn to organise an idea, create a plan, write copy, break down a task, or track your next move."
           value={prompt}
           onChange={(event) => setPrompt(event.target.value)}
         />
@@ -475,93 +600,100 @@ function AssistantPage({ user }) {
   );
 }
 
-function ProfilePage({ user }) {
-  const [form, setForm] = useState({ full_name: '', role: '', bio: '' });
-  const [status, setStatus] = useState('');
+function IdeasPage() {
+  return (
+    <div className="page-stack">
+      <header className="section-header panel">
+        <div>
+          <p className="eyebrow">Ideas</p>
+          <h3>Idea cards</h3>
+        </div>
+        <button className="button button-primary" type="button">
+          Add idea
+        </button>
+      </header>
 
-  useEffect(() => {
-    let ignore = false;
+      <section className="cards-grid">
+        {SAMPLE_IDEAS.map((idea) => (
+          <article key={idea.title} className="panel">
+            <h3>{idea.title}</h3>
+            <p className="subtle">Capture and move this idea into focused execution.</p>
+            <div className="status-row">
+              {IDEA_STATUS.map((status) => (
+                <span
+                  key={status}
+                  className={`status-tag ${status === idea.status ? 'active-tag' : ''}`}
+                >
+                  {status}
+                </span>
+              ))}
+            </div>
+          </article>
+        ))}
+      </section>
+    </div>
+  );
+}
 
-    const loadProfile = async () => {
-      if (!supabaseConfigured || !user?.id) return;
+function ProjectsPage() {
+  return (
+    <div className="page-stack">
+      <header className="section-header panel">
+        <div>
+          <p className="eyebrow">Projects</p>
+          <h3>Project cards</h3>
+        </div>
+      </header>
 
-      const { data, error } = await supabase
-        .from('profiles')
-        .select('full_name, role, bio')
-        .eq('user_id', user.id)
-        .maybeSingle();
+      <section className="cards-grid">
+        {SAMPLE_PROJECTS.map((project) => (
+          <article key={project.name} className="panel">
+            <p className="eyebrow">{project.category}</p>
+            <h3>{project.name}</h3>
+            <p className="subtle">Status: {project.status}</p>
+            <div className="progress-track" aria-label={`${project.name} progress`}>
+              <span style={{ width: `${project.progress}%` }} />
+            </div>
+            <p className="subtle">Progress: {project.progress}%</p>
+          </article>
+        ))}
+      </section>
+    </div>
+  );
+}
 
-      if (ignore) return;
-
-      if (error) {
-        setStatus('Create profiles table to load profile data from Supabase.');
-      } else if (data) {
-        setForm({
-          full_name: data.full_name ?? '',
-          role: data.role ?? '',
-          bio: data.bio ?? '',
-        });
-      }
-    };
-
-    loadProfile();
-
-    return () => {
-      ignore = true;
-    };
-  }, [user?.id]);
-
-  const saveProfile = async (event) => {
-    event.preventDefault();
-
-    if (!supabaseConfigured || !user?.id) {
-      setStatus('Configure Supabase to save profile changes.');
-      return;
-    }
-
-    const { error } = await supabase.from('profiles').upsert({
-      user_id: user.id,
-      ...form,
-      updated_at: new Date().toISOString(),
-    });
-
-    setStatus(error ? error.message : 'Profile saved.');
-  };
+function TasksPage() {
+  const columns = useMemo(() => Object.entries(TASK_COLUMNS), []);
 
   return (
-    <form onSubmit={saveProfile} className="card-form">
-      <label>
-        Full name
-        <input
-          value={form.full_name}
-          onChange={(e) => setForm((prev) => ({ ...prev, full_name: e.target.value }))}
-        />
-      </label>
-      <label>
-        Role
-        <input
-          value={form.role}
-          onChange={(e) => setForm((prev) => ({ ...prev, role: e.target.value }))}
-        />
-      </label>
-      <label>
-        Bio
-        <textarea
-          rows={4}
-          value={form.bio}
-          onChange={(e) => setForm((prev) => ({ ...prev, bio: e.target.value }))}
-        />
-      </label>
-      <button className="button button-primary" type="submit">
-        Save profile
-      </button>
-      {status && <p className="subtle">{status}</p>}
-    </form>
+    <div className="page-stack">
+      <header className="section-header panel">
+        <div>
+          <p className="eyebrow">Tasks</p>
+          <h3>Execution board</h3>
+        </div>
+      </header>
+
+      <section className="task-board">
+        {columns.map(([title, items]) => (
+          <article key={title} className="panel task-column">
+            <h3>{title}</h3>
+            <ul>
+              {items.map((item) => (
+                <li key={item}>{item}</li>
+              ))}
+            </ul>
+          </article>
+        ))}
+      </section>
+    </div>
   );
 }
 
 function SettingsPage({ user }) {
   const [settings, setSettings] = useState({
+    workspace_name: 'Dovroyn Workspace',
+    theme: 'Premium Dark',
     timezone: 'UTC',
     email_notifications: true,
     weekly_digest: true,
@@ -576,7 +708,7 @@ function SettingsPage({ user }) {
 
       const { data, error } = await supabase
         .from('user_settings')
-        .select('timezone, email_notifications, weekly_digest')
+        .select('timezone, email_notifications, weekly_digest, workspace_name, theme')
         .eq('user_id', user.id)
         .maybeSingle();
 
@@ -586,6 +718,8 @@ function SettingsPage({ user }) {
         setStatus('Create user_settings table to persist preferences.');
       } else if (data) {
         setSettings({
+          workspace_name: data.workspace_name ?? 'Dovroyn Workspace',
+          theme: data.theme ?? 'Premium Dark',
           timezone: data.timezone ?? 'UTC',
           email_notifications: Boolean(data.email_notifications),
           weekly_digest: Boolean(data.weekly_digest),
@@ -618,7 +752,44 @@ function SettingsPage({ user }) {
   };
 
   return (
-    <form className="card-form" onSubmit={saveSettings}>
+    <form className="card-form panel" onSubmit={saveSettings}>
+      <h3>Settings</h3>
+
+      <label>
+        Profile
+        <input value={user?.email ?? 'Not signed in'} disabled />
+      </label>
+
+      <label>
+        Workspace name
+        <input
+          value={settings.workspace_name}
+          onChange={(e) => setSettings((prev) => ({ ...prev, workspace_name: e.target.value }))}
+        />
+      </label>
+
+      <label>
+        Theme
+        <select
+          value={settings.theme}
+          onChange={(e) => setSettings((prev) => ({ ...prev, theme: e.target.value }))}
+        >
+          <option value="Premium Dark">Premium Dark</option>
+          <option value="Midnight Blue">Midnight Blue</option>
+          <option value="Electric Violet">Electric Violet</option>
+        </select>
+      </label>
+
+      <label>
+        Connected account
+        <input value={supabaseConfigured ? 'Supabase connected' : 'Supabase not configured'} disabled />
+      </label>
+
+      <label>
+        Domain
+        <input value="dovroyn.com" disabled />
+      </label>
+
       <label>
         Timezone
         <select
