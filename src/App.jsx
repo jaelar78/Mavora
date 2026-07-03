@@ -398,23 +398,51 @@ function LandingPage({ session }) {
       </header>
 
       <section className="hero-block panel">
-        <p className="eyebrow">AI ad-intelligence platform — {APP_DOMAIN}</p>
-        <h1>EVERY BRAND GETS ITS OWN AI BRAIN</h1>
-        <h2 className="hero-supporting">
-          Dedicated AI pods that analyse, advertise and improve every brand you run.
-        </h2>
-        <p className="lede">
-          Dovroyn creates dedicated AI pods for your brands. Each pod analyses your website, learns
-          your market, studies your aesthetic, suggests what to post, finds the best pages to
-          promote, and improves over time by watching what works.
-        </p>
-        <div className="hero-actions">
-          <NavLink className="button button-primary" to={session ? '/pods/new' : '/signup'}>
-            Create Your First Pod
-          </NavLink>
-          <NavLink className="button button-ghost" to={session ? '/dashboard' : '/login'}>
-            View Demo Dashboard
-          </NavLink>
+        <p className="eyebrow">Luxury AI operations suite — {APP_DOMAIN}</p>
+        <div className="divider-line" />
+        <div className="hero-layout">
+          <div className="hero-copy">
+            <h1>
+              Refined <span className="hero-emphasis">intelligence</span> for every brand in your
+              portfolio.
+            </h1>
+            <h2 className="hero-supporting">
+              A polished command centre for AI pods, campaign direction, and growth decisions.
+            </h2>
+            <p className="lede">
+              Dovroyn gives each brand its own AI pod to read your positioning, surface high-value
+              opportunities, and present the next move in a calm executive dashboard built for
+              modern operators.
+            </p>
+            <div className="hero-actions">
+              <NavLink className="button button-primary" to={session ? '/pods/new' : '/signup'}>
+                Create Your First Pod
+              </NavLink>
+              <NavLink className="button button-ghost" to={session ? '/dashboard' : '/login'}>
+                View Demo Dashboard
+              </NavLink>
+            </div>
+          </div>
+          <aside
+            className="hero-preview"
+            aria-label="Dashboard metrics preview"
+          >
+            <article className="preview-card">
+              <p className="preview-label">Portfolio pods</p>
+              <p className="preview-metric">12 Active</p>
+              <p className="preview-note">Priority queue aligned for this week.</p>
+            </article>
+            <article className="preview-card">
+              <p className="preview-label">Campaign readiness</p>
+              <p className="preview-metric">4 Launch-ready</p>
+              <p className="preview-note">Creative direction approved and scheduled.</p>
+            </article>
+            <article className="preview-card">
+              <p className="preview-label">Performance pulse</p>
+              <p className="preview-metric">+27% Lift</p>
+              <p className="preview-note">Top pod recommendations outperforming baseline.</p>
+            </article>
+          </aside>
         </div>
       </section>
 
@@ -1063,8 +1091,13 @@ function PricingPage() {
 
       <section className="hero-block panel">
         <p className="eyebrow">Pricing</p>
-        <h1>Choose the pod capacity for your brand portfolio.</h1>
-        <p className="lede">Scale from a few focused pod strategies to multi-brand ad intelligence operations.</p>
+        <h1>
+          Select the <span className="hero-emphasis">capacity</span> that matches your portfolio.
+        </h1>
+        <p className="lede">
+          Scale from focused pod support to full multi-brand intelligence operations with an elegant
+          control layer for your team.
+        </p>
       </section>
 
       <section className="cards-grid cards-grid-wide">
@@ -1088,7 +1121,7 @@ function PricingPage() {
 function SettingsPage({ user }) {
   const [settings, setSettings] = useState({
     workspace_name: 'Dovroyn Pod Command Centre',
-    theme: 'Dark Olive Luxury',
+    theme: 'Editorial Ivory and Navy',
     timezone: 'UTC',
     email_notifications: true,
     weekly_digest: true,
@@ -1114,7 +1147,7 @@ function SettingsPage({ user }) {
       } else if (data) {
         setSettings({
           workspace_name: data.workspace_name ?? 'Dovroyn Pod Command Centre',
-          theme: data.theme ?? 'Dark Olive Luxury',
+          theme: data.theme ?? 'Editorial Ivory and Navy',
           timezone: data.timezone ?? 'UTC',
           email_notifications: Boolean(data.email_notifications),
           weekly_digest: Boolean(data.weekly_digest),
@@ -1169,9 +1202,9 @@ function SettingsPage({ user }) {
           value={settings.theme}
           onChange={(e) => setSettings((prev) => ({ ...prev, theme: e.target.value }))}
         >
-          <option value="Dark Olive Luxury">Dark Olive Luxury</option>
-          <option value="Charcoal Gold">Charcoal Gold</option>
-          <option value="Ivory Contrast">Ivory Contrast</option>
+          <option value="Editorial Ivory and Navy">Editorial Ivory and Navy</option>
+          <option value="Antique Gold Luxe">Antique Gold Luxe</option>
+          <option value="Soft Cream Contrast">Soft Cream Contrast</option>
         </select>
       </label>
 
