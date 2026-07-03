@@ -1,6 +1,6 @@
-# Mavora
+# Dovroyn
 
-Mavora is a deploy-ready React + Vite application with:
+Dovroyn is a deploy-ready React + Vite application with:
 
 - Modern landing page
 - Login and signup with Supabase Auth
