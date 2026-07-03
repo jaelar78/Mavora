@@ -19,30 +19,30 @@ const APP_DOMAIN = 'dovroyn.com';
 
 const LANDING_SECTIONS = [
   {
-    heading: 'From scattered thoughts to structured action.',
-    body: 'Capture ideas before they disappear, organise them into pods, and turn them into clear next steps.',
+    heading: 'One pod per brand, launch, or campaign.',
+    body: 'Create a dedicated AI marketing pod for each brand, product, offer, or launch. Each pod keeps your strategy, content ideas, campaign direction, and audience notes in one focused space.',
   },
   {
-    heading: 'Built for people building more than one thing.',
-    body: 'Track brands, apps, websites, offers, content ideas, business moves, and projects in one calm workspace.',
+    heading: 'Marketing strategy that builds itself.',
+    body: 'Each pod analyses your brand positioning, surfaces high-value campaign angles, recommends content hooks, and suggests ad direction so you always know what to run next.',
   },
   {
-    heading: 'Your next move, always visible.',
-    body: 'See what matters now, what is waiting, and what needs action next.',
+    heading: 'Content, campaigns, and growth moves in one place.',
+    body: 'Plan social posts, shape ad creative, map offer funnels, and track what is working across every brand without switching between scattered tools.',
   },
   {
-    heading: 'One pod for every idea.',
-    body: 'Create a dedicated space for each brand, app, website, offer, or project so nothing gets buried in messy notes or forgotten tabs.',
+    heading: 'Your next marketing move, always visible.',
+    body: 'See which campaigns need attention, which content is ready to go, and which growth opportunities are waiting to be actioned.',
   },
 ];
 
 const DASHBOARD_PREVIEW_CARDS = [
-  { title: 'Active pods', metric: '12 Active', description: 'Ideas, brands, and projects currently being organised.' },
-  { title: 'Next moves', metric: '6 Ready', description: 'Clear actions waiting for your attention.' },
-  { title: 'Project momentum', metric: '4 Moving', description: 'Priority projects with progress this week.' },
-  { title: 'Ideas waiting', metric: '18 Captured', description: 'Scattered thoughts saved before they disappear.' },
-  { title: 'Business opportunities', metric: '5 Found', description: 'Potential offers, products, or growth moves to review.' },
-  { title: 'Tasks due', metric: '9 Open', description: 'Important actions that need a decision.' },
+  { title: 'Active pods', metric: '12 Active', description: 'Brands, launches, and campaigns currently being managed by AI.' },
+  { title: 'Marketing ideas', metric: '24 Surfaced', description: 'Content hooks, ad angles, and campaign concepts ready to review.' },
+  { title: 'Campaign angles', metric: '8 Ready', description: 'Tested creative directions waiting to be launched or scheduled.' },
+  { title: 'Content plans', metric: '6 Drafts', description: 'Weekly post and ad plans shaped by pod intelligence.' },
+  { title: 'Launch moves', metric: '3 Queued', description: 'Upcoming product or offer launches with strategy mapped.' },
+  { title: 'Audience insights', metric: '5 New', description: 'Fresh targeting signals and audience behaviour patterns found.' },
 ];
 
 const SIDEBAR_NAV_ITEMS = [
@@ -393,7 +393,7 @@ function LandingPage({ session }) {
 
   return (
     <main className="landing-shell">
-      {/* Header - clean, calm, premium */}
+      {/* Header */}
       <header className="top-nav">
         <Wordmark />
         <nav className="top-nav-links">
@@ -408,27 +408,27 @@ function LandingPage({ session }) {
 
       {/* Hero Section */}
       <section className="hero-block panel">
-        <p className="eyebrow">Luxury AI Command Centre</p>
+        <p className="eyebrow">AI Marketing Pods</p>
         <div className="divider-line" />
         <div className="hero-content-centered">
           <h1>
-            Refined <span className="hero-emphasis">intelligence</span> for every idea, project, and business move.
+            AI marketing pods for every <span className="hero-emphasis">brand</span>, launch, and campaign.
           </h1>
           <p className="hero-gold-line">
-            Built for beautifully chaotic builders managing more than one thing.
+            A luxury AI marketing command centre built for founders running multiple brands at once.
           </p>
           <h2 className="hero-supporting">
-            A calm AI workspace for organising your thoughts, tracking projects, planning next steps, and keeping momentum visible.
+            Dovroyn helps you plan content, shape offers, find campaign angles, and turn scattered marketing ideas into clear growth moves.
           </h2>
           <p className="lede">
-            Dovroyn gives every idea, brand, or project its own AI pod &mdash; helping you capture scattered thoughts, surface useful opportunities, and turn messy plans into clear action.
+            Create a dedicated AI pod for each brand, product, offer, or launch. Each pod keeps your strategy, content ideas, campaign direction, audience notes, and next marketing moves in one calm workspace.
           </p>
           <div className="hero-actions">
             <a className="button button-primary" href="#waitlist">
               Join the Waitlist
             </a>
-            <NavLink className="button button-ghost" to={session ? '/dashboard' : '/login'}>
-              View Demo Dashboard
+            <NavLink className="button button-ghost" to={session ? '/pods' : '/login'}>
+              View Demo Pods
             </NavLink>
           </div>
         </div>
@@ -437,7 +437,7 @@ function LandingPage({ session }) {
       {/* Waitlist / Early Access */}
       <section className="waitlist-section panel" id="waitlist">
         <p className="eyebrow">Early Access</p>
-        <h2 className="waitlist-heading">The command centre for builders with more than one idea.</h2>
+        <h2 className="waitlist-heading">AI marketing pods for every brand you are building.</h2>
         <form className="waitlist-form" onSubmit={handleWaitlist}>
           <input
             type="email"
@@ -456,8 +456,8 @@ function LandingPage({ session }) {
 
       {/* Dashboard Preview Cards */}
       <section className="dashboard-preview">
-        <p className="eyebrow">Your Command Centre</p>
-        <h2 className="section-title">Everything visible. Nothing lost.</h2>
+        <p className="eyebrow">Your Marketing Command Centre</p>
+        <h2 className="section-title">Every campaign visible. Every brand organised.</h2>
         <div className="preview-cards-grid">
           {DASHBOARD_PREVIEW_CARDS.map((card) => (
             <article key={card.title} className="panel preview-card">
@@ -636,7 +636,7 @@ function AppLayout({ user, onSignOut }) {
       </aside>
       <section className="content">
         <header className="content-header panel">
-          <p className="eyebrow">Dovroyn AI pod command centre</p>
+          <p className="eyebrow">Dovroyn AI marketing command centre</p>
           <h2>{user?.email}</h2>
         </header>
         <Outlet />
@@ -654,7 +654,7 @@ function DashboardPage() {
         <div>
           <p className="eyebrow">Dashboard</p>
           <h3>{primaryPod.brandName} pod dashboard</h3>
-          <p className="subtle">Every brand gets its own AI brain. This dashboard tracks what to run next.</p>
+          <p className="subtle">Every brand gets its own AI marketing brain. This dashboard tracks what to run next.</p>
         </div>
         <NavLink className="button button-ghost" to={`/pods/${primaryPod.id}`}>
           Open full pod dashboard
@@ -729,7 +729,7 @@ function PodsPage() {
       <header className="section-header panel">
         <div>
           <p className="eyebrow">Pods</p>
-          <h3>All AI pods</h3>
+          <h3>All AI marketing pods</h3>
         </div>
         <NavLink className="button button-primary" to="/pods/new">
           Create Pod
@@ -778,7 +778,7 @@ function CreatePodPage() {
       <header className="section-header panel">
         <div>
           <p className="eyebrow">Create Pod</p>
-          <h3>Create a dedicated AI pod</h3>
+          <h3>Create a dedicated AI marketing pod</h3>
           <p className="subtle">Pod provisioning saves to frontend placeholder state until backend creation is wired.</p>
         </div>
       </header>
@@ -879,7 +879,7 @@ function PodDashboardPage() {
         <div>
           <p className="eyebrow">Pod Dashboard</p>
           <h3>{pod.brandName}</h3>
-          <p className="subtle">Dedicated AI analysis hub for this single brand.</p>
+          <p className="subtle">Dedicated AI marketing hub for this single brand.</p>
         </div>
         <span className="status-tag">{pod.status}</span>
       </header>
@@ -1127,10 +1127,10 @@ function PricingPage() {
       <section className="hero-block panel">
         <p className="eyebrow">Pricing</p>
         <h1>
-          Select the <span className="hero-emphasis">capacity</span> that matches your needs.
+          Select the <span className="hero-emphasis">capacity</span> that matches your marketing needs.
         </h1>
         <p className="lede">
-          Scale from focused pod support to full multi-brand intelligence operations with an elegant
+          Scale from focused pod support to full multi-brand marketing intelligence with an elegant
           control layer for your team.
         </p>
       </section>
