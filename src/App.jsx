@@ -13,11 +13,11 @@ import {
 import { Analytics } from '@vercel/analytics/react';
 import './index.css';
 import { supabase, supabaseConfigured } from './lib/supabaseClient';
+import { redirectToCheckout, canCreatePod, getContentDays, TIER_LIMITS } from './lib/stripe';
 
 const APP_NAME = 'Dovroyn';
 const APP_DOMAIN = 'dovroyn.com';
 
-// Stripe configuration (add keys to environment variables)
 const STRIPE_PRICING_LINKS = {
   starter_monthly: import.meta.env.VITE_STRIPE_STARTER_MONTHLY || null,
   starter_yearly: import.meta.env.VITE_STRIPE_STARTER_YEARLY || null,
@@ -146,270 +146,43 @@ const SIDEBAR_NAV_ITEMS = [
   { to: '/settings', label: 'Settings' },
 ];
 
-function App() {
-  const [session, setSession] = useState(null);
-  const [bootstrapping, setBootstrapping] = useState(true);
+/* ─── SHARED POD TABS COMPONENT ─── */
+function PodTabsView({ pod }) {
+  const [activeTab, setActiveTab] = useState('Overview');
+  const [directionAccepted, setDirectionAccepted] = useState(pod?.status === 'direction_locked' || pod?.status === 'active');
+  const [userDirection, setUserDirection] = useState('');
 
-  useEffect(() => {
-    if (!supabaseConfigured) {
-      setBootstrapping(false);
-      return undefined;
-    }
-
-    let isMounted = true;
-
-    supabase.auth.getSession().then(({ data }) => {
-      if (isMounted) {
-        setSession(data.session ?? null);
-        setBootstrapping(false);
-      }
-    });
-
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, nextSession) => {
-      setSession(nextSession ?? null);
-    });
-
-    return () => {
-      isMounted = false;
-      subscription.unsubscribe();
-    };
-  }, []);
-
-  if (bootstrapping) {
-    return (
-      <div className="center-screen" aria-busy="true">
-        <span role="status" aria-live="polite">
-          Loading {APP_NAME}...
-        </span>
-      </div>
-    );
-  }
-
-  return (
-    <BrowserRouter>
-      <Analytics />
-      <Routes>
-        <Route path="/" element={<LandingPage session={session} />} />
-        <Route path="/login" element={<AuthPage session={session} defaultMode="login" />} />
-        <Route path="/signup" element={<AuthPage session={session} defaultMode="signup" />} />
-        <Route path="/auth" element={<AuthPage session={session} defaultMode="login" />} />
-        <Route path="/pricing" element={<PricingPage />} />
-        <Route path="/demo-pod" element={<DemoPodPage />} />
-
-        <Route element={<ProtectedRoute session={session} />}>
-          <Route
-            element={(
-              <AppLayout
-                user={session?.user}
-                onSignOut={async () => {
-                  if (!supabaseConfigured) return;
-                  await supabase.auth.signOut();
-                }}
-              />
-            )}
-          >
-            <Route path="/dashboard" element={<DashboardPage />} />
-            <Route path="/pods" element={<PodsPage />} />
-            <Route path="/pods/new" element={<CreatePodPage />} />
-            <Route path="/pods/:podId" element={<PodDashboardPage />} />
-            <Route path="/settings" element={<SettingsPage user={session?.user} />} />
-          </Route>
-        </Route>
-
-        <Route path="*" element={<Navigate to={session ? '/dashboard' : '/'} replace />} />
-      </Routes>
-    </BrowserRouter>
-  );
-}
-
-function ProtectedRoute({ session }) {
-  const location = useLocation();
-
-  if (!supabaseConfigured) {
-    return <Navigate to="/login" replace state={{ from: location }} />;
-  }
-
-  if (!session) {
-    return <Navigate to="/login" replace state={{ from: location }} />;
-  }
-
-  return <Outlet />;
-}
-
-function Wordmark() {
-  return (
-    <span className="logo-wordmark" aria-label="Dovroyn logo">
-      <span className="logo-mark" aria-hidden="true">
-        <span className="logo-orbit" />
-      </span>
-      <span>DOVROYN</span>
-    </span>
-  );
-}
-
-/* ─── LANDING PAGE ─── */
-function LandingPage({ session }) {
-  const [waitlistEmail, setWaitlistEmail] = useState('');
-  const [waitlistStatus, setWaitlistStatus] = useState('');
-
-  const handleWaitlist = async (e) => {
-    e.preventDefault();
-    if (!waitlistEmail.trim()) return;
-
-    // Save to Supabase waitlist table if configured
-    if (supabaseConfigured) {
-      await supabase.from('waitlist').insert({ email: waitlistEmail.trim() }).select();
-    }
-
-    setWaitlistStatus('Thank you! You will receive early access updates and founder pricing soon.');
-    setWaitlistEmail('');
+  const podData = pod || {
+    pod_name: 'Aurora Skincare Launch',
+    pod_type: 'website',
+    source_url: 'https://auroraskincare.co',
+    target_country: 'Australia',
+    accepted_tone: 'Expert, reassuring, modern luxury',
+    status: 'awaiting_direction',
   };
 
-  return (
-    <main className="landing-shell">
-      {/* Header */}
-      <header className="top-nav">
-        <Wordmark />
-        <nav className="top-nav-links">
-          <NavLink className="nav-link-subtle" to="/pricing">
-            Pricing
-          </NavLink>
-          <NavLink className="nav-link-subtle" to="/login">
-            Login
-          </NavLink>
-        </nav>
-      </header>
-
-      {/* Hero Section */}
-      <section className="hero-block panel">
-        <p className="eyebrow">Luxury AI Marketing Pods</p>
-        <div className="divider-line" />
-        <div className="hero-content-centered">
-          <h1>
-            AI marketing pods that turn your <span className="hero-emphasis">website</span>, launch, or campaign into a full growth plan.
-          </h1>
-          <p className="hero-gold-line">
-            Drop in a website, app, offer, campaign, or teaser images. Dovroyn analyses it, builds your campaign direction, recommends content, maps your calendar, and keeps every marketing move inside one intelligent pod.
-          </p>
-          <p className="lede">
-            Each pod learns what you are building, who you are selling to, what tone fits best, what platforms matter, what content should go out, and what marketing move comes next.
-          </p>
-          <div className="hero-actions">
-            <a className="button button-primary" href="#waitlist">
-              Join Early Access
-            </a>
-            <NavLink className="button button-ghost" to="/demo-pod">
-              View Demo Pod
-            </NavLink>
-          </div>
-        </div>
-      </section>
-
-      {/* Early Access / Coming Soon */}
-      <section className="waitlist-section panel" id="waitlist">
-        <p className="eyebrow">Coming Soon</p>
-        <h2 className="waitlist-heading">Marketing pods built for brands ready to move.</h2>
-        <p className="lede">Enter your email to get early access. Free to join. Early users get launch updates, first access, and founder pricing.</p>
-        <form className="waitlist-form" onSubmit={handleWaitlist}>
-          <input
-            type="email"
-            placeholder="Enter your email to get early access"
-            value={waitlistEmail}
-            onChange={(e) => setWaitlistEmail(e.target.value)}
-            required
-          />
-          <button className="button button-primary" type="submit">
-            Join Early Access
-          </button>
-        </form>
-        {waitlistStatus && <p className="waitlist-confirmation">{waitlistStatus}</p>}
-        <p className="waitlist-note">Free to join. Early users get launch updates, first access, and founder pricing.</p>
-      </section>
-
-      {/* Dashboard Preview Cards */}
-      <section className="dashboard-preview">
-        <p className="eyebrow">Demo Pod Preview</p>
-        <h2 className="section-title">Every marketing move visible. Every brand organised.</h2>
-        <div className="preview-cards-grid">
-          {DASHBOARD_PREVIEW_CARDS.map((card) => (
-            <article key={card.title} className="panel preview-card">
-              <p className="preview-label">{card.title}</p>
-              <p className="preview-metric">{card.metric}</p>
-              <p className="preview-note">{card.description}</p>
-            </article>
-          ))}
-        </div>
-      </section>
-
-      {/* Content Sections */}
-      <section className="landing-sections">
-        {LANDING_SECTIONS.map((section) => (
-          <article key={section.heading} className="landing-section-item">
-            <h2>{section.heading}</h2>
-            <p>{section.body}</p>
-          </article>
-        ))}
-      </section>
-
-      {/* Pricing Preview */}
-      <section className="pricing-section">
-        <p className="eyebrow">Early Access Pricing</p>
-        <h2 className="section-title">Four tiers. Scale when you are ready.</h2>
-        <div className="pricing-grid">
-          {PRICING_TIERS.map((tier) => (
-            <article key={tier.name} className="panel pricing-card">
-              <h3 className="pricing-tier-name">{tier.name}</h3>
-              <p className="pricing-price">{tier.monthly}<span style={{ fontSize: '0.6em', fontWeight: 400 }}>/month</span></p>
-              <p className="pricing-price-yearly">{tier.yearly}/year</p>
-              <p className="pricing-best-for">{tier.bestFor}</p>
-              <ul className="pricing-features">
-                {tier.features.map((feature) => (
-                  <li key={feature}>{feature}</li>
-                ))}
-              </ul>
-              <a
-                className="button button-primary"
-                href={STRIPE_PRICING_LINKS[`${tier.stripeKey}_monthly`] || '#waitlist'}
-              >
-                {STRIPE_PRICING_LINKS[`${tier.stripeKey}_monthly`] ? 'Subscribe' : 'Join Early Access'}
-              </a>
-            </article>
-          ))}
-        </div>
-        <p className="pricing-billing-note">Save 20% with yearly billing.</p>
-      </section>
-
-      {/* Footer */}
-      <footer className="landing-footer">
-        <p className="footer-copyright">&copy; {new Date().getFullYear()} Dovroyn. Built by Anglow Digital PTY LTD.</p>
-        <nav className="footer-links">
-          <a href="#privacy">Privacy</a>
-          <a href="#terms">Terms</a>
-          <a href="#contact">Contact</a>
-        </nav>
-      </footer>
-    </main>
-  );
-}
-
-/* ─── DEMO POD PAGE ─── */
-function DemoPodPage() {
-  const [activeTab, setActiveTab] = useState('Overview');
-  const [directionAccepted, setDirectionAccepted] = useState(false);
-  const [userDirection, setUserDirection] = useState('');
+  const handleAcceptDirection = async () => {
+    setDirectionAccepted(true);
+    if (supabaseConfigured && pod?.id) {
+      await supabase.from('pods').update({
+        status: 'direction_locked',
+        accepted_tone: userDirection || 'Expert, reassuring, modern luxury',
+        accepted_strategy: 'AI-recommended strategy accepted',
+        updated_at: new Date().toISOString(),
+      }).eq('id', pod.id);
+    }
+  };
 
   const renderTabContent = () => {
     switch (activeTab) {
       case 'Overview':
         return (
           <div className="pod-section-content">
-            <h4>Pod: Aurora Skincare Launch</h4>
-            <p><strong>Pod type:</strong> Website analysis</p>
+            <h4>Pod: {podData.pod_name}</h4>
+            <p><strong>Pod type:</strong> {podData.pod_type}</p>
             <p><strong>Status:</strong> {directionAccepted ? 'Direction locked' : 'Awaiting direction approval'}</p>
             <p><strong>Goal:</strong> Increase qualified leads and repeat purchases</p>
-            <p><strong>Target country:</strong> Australia</p>
+            <p><strong>Target country:</strong> {podData.target_country}</p>
             <p><strong>Current stage:</strong> {directionAccepted ? 'Content planning' : 'Strategy review'}</p>
             <p><strong>Next best marketing move:</strong> Launch hydration-focused ad set to warm traffic</p>
           </div>
@@ -418,7 +191,7 @@ function DemoPodPage() {
         return (
           <div className="pod-section-content">
             <h4>Source / Intake</h4>
-            <p><strong>Website URL:</strong> https://auroraskincare.co</p>
+            <p><strong>Website URL:</strong> {podData.source_url || 'Not provided'}</p>
             <p><strong>Uploaded images:</strong> 3 product photos, 1 lifestyle shot</p>
             <p><strong>Campaign notes:</strong> Winter barrier repair campaign targeting existing customers</p>
             <p><strong>Offer notes:</strong> Bundle discount on night serum + moisturiser</p>
@@ -436,7 +209,7 @@ function DemoPodPage() {
             <p><strong>Strongest opportunity:</strong> Hydration-focused messaging outperforms anti-ageing claims by 27%</p>
             {!directionAccepted && (
               <div className="direction-actions">
-                <button className="button button-primary" onClick={() => setDirectionAccepted(true)}>
+                <button className="button button-primary" onClick={handleAcceptDirection}>
                   Accept AI Direction
                 </button>
                 <button className="button button-ghost" onClick={() => setActiveTab('Brand DNA')}>
@@ -452,12 +225,12 @@ function DemoPodPage() {
           <div className="pod-section-content">
             <h4>Brand DNA</h4>
             <p><strong>Brand summary:</strong> Premium skincare for modern women who value efficacy and elegance</p>
-            <p><strong>Tone of voice:</strong> Expert, reassuring, modern luxury</p>
+            <p><strong>Tone of voice:</strong> {podData.accepted_tone || 'Expert, reassuring, modern luxury'}</p>
             <p><strong>Brand personality:</strong> Confident, knowledgeable, warm</p>
             <p><strong>Visual/style notes:</strong> Soft lighting, close-up textures, botanical elements</p>
             <p><strong>Words to use:</strong> Nourish, restore, glow, ritual, radiance</p>
             <p><strong>Words to avoid:</strong> Cheap, basic, quick fix, miracle</p>
-            <p><strong>Locked-in tone:</strong> {directionAccepted ? 'Expert luxury' : 'Pending approval'}</p>
+            <p><strong>Locked-in tone:</strong> {directionAccepted ? (podData.accepted_tone || 'Expert luxury') : 'Pending approval'}</p>
             {!directionAccepted && (
               <div style={{ marginTop: '0.8rem' }}>
                 <label>
@@ -469,7 +242,7 @@ function DemoPodPage() {
                     placeholder="e.g. Make it cheeky and bold instead of luxury..."
                   />
                 </label>
-                <button className="button button-primary" style={{ marginTop: '0.5rem' }} onClick={() => setDirectionAccepted(true)}>
+                <button className="button button-primary" style={{ marginTop: '0.5rem' }} onClick={handleAcceptDirection}>
                   Lock In This Direction
                 </button>
               </div>
@@ -498,7 +271,7 @@ function DemoPodPage() {
             <p><strong>Main angle:</strong> Protect your skin barrier before winter strips it</p>
             <p><strong>Bonuses:</strong> Free travel-size cleanser with bundle</p>
             <p><strong>Urgency:</strong> Winter stock limited, seasonal bundle ends in 14 days</p>
-            <p><strong>Why act now:</strong> Prevention is easier than repair — start before the cold hits</p>
+            <p><strong>Why act now:</strong> Prevention is easier than repair \u2014 start before the cold hits</p>
             <p><strong>CTA:</strong> Get Your Winter Bundle</p>
           </div>
         );
@@ -510,7 +283,7 @@ function DemoPodPage() {
             <p><strong>Campaign message:</strong> Your skin barrier needs protection before winter, not after</p>
             <p><strong>Launch angle:</strong> Seasonal urgency + education</p>
             <p><strong>Content theme:</strong> Hydration science meets cosy winter ritual</p>
-            <p><strong>Funnel direction:</strong> Awareness reel → Education carousel → Bundle offer → Retarget</p>
+            <p><strong>Funnel direction:</strong> Awareness reel \u2192 Education carousel \u2192 Bundle offer \u2192 Retarget</p>
             <p><strong>Best channels:</strong> Instagram Reels, Meta Ads, Email</p>
             <p><strong>What to test first:</strong> Hydration hooks vs barrier repair hooks in ad creative</p>
           </div>
@@ -535,6 +308,13 @@ function DemoPodPage() {
               <li>Winter prep sequence: 3 emails over 5 days</li>
               <li>Bundle launch announcement with early-bird bonus</li>
             </ul>
+            <p><strong>Hook bank:</strong></p>
+            <ul className="simple-list compact-list">
+              <li>"Your moisturiser is not enough for winter"</li>
+              <li>"3 signs your barrier is already damaged"</li>
+              <li>"The one step your evening routine is missing"</li>
+              <li>"Why hydration beats anti-ageing in winter"</li>
+            </ul>
           </div>
         );
       case 'Ad Angles':
@@ -544,7 +324,7 @@ function DemoPodPage() {
             <ul className="simple-list compact-list">
               <li><strong>Pain-point:</strong> "Your skin barrier is breaking down and you might not even know"</li>
               <li><strong>Desire:</strong> "Wake up to plump, hydrated skin every morning"</li>
-              <li><strong>Before/after:</strong> "Week 1 vs Week 4 — same routine, visible glow"</li>
+              <li><strong>Before/after:</strong> "Week 1 vs Week 4 \u2014 same routine, visible glow"</li>
               <li><strong>Founder story:</strong> "I created this because my own skin was suffering"</li>
               <li><strong>Limited drop:</strong> "Winter bundle. 200 units. Once they sell, they sell."</li>
               <li><strong>Problem/solution:</strong> "Dry skin in winter? Your moisturiser is not enough."</li>
@@ -558,18 +338,20 @@ function DemoPodPage() {
         return (
           <div className="pod-section-content">
             <h4>Socials</h4>
-            <p><strong>Recommended platforms:</strong></p>
+            <p><strong>Recommended platforms for this pod:</strong></p>
             <div className="cards-grid" style={{ marginTop: '0.5rem' }}>
               {['Instagram', 'TikTok', 'Pinterest', 'Facebook'].map((platform) => (
                 <article key={platform} className="panel detail-card">
                   <h4>{platform}</h4>
                   <p className="subtle">Platform-specific content direction ready</p>
+                  <p className="subtle"><strong>Posting permission:</strong> Not connected</p>
+                  <p className="subtle"><strong>Ad permission:</strong> Not connected</p>
                   <button className="button button-ghost button-sm">Connect Account</button>
-                  <p className="subtle" style={{ fontSize: '0.75rem' }}>Posting: Coming soon</p>
+                  <p className="subtle" style={{ fontSize: '0.75rem' }}>Posting and ads: Requires connection and user approval</p>
                 </article>
               ))}
             </div>
-            <p className="subtle" style={{ marginTop: '0.8rem' }}>Ad permissions: Requires connected account and explicit user approval before Dovroyn can post or run ads.</p>
+            <p className="subtle" style={{ marginTop: '0.8rem' }}>Important: Users must connect each platform securely via OAuth. Dovroyn cannot post or run ads until you connect and grant permission. No passwords are stored.</p>
           </div>
         );
       case 'Calendar':
@@ -577,28 +359,33 @@ function DemoPodPage() {
           <div className="pod-section-content">
             <h4>Content Calendar</h4>
             <p><strong>Tier:</strong> Growth (20 content days/month)</p>
-            <p><strong>Target country:</strong> Australia</p>
+            <p><strong>Target country:</strong> {podData.target_country}</p>
+            <p><strong>Calendar length:</strong> Based on paid months</p>
             <p><strong>Calendar status:</strong> Ready to generate</p>
             <div style={{ marginTop: '0.5rem' }}>
               <button className="button button-primary">Generate Calendar</button>
             </div>
-            <p className="subtle" style={{ marginTop: '0.5rem' }}>Calendar will be generated based on locked-in tone, selected platforms, and paid tier. Content posts to all selected platforms on the same campaign day.</p>
-            <p className="subtle">Preview, edit, approve, and schedule before anything posts.</p>
+            <p className="subtle" style={{ marginTop: '0.5rem' }}>Calendar will be generated from the pod's analysed website/campaign/images, using the accepted/locked-in tone, selected platforms, paid tier, and target country.</p>
+            <p className="subtle">Content posting to multiple platforms happens on the same campaign day unless you choose otherwise.</p>
+            <p className="subtle">You can preview, edit, approve, or regenerate before anything posts.</p>
           </div>
         );
       case 'Holidays':
         return (
           <div className="pod-section-content">
             <h4>Public Holidays / Seasonal Marketing</h4>
-            <p><strong>Target country:</strong> Australia</p>
+            <p><strong>Target country:</strong> {podData.target_country}</p>
             <p><strong>Upcoming opportunities:</strong></p>
             <ul className="simple-list compact-list">
-              <li>Mother's Day (May) — Gift bundle campaign</li>
-              <li>EOFY Sales (June) — Clearance + new season launch</li>
-              <li>Black Friday (November) — Biggest sale of the year</li>
-              <li>Christmas (December) — Gift sets and luxury packaging</li>
+              <li>Mother's Day (May) \u2014 Gift bundle campaign</li>
+              <li>EOFY Sales (June) \u2014 Clearance + new season launch</li>
+              <li>Father's Day (September) \u2014 Gift sets for him</li>
+              <li>Black Friday (November) \u2014 Biggest sale of the year</li>
+              <li>Christmas (December) \u2014 Gift sets and luxury packaging</li>
+              <li>New Year (January) \u2014 Fresh start / new routine angle</li>
+              <li>Easter (April) \u2014 Seasonal reset campaign</li>
             </ul>
-            <p className="subtle">AI will recommend content close to seasonal dates and factor holidays into calendar generation.</p>
+            <p className="subtle">AI will recommend content close to seasonal dates and factor holidays into calendar generation. Real holiday API integration coming soon.</p>
           </div>
         );
       case 'Budget':
@@ -613,6 +400,10 @@ function DemoPodPage() {
               <article className="panel detail-card">
                 <h4>Ad spend used</h4>
                 <p>$847 this month</p>
+              </article>
+              <article className="panel detail-card">
+                <h4>Spend by platform</h4>
+                <p>Meta: $520 | Instagram: $327</p>
               </article>
               <article className="panel detail-card">
                 <h4>Leads generated</h4>
@@ -630,22 +421,28 @@ function DemoPodPage() {
                 <h4>Cost per lead</h4>
                 <p>$5.96</p>
               </article>
+              <article className="panel detail-card">
+                <h4>Cost per sale</h4>
+                <p>$29.79</p>
+              </article>
             </div>
-            <p className="subtle">Manual input for MVP. Real ad platform spend syncing coming soon.</p>
+            <p className="subtle" style={{ marginTop: '0.5rem' }}>Manual input for MVP. Real ad platform spend syncing coming soon.</p>
           </div>
         );
       case 'Ad Analysis':
         return (
           <div className="pod-section-content">
             <h4>Ad Analysis</h4>
-            <p><strong>Best performing:</strong> Hydration reel hook — 4.2% CTR</p>
-            <p><strong>Worst performing:</strong> Anti-ageing static — 0.8% CTR</p>
+            <p><strong>What is running:</strong> 3 active ad sets across Meta and Instagram</p>
+            <p><strong>Best performing:</strong> Hydration reel hook \u2014 4.2% CTR</p>
+            <p><strong>Worst performing:</strong> Anti-ageing static \u2014 0.8% CTR</p>
             <p><strong>Best hooks:</strong> "Your evening routine is missing one step", "3 signs your barrier is damaged"</p>
             <p><strong>What to test next:</strong> Founder story video, before/after carousel</p>
             <p><strong>Competitor observation:</strong> Luma Botanics using ingredient transparency with strong results</p>
             <div style={{ marginTop: '0.8rem', padding: '0.8rem', background: 'var(--card)', borderRadius: '12px' }}>
               <p><strong>AI Recommendation:</strong></p>
               <p className="subtle">Shift 40% of budget from static ads to Reels. Test founder story angle with hydration hook.</p>
+              <p className="subtle" style={{ fontSize: '0.78rem', fontStyle: 'italic' }}>This change requires your approval before anything is modified.</p>
               <div className="direction-actions">
                 <button className="button button-primary button-sm">Approve Change</button>
                 <button className="button button-ghost button-sm">Reject</button>
@@ -658,12 +455,14 @@ function DemoPodPage() {
           <div className="pod-section-content">
             <h4>AI Notes / Memory</h4>
             <ul className="simple-list compact-list">
+              <li><strong>Decisions made:</strong> Hydration-first messaging chosen over anti-ageing</li>
               <li><strong>Accepted tone:</strong> Expert, reassuring, modern luxury</li>
-              <li><strong>Rejected suggestions:</strong> "Playful" tone was rejected by user in Week 1</li>
+              <li><strong>Rejected suggestions:</strong> "Playful" tone rejected by user in Week 1</li>
               <li><strong>User preferences:</strong> Prefers carousel over single-image posts</li>
+              <li><strong>Past campaign notes:</strong> Quiz landing page converts strongest from social traffic</li>
               <li><strong>Best hooks:</strong> Hydration-focused hooks outperform anti-ageing by 27%</li>
               <li><strong>Brand rules:</strong> Never use the word "cheap" or "basic"</li>
-              <li><strong>Past notes:</strong> Evening skincare content gets best saves and shares</li>
+              <li><strong>Things to remember:</strong> Evening skincare content gets best saves and shares</li>
             </ul>
           </div>
         );
@@ -677,12 +476,12 @@ function DemoPodPage() {
               <li>2. Publish founder story reel with product stack CTA</li>
               <li>3. Send winter prep email sequence (3 emails over 5 days)</li>
             </ul>
-            <p><strong>Needs writing:</strong> Email sequence copy, reel script</p>
-            <p><strong>Needs posting:</strong> Monday authority reel, Wednesday carousel</p>
-            <p><strong>Needs designing:</strong> Bundle product shot, carousel frames</p>
-            <p><strong>Needs testing:</strong> Hydration hook vs barrier repair hook in ads</p>
-            <p><strong>Needs approval:</strong> Budget reallocation from static to Reels</p>
-            <p><strong>Blocking progress:</strong> Bundle product photography not yet received</p>
+            <p><strong>What needs writing:</strong> Email sequence copy, reel script</p>
+            <p><strong>What needs posting:</strong> Monday authority reel, Wednesday carousel</p>
+            <p><strong>What needs designing:</strong> Bundle product shot, carousel frames</p>
+            <p><strong>What needs testing:</strong> Hydration hook vs barrier repair hook in ads</p>
+            <p><strong>What needs approval:</strong> Budget reallocation from static to Reels</p>
+            <p><strong>What is blocking progress:</strong> Bundle product photography not yet received</p>
           </div>
         );
       default:
@@ -691,28 +490,7 @@ function DemoPodPage() {
   };
 
   return (
-    <main className="landing-shell">
-      <header className="top-nav">
-        <Wordmark />
-        <nav className="top-nav-links">
-          <NavLink className="nav-link-subtle" to="/">
-            Home
-          </NavLink>
-          <NavLink className="nav-link-subtle" to="/pricing">
-            Pricing
-          </NavLink>
-          <NavLink className="nav-link-subtle" to="/login">
-            Login
-          </NavLink>
-        </nav>
-      </header>
-
-      <section className="hero-block panel" style={{ padding: '1.5rem' }}>
-        <p className="eyebrow">Demo Pod</p>
-        <h2 style={{ fontFamily: "'Playfair Display', serif" }}>Aurora Skincare — AI Marketing Pod</h2>
-        <p className="subtle">This is a demo pod showing how Dovroyn analyses a website and builds a complete marketing direction.</p>
-      </section>
-
+    <>
       <div className="pod-tabs">
         {POD_TABS.map((tab) => (
           <button
@@ -724,10 +502,253 @@ function DemoPodPage() {
           </button>
         ))}
       </div>
-
       <section className="panel">
         {renderTabContent()}
       </section>
+    </>
+  );
+}
+
+/* ─── MAIN APP ─── */
+function App() {
+  const [session, setSession] = useState(null);
+  const [bootstrapping, setBootstrapping] = useState(true);
+  const [subscription, setSubscription] = useState(null);
+
+  useEffect(() => {
+    if (!supabaseConfigured) {
+      setBootstrapping(false);
+      return undefined;
+    }
+
+    let isMounted = true;
+
+    supabase.auth.getSession().then(({ data }) => {
+      if (isMounted) {
+        setSession(data.session ?? null);
+        setBootstrapping(false);
+      }
+    });
+
+    const {
+      data: { subscription: authSub },
+    } = supabase.auth.onAuthStateChange((_event, nextSession) => {
+      setSession(nextSession ?? null);
+    });
+
+    return () => {
+      isMounted = false;
+      authSub.unsubscribe();
+    };
+  }, []);
+
+  // Load subscription status
+  useEffect(() => {
+    if (!supabaseConfigured || !session?.user?.id) return;
+    supabase
+      .from('subscriptions')
+      .select('*')
+      .eq('user_id', session.user.id)
+      .maybeSingle()
+      .then(({ data }) => {
+        setSubscription(data || { tier: 'free', status: 'inactive', max_pods: 0, monthly_content_days: 0 });
+      });
+  }, [session?.user?.id]);
+
+  if (bootstrapping) {
+    return (
+      <div className="center-screen" aria-busy="true">
+        <span role="status" aria-live="polite">
+          Loading {APP_NAME}...
+        </span>
+      </div>
+    );
+  }
+
+  return (
+    <BrowserRouter>
+      <Analytics />
+      <Routes>
+        <Route path="/" element={<LandingPage session={session} />} />
+        <Route path="/login" element={<AuthPage session={session} defaultMode="login" />} />
+        <Route path="/signup" element={<AuthPage session={session} defaultMode="signup" />} />
+        <Route path="/auth" element={<AuthPage session={session} defaultMode="login" />} />
+        <Route path="/pricing" element={<PricingPage />} />
+        <Route path="/demo-pod" element={<DemoPodPage />} />
+
+        <Route element={<ProtectedRoute session={session} />}>
+          <Route
+            element={(
+              <AppLayout
+                user={session?.user}
+                subscription={subscription}
+                onSignOut={async () => {
+                  if (!supabaseConfigured) return;
+                  await supabase.auth.signOut();
+                }}
+              />
+            )}
+          >
+            <Route path="/dashboard" element={<DashboardPage subscription={subscription} />} />
+            <Route path="/pods" element={<PodsPage session={session} subscription={subscription} />} />
+            <Route path="/pods/new" element={<CreatePodPage session={session} subscription={subscription} />} />
+            <Route path="/pods/:podId" element={<PodDashboardPage session={session} />} />
+            <Route path="/settings" element={<SettingsPage user={session?.user} subscription={subscription} />} />
+          </Route>
+        </Route>
+
+        <Route path="*" element={<Navigate to={session ? '/dashboard' : '/'} replace />} />
+      </Routes>
+    </BrowserRouter>
+  );
+}
+
+function ProtectedRoute({ session }) {
+  const location = useLocation();
+  if (!supabaseConfigured) return <Navigate to="/login" replace state={{ from: location }} />;
+  if (!session) return <Navigate to="/login" replace state={{ from: location }} />;
+  return <Outlet />;
+}
+
+function Wordmark() {
+  return (
+    <span className="logo-wordmark" aria-label="Dovroyn logo">
+      <span className="logo-mark" aria-hidden="true">
+        <span className="logo-orbit" />
+      </span>
+      <span>DOVROYN</span>
+    </span>
+  );
+}
+
+/* ─── LANDING PAGE ─── */
+function LandingPage({ session }) {
+  const [waitlistEmail, setWaitlistEmail] = useState('');
+  const [waitlistStatus, setWaitlistStatus] = useState('');
+
+  const handleWaitlist = async (e) => {
+    e.preventDefault();
+    if (!waitlistEmail.trim()) return;
+    if (supabaseConfigured) {
+      await supabase.from('waitlist').insert({ email: waitlistEmail.trim() }).select();
+    }
+    setWaitlistStatus('Thank you! You will receive early access updates and founder pricing soon.');
+    setWaitlistEmail('');
+  };
+
+  return (
+    <main className="landing-shell">
+      <header className="top-nav">
+        <Wordmark />
+        <nav className="top-nav-links">
+          <NavLink className="nav-link-subtle" to="/pricing">Pricing</NavLink>
+          <NavLink className="nav-link-subtle" to="/login">Login</NavLink>
+        </nav>
+      </header>
+
+      <section className="hero-block panel">
+        <p className="eyebrow">Luxury AI Marketing Pods</p>
+        <div className="divider-line" />
+        <div className="hero-content-centered">
+          <h1>AI marketing pods that turn your <span className="hero-emphasis">website</span>, launch, or campaign into a full growth plan.</h1>
+          <p className="hero-gold-line">Drop in a website, app, offer, campaign, or teaser images. Dovroyn analyses it, builds your campaign direction, recommends content, maps your calendar, and keeps every marketing move inside one intelligent pod.</p>
+          <p className="lede">Each pod learns what you are building, who you are selling to, what tone fits best, what platforms matter, what content should go out, and what marketing move comes next.</p>
+          <div className="hero-actions">
+            <a className="button button-primary" href="#waitlist">Join Early Access</a>
+            <NavLink className="button button-ghost" to="/demo-pod">View Demo Pod</NavLink>
+          </div>
+        </div>
+      </section>
+
+      <section className="waitlist-section panel" id="waitlist">
+        <p className="eyebrow">Coming Soon</p>
+        <h2 className="waitlist-heading">Marketing pods built for brands ready to move.</h2>
+        <p className="lede">Enter your email to get early access. Free to join. Early users get launch updates, first access, and founder pricing.</p>
+        <form className="waitlist-form" onSubmit={handleWaitlist}>
+          <input type="email" placeholder="Enter your email to get early access" value={waitlistEmail} onChange={(e) => setWaitlistEmail(e.target.value)} required />
+          <button className="button button-primary" type="submit">Join Early Access</button>
+        </form>
+        {waitlistStatus && <p className="waitlist-confirmation">{waitlistStatus}</p>}
+        <p className="waitlist-note">Free to join. Early users get launch updates, first access, and founder pricing.</p>
+      </section>
+
+      <section className="dashboard-preview">
+        <p className="eyebrow">Demo Pod Preview</p>
+        <h2 className="section-title">Every marketing move visible. Every brand organised.</h2>
+        <div className="preview-cards-grid">
+          {DASHBOARD_PREVIEW_CARDS.map((card) => (
+            <article key={card.title} className="panel preview-card">
+              <p className="preview-label">{card.title}</p>
+              <p className="preview-metric">{card.metric}</p>
+              <p className="preview-note">{card.description}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="landing-sections">
+        {LANDING_SECTIONS.map((section) => (
+          <article key={section.heading} className="landing-section-item">
+            <h2>{section.heading}</h2>
+            <p>{section.body}</p>
+          </article>
+        ))}
+      </section>
+
+      <section className="pricing-section">
+        <p className="eyebrow">Early Access Pricing</p>
+        <h2 className="section-title">Four tiers. Scale when you are ready.</h2>
+        <div className="pricing-grid">
+          {PRICING_TIERS.map((tier) => (
+            <article key={tier.name} className="panel pricing-card">
+              <h3 className="pricing-tier-name">{tier.name}</h3>
+              <p className="pricing-price">{tier.monthly}<span style={{ fontSize: '0.6em', fontWeight: 400 }}>/month</span></p>
+              <p className="pricing-price-yearly">{tier.yearly}/year</p>
+              <p className="pricing-best-for">{tier.bestFor}</p>
+              <ul className="pricing-features">
+                {tier.features.map((f) => <li key={f}>{f}</li>)}
+              </ul>
+              <a className="button button-primary" href={STRIPE_PRICING_LINKS[`${tier.stripeKey}_monthly`] || '#waitlist'}>
+                {STRIPE_PRICING_LINKS[`${tier.stripeKey}_monthly`] ? 'Subscribe' : 'Join Early Access'}
+              </a>
+            </article>
+          ))}
+        </div>
+        <p className="pricing-billing-note">Save 20% with yearly billing.</p>
+      </section>
+
+      <footer className="landing-footer">
+        <p className="footer-copyright">&copy; {new Date().getFullYear()} Dovroyn. Built by Anglow Digital PTY LTD.</p>
+        <nav className="footer-links">
+          <a href="#privacy">Privacy</a>
+          <a href="#terms">Terms</a>
+          <a href="#contact">Contact</a>
+        </nav>
+      </footer>
+    </main>
+  );
+}
+
+/* ─── DEMO POD PAGE (public) ─── */
+function DemoPodPage() {
+  return (
+    <main className="landing-shell">
+      <header className="top-nav">
+        <Wordmark />
+        <nav className="top-nav-links">
+          <NavLink className="nav-link-subtle" to="/">Home</NavLink>
+          <NavLink className="nav-link-subtle" to="/pricing">Pricing</NavLink>
+          <NavLink className="nav-link-subtle" to="/login">Login</NavLink>
+        </nav>
+      </header>
+
+      <section className="hero-block panel" style={{ padding: '1.5rem' }}>
+        <p className="eyebrow">Demo Pod</p>
+        <h2 style={{ fontFamily: "'Playfair Display', serif" }}>Aurora Skincare \u2014 AI Marketing Pod</h2>
+        <p className="subtle">This demo shows how Dovroyn analyses a website and builds a complete marketing direction inside one pod.</p>
+      </section>
+
+      <PodTabsView pod={null} />
 
       <footer className="landing-footer">
         <p className="footer-copyright">&copy; {new Date().getFullYear()} Dovroyn. Built by Anglow Digital PTY LTD.</p>
@@ -751,52 +772,20 @@ function AuthPage({ session, defaultMode = 'login' }) {
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
 
-  useEffect(() => {
-    setMode(defaultMode);
-  }, [defaultMode]);
-
-  useEffect(() => {
-    if (session) {
-      navigate('/dashboard', { replace: true });
-    }
-  }, [navigate, session]);
-
-  const submitLabel = mode === 'login' ? 'Log in' : 'Create account';
+  useEffect(() => { setMode(defaultMode); }, [defaultMode]);
+  useEffect(() => { if (session) navigate('/dashboard', { replace: true }); }, [navigate, session]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-
-    if (!supabaseConfigured) {
-      setError('Missing Supabase environment variables.');
-      return;
-    }
-
-    setSubmitting(true);
-    setError('');
-    setMessage('');
-
-    const action =
-      mode === 'login'
-        ? supabase.auth.signInWithPassword({ email, password })
-        : supabase.auth.signUp({
-            email,
-            password,
-            options: {
-              data: { full_name: name.trim() },
-            },
-          });
-
+    if (!supabaseConfigured) { setError('Missing Supabase environment variables.'); return; }
+    setSubmitting(true); setError(''); setMessage('');
+    const action = mode === 'login'
+      ? supabase.auth.signInWithPassword({ email, password })
+      : supabase.auth.signUp({ email, password, options: { data: { full_name: name.trim() } } });
     const { error: authError } = await action;
-
-    if (authError) {
-      setError(authError.message);
-    } else if (mode === 'signup') {
-      setMessage('Check your inbox to confirm your email, then log in.');
-      navigate('/login', { replace: true });
-    } else {
-      navigate('/dashboard', { replace: true });
-    }
-
+    if (authError) { setError(authError.message); }
+    else if (mode === 'signup') { setMessage('Check your inbox to confirm your email.'); navigate('/login', { replace: true }); }
+    else { navigate('/dashboard', { replace: true }); }
     setSubmitting(false);
   };
 
@@ -806,57 +795,16 @@ function AuthPage({ session, defaultMode = 'login' }) {
         <Wordmark />
         <h1 style={{ fontSize: '1.5rem' }}>{mode === 'login' ? 'Welcome back to Dovroyn' : 'Create your first Dovroyn pod'}</h1>
         <p>Secure pod access powered by Supabase authentication.</p>
-
-        {!supabaseConfigured && (
-          <div className="alert">
-            Add <code>VITE_SUPABASE_URL</code> and <code>VITE_SUPABASE_ANON_KEY</code> in your
-            environment to enable authentication.
-          </div>
-        )}
-
+        {!supabaseConfigured && <div className="alert">Add <code>VITE_SUPABASE_URL</code> and <code>VITE_SUPABASE_ANON_KEY</code> to enable authentication.</div>}
         <form onSubmit={handleSubmit} className="stack">
-          {mode === 'signup' && (
-            <label>
-              Name
-              <input value={name} onChange={(e) => setName(e.target.value)} required />
-            </label>
-          )}
-
-          <label>
-            Email
-            <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-          </label>
-
-          <label>
-            Password
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              minLength={6}
-              required
-            />
-          </label>
-
+          {mode === 'signup' && <label>Name<input value={name} onChange={(e) => setName(e.target.value)} required /></label>}
+          <label>Email<input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required /></label>
+          <label>Password<input type="password" value={password} onChange={(e) => setPassword(e.target.value)} minLength={6} required /></label>
           {error && <p className="form-error">{error}</p>}
           {message && <p className="subtle">{message}</p>}
-
-          <button className="button button-primary" type="submit" disabled={submitting}>
-            {submitting ? 'Working...' : submitLabel}
-          </button>
+          <button className="button button-primary" type="submit" disabled={submitting}>{submitting ? 'Working...' : (mode === 'login' ? 'Log in' : 'Create account')}</button>
         </form>
-
-        <button
-          className="button button-link"
-          type="button"
-          onClick={() => {
-            setError('');
-            setMessage('');
-            const nextMode = mode === 'login' ? 'signup' : 'login';
-            setMode(nextMode);
-            navigate(`/${nextMode}`);
-          }}
-        >
+        <button className="button button-link" type="button" onClick={() => { setError(''); setMessage(''); const next = mode === 'login' ? 'signup' : 'login'; setMode(next); navigate(`/${next}`); }}>
           {mode === 'login' ? 'Need an account? Sign up' : 'Already have an account? Log in'}
         </button>
       </div>
@@ -865,25 +813,22 @@ function AuthPage({ session, defaultMode = 'login' }) {
 }
 
 /* ─── APP LAYOUT ─── */
-function AppLayout({ user, onSignOut }) {
+function AppLayout({ user, subscription, onSignOut }) {
   return (
     <div className="app-layout">
       <aside className="sidebar panel">
         <Wordmark />
         <nav>
           {SIDEBAR_NAV_ITEMS.map((item) => (
-            <NavLink key={item.to} to={item.to} className="nav-item">
-              {item.label}
-            </NavLink>
+            <NavLink key={item.to} to={item.to} className="nav-item">{item.label}</NavLink>
           ))}
         </nav>
-        <button className="button button-ghost" type="button" onClick={onSignOut}>
-          Sign out
-        </button>
+        {subscription && <p style={{ color: 'var(--gold-soft)', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Tier: {subscription.tier || 'Free'}</p>}
+        <button className="button button-ghost" type="button" onClick={onSignOut}>Sign out</button>
       </aside>
       <section className="content">
         <header className="content-header panel">
-          <p className="eyebrow">Dovroyn — Luxury AI Marketing Pods</p>
+          <p className="eyebrow">Dovroyn \u2014 Luxury AI Marketing Pods</p>
           <h2>{user?.email}</h2>
         </header>
         <Outlet />
@@ -893,19 +838,25 @@ function AppLayout({ user, onSignOut }) {
 }
 
 /* ─── DASHBOARD PAGE ─── */
-function DashboardPage() {
+function DashboardPage({ subscription }) {
   return (
     <div className="page-stack">
       <header className="section-header panel">
         <div>
           <p className="eyebrow">Dashboard</p>
           <h3>Your marketing pods</h3>
-          <p className="subtle">Every brand gets its own AI marketing pod. Each pod keeps strategy, content, and marketing moves in one place.</p>
+          <p className="subtle">Every brand gets its own AI marketing pod.</p>
         </div>
-        <NavLink className="button button-primary" to="/pods/new">
-          Create Pod
-        </NavLink>
+        <NavLink className="button button-primary" to="/pods/new">Create Pod</NavLink>
       </header>
+
+      {subscription && subscription.tier === 'free' && (
+        <article className="panel detail-card" style={{ borderColor: 'var(--gold)' }}>
+          <h4>Upgrade to start creating pods</h4>
+          <p className="subtle">You are on the free tier. Subscribe to a plan to create and manage marketing pods.</p>
+          <NavLink className="button button-primary" to="/pricing">View Pricing</NavLink>
+        </article>
+      )}
 
       <section className="cards-grid cards-grid-wide">
         {DASHBOARD_PREVIEW_CARDS.map((card) => (
@@ -921,53 +872,130 @@ function DashboardPage() {
 }
 
 /* ─── PODS PAGE ─── */
-function PodsPage() {
+function PodsPage({ session, subscription }) {
+  const [pods, setPods] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (!supabaseConfigured || !session?.user?.id) { setLoading(false); return; }
+    supabase.from('pods').select('*').eq('user_id', session.user.id).order('created_at', { ascending: false })
+      .then(({ data }) => { setPods(data || []); setLoading(false); });
+  }, [session?.user?.id]);
+
+  const tier = subscription?.tier || 'free';
+  const maxPods = TIER_LIMITS[tier]?.maxPods || 0;
+
   return (
     <div className="page-stack">
       <header className="section-header panel">
         <div>
-          <p className="eyebrow">Pods</p>
+          <p className="eyebrow">Pods ({pods.length}/{maxPods})</p>
           <h3>All AI marketing pods</h3>
           <p className="subtle">Create a dedicated pod for each brand, product, offer, or campaign.</p>
         </div>
-        <NavLink className="button button-primary" to="/pods/new">
-          Create Pod
-        </NavLink>
+        <NavLink className="button button-primary" to="/pods/new">Create Pod</NavLink>
       </header>
 
-      <section className="cards-grid cards-grid-wide">
-        <article className="panel pod-card">
-          <div className="pod-card-head">
-            <h3>Aurora Skincare</h3>
-            <span className="status-tag">Demo</span>
-          </div>
-          <div className="pod-card-meta">
-            <p><strong>Type:</strong> Website analysis</p>
-            <p><strong>Source:</strong> https://auroraskincare.co</p>
-            <p><strong>Direction:</strong> Expert luxury tone (locked)</p>
-            <p><strong>Next move:</strong> Launch hydration-focused ad set</p>
-          </div>
-          <div className="action-buttons">
-            <NavLink className="button button-ghost" to="/demo-pod">
-              Open pod
-            </NavLink>
-          </div>
+      {tier === 'free' && (
+        <article className="panel detail-card" style={{ borderColor: 'var(--gold)' }}>
+          <h4>Subscribe to create pods</h4>
+          <p className="subtle">Free users cannot create pods. Choose a plan to get started.</p>
+          <NavLink className="button button-primary" to="/pricing">View Pricing</NavLink>
         </article>
+      )}
+
+      <section className="cards-grid cards-grid-wide">
+        {loading && <p className="subtle">Loading pods...</p>}
+        {!loading && pods.length === 0 && tier !== 'free' && (
+          <article className="panel detail-card">
+            <h4>No pods yet</h4>
+            <p className="subtle">Create your first AI marketing pod to get started.</p>
+            <NavLink className="button button-primary" to="/pods/new">Create Pod</NavLink>
+          </article>
+        )}
+        {pods.map((pod) => (
+          <article key={pod.id} className="panel pod-card">
+            <div className="pod-card-head">
+              <h3>{pod.pod_name}</h3>
+              <span className="status-tag">{pod.status}</span>
+            </div>
+            <div className="pod-card-meta">
+              <p><strong>Type:</strong> {pod.pod_type}</p>
+              {pod.source_url && <p><strong>Source:</strong> {pod.source_url}</p>}
+              <p><strong>Country:</strong> {pod.target_country}</p>
+              {pod.accepted_tone && <p><strong>Tone:</strong> {pod.accepted_tone}</p>}
+            </div>
+            <div className="action-buttons">
+              <NavLink className="button button-ghost" to={`/pods/${pod.id}`}>Open pod</NavLink>
+            </div>
+          </article>
+        ))}
       </section>
     </div>
   );
 }
 
 /* ─── CREATE POD PAGE ─── */
-function CreatePodPage() {
-  const [form, setForm] = useState({
-    podName: '',
-    podType: 'website',
-    sourceUrl: '',
-    targetCountry: 'Australia',
-    notes: '',
-  });
+function CreatePodPage({ session, subscription }) {
+  const navigate = useNavigate();
+  const [form, setForm] = useState({ podName: '', podType: 'website', sourceUrl: '', targetCountry: 'Australia', notes: '' });
   const [step, setStep] = useState(1);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState('');
+
+  const tier = subscription?.tier || 'free';
+
+  const handleCreatePod = async () => {
+    if (tier === 'free') { setError('Please subscribe to a plan to create pods.'); return; }
+    if (!form.podName.trim()) { setError('Pod name is required.'); return; }
+    setSaving(true); setError('');
+
+    if (supabaseConfigured && session?.user?.id) {
+      const { data, error: dbError } = await supabase.from('pods').insert({
+        user_id: session.user.id,
+        pod_name: form.podName.trim(),
+        pod_type: form.podType,
+        source_url: form.sourceUrl.trim() || null,
+        target_country: form.targetCountry,
+        status: 'created',
+      }).select().single();
+
+      if (dbError) { setError(dbError.message); setSaving(false); return; }
+
+      // Save source
+      if (form.sourceUrl.trim() || form.notes.trim()) {
+        await supabase.from('pod_sources').insert({
+          pod_id: data.id,
+          source_type: form.podType,
+          source_url: form.sourceUrl.trim() || null,
+          notes: form.notes.trim() || null,
+        });
+      }
+
+      // Create empty budget
+      await supabase.from('budgets').insert({ pod_id: data.id });
+
+      navigate(`/pods/${data.id}`);
+    } else {
+      setError('Database not configured.');
+    }
+    setSaving(false);
+  };
+
+  if (tier === 'free') {
+    return (
+      <div className="page-stack">
+        <header className="section-header panel">
+          <div>
+            <p className="eyebrow">Create Pod</p>
+            <h3>Subscribe to create pods</h3>
+            <p className="subtle">Pod creation requires a paid subscription.</p>
+          </div>
+        </header>
+        <NavLink className="button button-primary" to="/pricing">View Pricing</NavLink>
+      </div>
+    );
+  }
 
   return (
     <div className="page-stack">
@@ -979,26 +1007,15 @@ function CreatePodPage() {
         </div>
       </header>
 
+      {error && <p className="form-error" style={{ padding: '0.5rem' }}>{error}</p>}
+
       {step === 1 && (
         <form className="card-form panel" onSubmit={(e) => { e.preventDefault(); setStep(2); }}>
           <h4>Step 1: Pod details</h4>
           <div className="field-grid">
-            <label>
-              Pod name
-              <input
-                value={form.podName}
-                onChange={(e) => setForm((prev) => ({ ...prev, podName: e.target.value }))}
-                placeholder="e.g. Aurora Skincare Launch"
-                required
-              />
-            </label>
-
-            <label>
-              Pod type
-              <select
-                value={form.podType}
-                onChange={(e) => setForm((prev) => ({ ...prev, podType: e.target.value }))}
-              >
+            <label>Pod name<input value={form.podName} onChange={(e) => setForm((p) => ({ ...p, podName: e.target.value }))} placeholder="e.g. Aurora Skincare Launch" required /></label>
+            <label>Pod type
+              <select value={form.podType} onChange={(e) => setForm((p) => ({ ...p, podType: e.target.value }))}>
                 <option value="website">Website URL</option>
                 <option value="app">App URL</option>
                 <option value="product">Product URL</option>
@@ -1008,22 +1025,9 @@ function CreatePodPage() {
                 <option value="brand">Brand notes</option>
               </select>
             </label>
-
-            <label>
-              Source URL (if applicable)
-              <input
-                value={form.sourceUrl}
-                onChange={(e) => setForm((prev) => ({ ...prev, sourceUrl: e.target.value }))}
-                placeholder="https://yourbrand.com"
-              />
-            </label>
-
-            <label>
-              Target country
-              <select
-                value={form.targetCountry}
-                onChange={(e) => setForm((prev) => ({ ...prev, targetCountry: e.target.value }))}
-              >
+            <label>Source URL (if applicable)<input value={form.sourceUrl} onChange={(e) => setForm((p) => ({ ...p, sourceUrl: e.target.value }))} placeholder="https://yourbrand.com" /></label>
+            <label>Target country
+              <select value={form.targetCountry} onChange={(e) => setForm((p) => ({ ...p, targetCountry: e.target.value }))}>
                 <option value="Australia">Australia</option>
                 <option value="United States">United States</option>
                 <option value="United Kingdom">United Kingdom</option>
@@ -1032,21 +1036,9 @@ function CreatePodPage() {
                 <option value="Other">Other</option>
               </select>
             </label>
-
-            <label>
-              Campaign/brand notes (optional)
-              <textarea
-                rows={4}
-                value={form.notes}
-                onChange={(e) => setForm((prev) => ({ ...prev, notes: e.target.value }))}
-                placeholder="Anything the AI should know about your brand, offer, or campaign..."
-              />
-            </label>
+            <label>Campaign/brand notes (optional)<textarea rows={4} value={form.notes} onChange={(e) => setForm((p) => ({ ...p, notes: e.target.value }))} placeholder="Anything the AI should know..." /></label>
           </div>
-
-          <button className="button button-primary" type="submit">
-            Next: Add Source
-          </button>
+          <button className="button button-primary" type="submit">Next: Add Source</button>
         </form>
       )}
 
@@ -1054,39 +1046,20 @@ function CreatePodPage() {
         <div className="card-form panel">
           <h4>Step 2: Add your source</h4>
           <p className="subtle">The AI will analyse your website, app, images, or notes to build your marketing direction.</p>
-
           <div className="cards-grid">
-            <article className="panel detail-card">
-              <h4>Website/App Analysis</h4>
-              <p className="subtle">Paste a URL and Dovroyn reads the source</p>
-              <span className="status-chip">Ready</span>
-            </article>
-            <article className="panel detail-card">
-              <h4>Image Upload</h4>
-              <p className="subtle">Upload product photos or teaser images</p>
-              <span className="status-chip">Coming soon</span>
-            </article>
-            <article className="panel detail-card">
-              <h4>Campaign Notes</h4>
-              <p className="subtle">Paste your offer, campaign, or brand notes</p>
-              <span className="status-chip">Ready</span>
-            </article>
+            <article className="panel detail-card"><h4>Website/App Analysis</h4><p className="subtle">Paste a URL and Dovroyn reads the source</p><span className="status-chip">Ready</span></article>
+            <article className="panel detail-card"><h4>Image Upload</h4><p className="subtle">Upload product photos or teaser images</p><span className="status-chip">Coming soon</span></article>
+            <article className="panel detail-card"><h4>Campaign Notes</h4><p className="subtle">Paste your offer, campaign, or brand notes</p><span className="status-chip">Ready</span></article>
           </div>
-
-          <button className="button button-primary" onClick={() => setStep(3)}>
-            Analyse
-          </button>
-          <button className="button button-ghost" onClick={() => setStep(1)}>
-            Back
-          </button>
+          <button className="button button-primary" onClick={() => setStep(3)}>Analyse</button>
+          <button className="button button-ghost" onClick={() => setStep(1)}>Back</button>
         </div>
       )}
 
       {step === 3 && (
         <div className="card-form panel">
           <h4>Step 3: AI Analysis Complete</h4>
-          <p className="subtle">The AI has analysed your source and built a marketing direction. Review it below.</p>
-
+          <p className="subtle">The AI has analysed your source and built a marketing direction.</p>
           <article className="panel detail-card">
             <h4>AI Direction Summary</h4>
             <p><strong>Brand direction:</strong> Professional, trustworthy, results-focused</p>
@@ -1094,33 +1067,46 @@ function CreatePodPage() {
             <p><strong>Tone:</strong> Confident, knowledgeable, direct</p>
             <p><strong>Campaign angle:</strong> Authority-led content with clear next steps</p>
           </article>
-
           <div className="direction-actions">
-            <button className="button button-primary">Accept AI Direction</button>
+            <button className="button button-primary" onClick={handleCreatePod} disabled={saving}>{saving ? 'Creating pod...' : 'Accept and Create Pod'}</button>
             <button className="button button-ghost" onClick={() => setStep(2)}>Change Direction</button>
           </div>
-
-          <p className="subtle">Once accepted, all pod sections (content, ads, calendar, budget) will follow this locked-in direction.</p>
+          <p className="subtle">Once accepted, all pod sections will follow this locked-in direction.</p>
         </div>
       )}
     </div>
   );
 }
 
-/* ─── POD DASHBOARD (for authenticated user pods) ─── */
-function PodDashboardPage() {
+/* ─── POD DASHBOARD (full 16-tab view for authenticated pods) ─── */
+function PodDashboardPage({ session }) {
+  const { podId } = useParams();
+  const [pod, setPod] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (!supabaseConfigured || !podId) { setLoading(false); return; }
+    supabase.from('pods').select('*').eq('id', podId).single()
+      .then(({ data, error }) => {
+        if (data) setPod(data);
+        setLoading(false);
+      });
+  }, [podId]);
+
+  if (loading) return <div className="page-stack"><p className="subtle">Loading pod...</p></div>;
+
   return (
     <div className="page-stack">
       <header className="section-header panel">
         <div>
           <p className="eyebrow">Pod Dashboard</p>
-          <h3>Pod details</h3>
-          <p className="subtle">Full pod view coming soon. Use the demo pod to preview the complete pod flow.</p>
+          <h3>{pod?.pod_name || 'Pod'}</h3>
+          <p className="subtle">{pod?.pod_type} pod \u2014 {pod?.target_country}</p>
         </div>
+        <span className="status-tag">{pod?.status || 'created'}</span>
       </header>
-      <NavLink className="button button-ghost" to="/demo-pod">
-        View Demo Pod
-      </NavLink>
+
+      <PodTabsView pod={pod} />
     </div>
   );
 }
@@ -1132,26 +1118,16 @@ function PricingPage() {
       <header className="top-nav">
         <Wordmark />
         <nav className="top-nav-links">
-          <NavLink className="nav-link-subtle" to="/">
-            Home
-          </NavLink>
-          <NavLink className="nav-link-subtle" to="/login">
-            Login
-          </NavLink>
-          <a className="button button-primary button-sm" href="/#waitlist">
-            Join Early Access
-          </a>
+          <NavLink className="nav-link-subtle" to="/">Home</NavLink>
+          <NavLink className="nav-link-subtle" to="/login">Login</NavLink>
+          <a className="button button-primary button-sm" href="/#waitlist">Join Early Access</a>
         </nav>
       </header>
 
       <section className="hero-block panel">
         <p className="eyebrow">Early Access Pricing</p>
-        <h1>
-          Select the <span className="hero-emphasis">pod capacity</span> that matches your marketing needs.
-        </h1>
-        <p className="lede">
-          Scale from a focused single-brand pod to full multi-brand marketing intelligence. Every tier includes AI analysis, campaign strategy, and content direction.
-        </p>
+        <h1>Select the <span className="hero-emphasis">pod capacity</span> that matches your marketing needs.</h1>
+        <p className="lede">Scale from a focused single-brand pod to full multi-brand marketing intelligence. Every tier includes AI analysis, campaign strategy, and content direction.</p>
       </section>
 
       <section className="pricing-grid">
@@ -1162,14 +1138,9 @@ function PricingPage() {
             <p className="pricing-price-yearly">{tier.yearly}/year</p>
             <p className="pricing-best-for">{tier.bestFor}</p>
             <ul className="pricing-features">
-              {tier.features.map((feature) => (
-                <li key={feature}>{feature}</li>
-              ))}
+              {tier.features.map((f) => <li key={f}>{f}</li>)}
             </ul>
-            <a
-              className="button button-primary"
-              href={STRIPE_PRICING_LINKS[`${tier.stripeKey}_monthly`] || '/#waitlist'}
-            >
+            <a className="button button-primary" href={STRIPE_PRICING_LINKS[`${tier.stripeKey}_monthly`] || '/#waitlist'}>
               {STRIPE_PRICING_LINKS[`${tier.stripeKey}_monthly`] ? 'Subscribe Now' : 'Join Early Access'}
             </a>
           </article>
@@ -1180,123 +1151,50 @@ function PricingPage() {
 
       <footer className="landing-footer">
         <p className="footer-copyright">&copy; {new Date().getFullYear()} Dovroyn. Built by Anglow Digital PTY LTD.</p>
-        <nav className="footer-links">
-          <a href="#privacy">Privacy</a>
-          <a href="#terms">Terms</a>
-          <a href="#contact">Contact</a>
-        </nav>
+        <nav className="footer-links"><a href="#privacy">Privacy</a><a href="#terms">Terms</a><a href="#contact">Contact</a></nav>
       </footer>
     </main>
   );
 }
 
 /* ─── SETTINGS PAGE ─── */
-function SettingsPage({ user }) {
-  const [settings, setSettings] = useState({
-    workspace_name: 'Dovroyn Pod Command Centre',
-    theme: 'Editorial Ivory and Navy',
-    timezone: 'UTC',
-    email_notifications: true,
-    weekly_digest: true,
-  });
+function SettingsPage({ user, subscription }) {
+  const [settings, setSettings] = useState({ workspace_name: 'Dovroyn Pod Command Centre', theme: 'Editorial Ivory and Navy', timezone: 'UTC', email_notifications: true, weekly_digest: true });
   const [status, setStatus] = useState('');
 
   useEffect(() => {
     let ignore = false;
-
-    const loadSettings = async () => {
-      if (!supabaseConfigured || !user?.id) return;
-
-      const { data, error } = await supabase
-        .from('user_settings')
-        .select('timezone, email_notifications, weekly_digest, workspace_name, theme')
-        .eq('user_id', user.id)
-        .maybeSingle();
-
-      if (ignore) return;
-
-      if (error) {
-        setStatus('Create user_settings table to persist preferences.');
-      } else if (data) {
-        setSettings({
-          workspace_name: data.workspace_name ?? 'Dovroyn Pod Command Centre',
-          theme: data.theme ?? 'Editorial Ivory and Navy',
-          timezone: data.timezone ?? 'UTC',
-          email_notifications: Boolean(data.email_notifications),
-          weekly_digest: Boolean(data.weekly_digest),
-        });
-      }
-    };
-
-    loadSettings();
-
-    return () => {
-      ignore = true;
-    };
+    if (!supabaseConfigured || !user?.id) return;
+    supabase.from('user_settings').select('*').eq('user_id', user.id).maybeSingle()
+      .then(({ data, error }) => {
+        if (ignore) return;
+        if (data) setSettings({ workspace_name: data.workspace_name || 'Dovroyn Pod Command Centre', theme: data.theme || 'Editorial Ivory and Navy', timezone: data.timezone || 'UTC', email_notifications: Boolean(data.email_notifications), weekly_digest: Boolean(data.weekly_digest) });
+      });
+    return () => { ignore = true; };
   }, [user?.id]);
 
   const saveSettings = async (event) => {
     event.preventDefault();
-
-    if (!supabaseConfigured || !user?.id) {
-      setStatus('Configure Supabase to save settings.');
-      return;
-    }
-
-    const { error } = await supabase.from('user_settings').upsert({
-      user_id: user.id,
-      ...settings,
-      updated_at: new Date().toISOString(),
-    });
-
+    if (!supabaseConfigured || !user?.id) { setStatus('Configure Supabase to save.'); return; }
+    const { error } = await supabase.from('user_settings').upsert({ user_id: user.id, ...settings, updated_at: new Date().toISOString() });
     setStatus(error ? error.message : 'Settings updated.');
   };
 
   return (
     <form className="card-form panel" onSubmit={saveSettings}>
       <h3>Settings</h3>
-
-      <label>
-        Account
-        <input value={user?.email ?? 'Not signed in'} readOnly />
-      </label>
-
-      <label>
-        Workspace name
-        <input
-          value={settings.workspace_name}
-          onChange={(e) => setSettings((prev) => ({ ...prev, workspace_name: e.target.value }))}
-        />
-      </label>
-
-      <label>
-        Theme
-        <select
-          value={settings.theme}
-          onChange={(e) => setSettings((prev) => ({ ...prev, theme: e.target.value }))}
-        >
+      <label>Account<input value={user?.email || 'Not signed in'} readOnly /></label>
+      <label>Subscription tier<input value={subscription?.tier || 'Free'} readOnly /></label>
+      <label>Workspace name<input value={settings.workspace_name} onChange={(e) => setSettings((p) => ({ ...p, workspace_name: e.target.value }))} /></label>
+      <label>Theme
+        <select value={settings.theme} onChange={(e) => setSettings((p) => ({ ...p, theme: e.target.value }))}>
           <option value="Editorial Ivory and Navy">Editorial Ivory and Navy</option>
           <option value="Antique Gold Luxe">Antique Gold Luxe</option>
           <option value="Soft Cream Contrast">Soft Cream Contrast</option>
         </select>
       </label>
-
-      <label>
-        Connected account
-        <input value={supabaseConfigured ? 'Supabase connected' : 'Supabase not configured'} readOnly />
-      </label>
-
-      <label>
-        Domain
-        <input value={APP_DOMAIN} readOnly />
-      </label>
-
-      <label>
-        Timezone
-        <select
-          value={settings.timezone}
-          onChange={(e) => setSettings((prev) => ({ ...prev, timezone: e.target.value }))}
-        >
+      <label>Timezone
+        <select value={settings.timezone} onChange={(e) => setSettings((p) => ({ ...p, timezone: e.target.value }))}>
           <option value="UTC">UTC</option>
           <option value="America/New_York">America/New_York</option>
           <option value="Europe/London">Europe/London</option>
@@ -1304,30 +1202,9 @@ function SettingsPage({ user }) {
           <option value="Australia/Sydney">Australia/Sydney</option>
         </select>
       </label>
-
-      <label className="checkbox-row">
-        <input
-          type="checkbox"
-          checked={settings.email_notifications}
-          onChange={(e) =>
-            setSettings((prev) => ({ ...prev, email_notifications: e.target.checked }))
-          }
-        />
-        Email notifications
-      </label>
-
-      <label className="checkbox-row">
-        <input
-          type="checkbox"
-          checked={settings.weekly_digest}
-          onChange={(e) => setSettings((prev) => ({ ...prev, weekly_digest: e.target.checked }))}
-        />
-        Weekly digest
-      </label>
-
-      <button className="button button-primary" type="submit">
-        Save settings
-      </button>
+      <label className="checkbox-row"><input type="checkbox" checked={settings.email_notifications} onChange={(e) => setSettings((p) => ({ ...p, email_notifications: e.target.checked }))} />Email notifications</label>
+      <label className="checkbox-row"><input type="checkbox" checked={settings.weekly_digest} onChange={(e) => setSettings((p) => ({ ...p, weekly_digest: e.target.checked }))} />Weekly digest</label>
+      <button className="button button-primary" type="submit">Save settings</button>
       {status && <p className="subtle">{status}</p>}
     </form>
   );
