@@ -9,6 +9,7 @@ import {
   useLocation,
   useNavigate,
 } from 'react-router-dom';
+import { Analytics } from '@vercel/analytics/react';
 import './index.css';
 import { supabase, supabaseConfigured } from './lib/supabaseClient';
 
@@ -70,6 +71,7 @@ function App() {
 
   return (
     <BrowserRouter>
+      <Analytics />
       <Routes>
         <Route path="/" element={<LandingPage session={session} />} />
         <Route path="/auth" element={<AuthPage session={session} />} />
