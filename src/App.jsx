@@ -40,6 +40,7 @@ import './index.css';
 import { supabase, supabaseConfigured } from './lib/supabaseClient';
 import Header from './components/Header';
 import Footer from './components/Footer';
+import EarlyAccessModal from './components/EarlyAccessModal';
 import { redirectToCheckout, canCreatePod, getContentDays, TIER_LIMITS } from './lib/stripe';
 import WaitlistPage from './pages/Waitlist';
 import PodsPage from './pages/Pods';
@@ -724,6 +725,7 @@ function Wordmark() {
 function LandingPage({ session }) {
   const [waitlistEmail, setWaitlistEmail] = useState('');
   const [waitlistStatus, setWaitlistStatus] = useState('');
+  const [modalOpen, setModalOpen] = useState(false);
 
   const handleWaitlist = async (e) => {
     e.preventDefault();
@@ -738,6 +740,7 @@ function LandingPage({ session }) {
   return (
     <main className="landing-shell">
       <Header />
+      <EarlyAccessModal open={modalOpen} onClose={() => setModalOpen(false)} />
 
       <section className="hero-block panel">
         <p className="eyebrow">AI Marketing Pods</p>
@@ -748,7 +751,7 @@ function LandingPage({ session }) {
           <p className="lede">Drop in a website, app, offer, campaign, or teaser images. Dovroyn analyses it, shapes the campaign direction, recommends content, maps the calendar, and keeps every marketing move inside one intelligent pod.</p>
           <p className="lede">Each pod learns what you are building, who you are selling to, what tone fits best, what platforms matter, what content should go out, and what marketing move comes next.</p>
           <div className="hero-actions">
-            <a className="button button-primary" href="#waitlist">Join Early Access</a>
+            <button className="button button-primary" onClick={() => setModalOpen(true)}>Join Early Access</button>
             <NavLink className="button button-ghost" to="/demo-pod">View Demo Pod</NavLink>
           </div>
         </div>

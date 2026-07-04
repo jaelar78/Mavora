@@ -896,3 +896,48 @@ select {
     gap: 0.3rem;
   }
 }
+
+/* ─── EARLY ACCESS MODAL ─── */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: rgba(7, 22, 45, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.2rem;
+}
+
+.modal-panel {
+  position: relative;
+  background: var(--panel);
+  border: 1px solid var(--gold-border);
+  border-radius: 0.75rem;
+  box-shadow: 0 8px 40px var(--shadow-soft);
+  max-width: 480px;
+  width: 100%;
+  padding: 2.4rem 2rem 2rem;
+}
+
+.modal-close {
+  position: absolute;
+  top: 0.9rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.4rem;
+  line-height: 1;
+  color: var(--muted);
+  padding: 0.2rem 0.4rem;
+}
+
+.modal-close:hover {
+  color: var(--navy);
+}
+
+.modal-success {
+  text-align: center;
+  padding: 1rem 0;
+}
