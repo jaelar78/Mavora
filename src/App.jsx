@@ -159,6 +159,79 @@ const PRICING_TIERS = [
   },
 ];
 
+const PRICING_PAGE_TIERS = [
+  {
+    name: 'Starter Pod',
+    monthly: '$89',
+    yearly: '$855',
+    bestFor: 'Best for one brand, launch, or campaign.',
+    features: [
+      '1 active pod',
+      'Website or image analysis',
+      'AI brand/tone summary',
+      'Audience and offer direction',
+      'Campaign angles',
+      '2 social campaign posts per week',
+      'Manual budget tracking',
+      'Early access features',
+    ],
+    stripeKey: 'starter',
+  },
+  {
+    name: 'Growth Pods',
+    monthly: '$249',
+    yearly: '$2,390',
+    bestFor: 'Best for small businesses and creators with multiple offers.',
+    features: [
+      'Up to 3 active pods',
+      'Website/app/image analysis',
+      'Campaign strategy',
+      'Social platform recommendations',
+      '3 social campaign posts per week',
+      'Holiday-aware calendar planning',
+      'Budget tracking',
+      'Ad analysis preview',
+      'Extra posting days available as add-ons',
+    ],
+    stripeKey: 'growth',
+  },
+  {
+    name: 'Pro Marketing Pods',
+    monthly: '$599',
+    yearly: '$5,750',
+    bestFor: 'Best for brands running multiple campaigns.',
+    features: [
+      'Up to 7 active pods',
+      'Full pod analysis',
+      'Launch planning',
+      'Content calendar generation',
+      '6 social campaign posts per week',
+      'Budget dashboard',
+      'Ad analysis dashboard',
+      'Approval workflow for AI recommendations',
+    ],
+    stripeKey: 'pro',
+  },
+  {
+    name: 'Scale / Agency Pods',
+    monthly: '$1,299',
+    yearly: '$12,470',
+    bestFor: 'Best for agencies, teams, or users managing many brands.',
+    features: [
+      'Up to 12 active pods',
+      'Multi-brand campaign planning',
+      'Advanced calendar generation',
+      '7 social campaign posts per week',
+      '30 content calendar days per month per pod',
+      'Budget and performance tracking',
+      'Ad analysis recommendations',
+      'Priority early access',
+      'Founder support',
+    ],
+    stripeKey: 'scale',
+  },
+];
+
 const POD_TABS = [
   'Overview', 'Source', 'AI Analysis', 'Brand DNA', 'Audience', 'Offer',
   'Campaign Strategy', 'Content Ideas', 'Ad Angles', 'Socials', 'Calendar',
@@ -1132,7 +1205,7 @@ function PricingPage() {
       </section>
 
       <section className="pricing-grid">
-        {PRICING_TIERS.map((tier) => (
+        {PRICING_PAGE_TIERS.map((tier) => (
           <article key={tier.name} className="panel pricing-card">
             <h3 className="pricing-tier-name">{tier.name}</h3>
             <p className="pricing-price">{tier.monthly}<span style={{ fontSize: '0.6em', fontWeight: 400 }}>/month</span></p>
@@ -1142,7 +1215,7 @@ function PricingPage() {
               {tier.features.map((f) => <li key={f}>{f}</li>)}
             </ul>
             <a className="button button-primary" href={STRIPE_PRICING_LINKS[`${tier.stripeKey}_monthly`] || '/#waitlist'}>
-              {STRIPE_PRICING_LINKS[`${tier.stripeKey}_monthly`] ? 'Subscribe Now' : 'Join Early Access'}
+              Join Early Access
             </a>
           </article>
         ))}
