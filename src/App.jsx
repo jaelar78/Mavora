@@ -85,6 +85,41 @@ const DASHBOARD_PREVIEW_CARDS = [
   { title: 'Ad improvement', metric: 'Needs approval', description: 'AI suggestions are shown for review before anything changes.' },
 ];
 
+const PLATFORM_PLANNING_ITEMS = [
+  { name: 'Facebook', initials: 'FB', color: '#1877F2' },
+  { name: 'Instagram', initials: 'IG', color: '#E4405F' },
+  { name: 'TikTok', initials: 'TT', color: '#000000' },
+  { name: 'Google Ads', initials: 'GA', color: '#4285F4' },
+  { name: 'YouTube', initials: 'YT', color: '#FF0000' },
+  { name: 'LinkedIn', initials: 'LI', color: '#0A66C2' },
+  { name: 'X / Twitter', initials: 'X', color: '#1DA1F2' },
+  { name: 'Pinterest', initials: 'PI', color: '#E60023' },
+  { name: 'Snapchat', initials: 'SC', color: '#FFFC00', darkText: true },
+  { name: 'Reddit', initials: 'RD', color: '#FF4500' },
+  { name: 'WhatsApp', initials: 'WA', color: '#25D366' },
+  { name: 'Telegram', initials: 'TG', color: '#26A5E4' },
+  { name: 'Discord', initials: 'DC', color: '#5865F2' },
+  { name: 'Threads', initials: 'TH', color: '#000000' },
+  { name: 'WeChat', initials: 'WC', color: '#07C160' },
+  { name: 'LINE', initials: 'LN', color: '#00B900' },
+  { name: 'Weibo', initials: 'WB', color: '#E6162D' },
+  { name: 'VK', initials: 'VK', color: '#4C75A3' },
+  { name: 'Twitch', initials: 'TW', color: '#9146FF' },
+  { name: 'Spotify', initials: 'SP', color: '#1DB954' },
+  { name: 'Clubhouse', initials: 'CH', color: '#F2E5C8', darkText: true },
+  { name: 'BeReal', initials: 'BR', color: '#000000' },
+  { name: 'Mastodon', initials: 'MS', color: '#6364FF' },
+  { name: 'Bluesky', initials: 'BS', color: '#0085FF' },
+  { name: 'Quora', initials: 'QU', color: '#B92B27' },
+  { name: 'Medium', initials: 'MD', color: '#000000' },
+  { name: 'Tumblr', initials: 'TU', color: '#36465D' },
+  { name: 'Substack', initials: 'SS', color: '#FF6719' },
+  { name: 'Bing Ads', initials: 'BA', color: '#008373' },
+  { name: 'Amazon Ads', initials: 'AA', color: '#FF9900' },
+  { name: 'Apple News', initials: 'AN', color: '#000000' },
+  { name: 'Nextdoor', initials: 'ND', color: '#00B246' },
+];
+
 const PRICING_TIERS = [
   {
     name: 'Starter Pod',
@@ -790,6 +825,31 @@ function LandingPage({ session }) {
             <p>{section.body}</p>
           </article>
         ))}
+      </section>
+
+      <section className="platform-planning-section">
+        <p className="eyebrow">PLATFORM PLANNING</p>
+        <h2 className="section-title">Plan campaigns for the places your audience already lives.</h2>
+        <p className="lede platform-planning-body">
+          Dovroyn helps shape campaign direction for major social, search, content, and community platforms. Posting and ads require users to connect their own approved accounts before anything can go live.
+        </p>
+        <div className="platform-grid">
+          {PLATFORM_PLANNING_ITEMS.map((platform) => (
+            <article className="platform-tile" key={platform.name}>
+              <span
+                className={`platform-badge${platform.darkText ? ' platform-badge-dark-text' : ''}`}
+                style={{ backgroundColor: platform.color }}
+                aria-hidden="true"
+              >
+                {platform.initials}
+              </span>
+              <p className="platform-name">{platform.name}</p>
+            </article>
+          ))}
+        </div>
+        <p className="platform-note">
+          Platform availability may depend on official account connection, permissions, region, and API access.
+        </p>
       </section>
 
       <section className="pricing-section">
