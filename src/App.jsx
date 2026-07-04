@@ -7,12 +7,39 @@ import {
   Route,
   Routes,
   useLocation,
+  Link,
   useNavigate,
   useParams,
 } from 'react-router-dom';
+import {
+  ArrowRight,
+  TrendingUp,
+  Lightbulb,
+  Target,
+  CheckCircle,
+  Megaphone,
+  PenTool,
+  Calendar,
+  BarChart3,
+  Users,
+  Rocket,
+  Sparkles,
+  Upload,
+  Search,
+  Brain,
+  Dna,
+  Gift,
+  Share2,
+  PartyPopper,
+  DollarSign,
+  MonitorPlay,
+  StickyNote,
+} from 'lucide-react';
 import { Analytics } from '@vercel/analytics/react';
 import './index.css';
 import { supabase, supabaseConfigured } from './lib/supabaseClient';
+import Header from './components/Header';
+import Footer from './components/Footer';
 import { redirectToCheckout, canCreatePod, getContentDays, TIER_LIMITS } from './lib/stripe';
 
 const APP_NAME = 'Dovroyn';
@@ -638,13 +665,7 @@ function LandingPage({ session }) {
 
   return (
     <main className="landing-shell">
-      <header className="top-nav">
-        <Wordmark />
-        <nav className="top-nav-links">
-          <NavLink className="nav-link-subtle" to="/pricing">Pricing</NavLink>
-          <NavLink className="nav-link-subtle" to="/login">Login</NavLink>
-        </nav>
-      </header>
+      <Header />
 
       <section className="hero-block panel">
         <p className="eyebrow">Luxury AI Marketing Pods</p>
@@ -717,14 +738,7 @@ function LandingPage({ session }) {
         <p className="pricing-billing-note">Save 20% with yearly billing.</p>
       </section>
 
-      <footer className="landing-footer">
-        <p className="footer-copyright">&copy; {new Date().getFullYear()} Dovroyn. Built by Anglow Digital PTY LTD.</p>
-        <nav className="footer-links">
-          <a href="#privacy">Privacy</a>
-          <a href="#terms">Terms</a>
-          <a href="#contact">Contact</a>
-        </nav>
-      </footer>
+      <Footer variant="full" />
     </main>
   );
 }
@@ -733,14 +747,7 @@ function LandingPage({ session }) {
 function DemoPodPage() {
   return (
     <main className="landing-shell">
-      <header className="top-nav">
-        <Wordmark />
-        <nav className="top-nav-links">
-          <NavLink className="nav-link-subtle" to="/">Home</NavLink>
-          <NavLink className="nav-link-subtle" to="/pricing">Pricing</NavLink>
-          <NavLink className="nav-link-subtle" to="/login">Login</NavLink>
-        </nav>
-      </header>
+      <Header variant="page" showNav />
 
       <section className="hero-block panel" style={{ padding: '1.5rem' }}>
         <p className="eyebrow">Demo Pod</p>
@@ -750,13 +757,7 @@ function DemoPodPage() {
 
       <PodTabsView pod={null} />
 
-      <footer className="landing-footer">
-        <p className="footer-copyright">&copy; {new Date().getFullYear()} Dovroyn. Built by Anglow Digital PTY LTD.</p>
-        <nav className="footer-links">
-          <NavLink to="/">Home</NavLink>
-          <NavLink to="/pricing">Pricing</NavLink>
-        </nav>
-      </footer>
+      <Footer />
     </main>
   );
 }
@@ -1149,10 +1150,7 @@ function PricingPage() {
 
       <p className="pricing-billing-note" style={{ textAlign: 'center' }}>Save 20% with yearly billing.</p>
 
-      <footer className="landing-footer">
-        <p className="footer-copyright">&copy; {new Date().getFullYear()} Dovroyn. Built by Anglow Digital PTY LTD.</p>
-        <nav className="footer-links"><a href="#privacy">Privacy</a><a href="#terms">Terms</a><a href="#contact">Contact</a></nav>
-      </footer>
+      <Footer variant="full" />
     </main>
   );
 }
