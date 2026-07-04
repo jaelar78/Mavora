@@ -45,14 +45,14 @@ export default function EarlyAccessModal({ open, onClose }) {
   };
 
   return (
-    <div className="modal-overlay" role="dialog" aria-modal="true" aria-label="Early Access" onClick={onClose}>
+    <div className="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="early-access-modal-heading" onClick={onClose}>
       <div className="modal-panel" onClick={(e) => e.stopPropagation()}>
         <button className="modal-close" aria-label="Close" onClick={onClose}>&#215;</button>
 
         {status === 'success' ? (
           <div className="modal-success">
             <p className="eyebrow">You are on the list</p>
-            <h2 className="waitlist-heading">Thank you for joining.</h2>
+            <h2 id="early-access-modal-heading" className="waitlist-heading">Thank you for joining.</h2>
             <p className="lede">
               You will receive early access updates and founder pricing information soon.
             </p>
@@ -63,7 +63,7 @@ export default function EarlyAccessModal({ open, onClose }) {
         ) : (
           <>
             <p className="eyebrow">Early Access</p>
-            <h2 className="waitlist-heading">Join the Dovroyn waitlist.</h2>
+            <h2 id="early-access-modal-heading" className="waitlist-heading">Join the Dovroyn waitlist.</h2>
             <p className="lede">
               Be among the first to access AI-powered marketing pods. Free to join. Early users
               receive launch updates, first access, and founder pricing.
@@ -76,7 +76,6 @@ export default function EarlyAccessModal({ open, onClose }) {
                 onChange={(e) => setEmail(e.target.value)}
                 required
                 disabled={status === 'loading'}
-                autoFocus
               />
               <button
                 className="button button-primary"
