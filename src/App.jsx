@@ -816,6 +816,8 @@ function LandingPage({ session }) {
         <p className="waitlist-note">Free to join. Early users get launch updates, first access, and founder pricing.</p>
       </section>
 
+      <TesterPodPreview onJoinEarlyAccess={() => setModalOpen(true)} />
+
       <section className="dashboard-preview">
         <p className="eyebrow">Demo Pod Preview</p>
         <h2 className="section-title">Every marketing move visible. Every brand organised.</h2>
@@ -852,8 +854,6 @@ function LandingPage({ session }) {
         </div>
         <p className="platforms-note">Platform availability may depend on official account connection, permissions, region, and API access.</p>
       </section>
-
-      <TesterPodPreview onJoinEarlyAccess={() => setModalOpen(true)} />
 
       <section className="pricing-section">
         <p className="eyebrow">Early Access Pricing</p>
