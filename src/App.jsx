@@ -727,6 +727,17 @@ function LandingPage({ session }) {
   const [waitlistStatus, setWaitlistStatus] = useState('');
   const [modalOpen, setModalOpen] = useState(false);
 
+  useEffect(() => {
+    if (localStorage.getItem('dovroynEarlyAccessDismissed') === 'true') return;
+    const timer = setTimeout(() => setModalOpen(true), 1200);
+    return () => clearTimeout(timer);
+  }, []);
+
+  const closeModal = () => {
+    localStorage.setItem('dovroynEarlyAccessDismissed', 'true');
+    setModalOpen(false);
+  };
+
   const handleWaitlist = async (e) => {
     e.preventDefault();
     if (!waitlistEmail.trim()) return;
@@ -740,7 +751,7 @@ function LandingPage({ session }) {
   return (
     <main className="landing-shell">
       <Header />
-      <EarlyAccessModal open={modalOpen} onClose={() => setModalOpen(false)} />
+      <EarlyAccessModal open={modalOpen} onClose={closeModal} />
 
       <section className="hero-block panel">
         <p className="eyebrow">AI Marketing Pods</p>
