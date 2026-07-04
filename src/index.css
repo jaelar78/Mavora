@@ -962,6 +962,66 @@ select {
   }
 }
 
+/* Tester Pod Preview Section */
+.tester-pod-section {
+  display: grid;
+  gap: 1.5rem;
+  text-align: center;
+}
+
+.tester-pod-card {
+  text-align: left;
+  padding: clamp(1.4rem, 3vw, 2rem);
+  display: grid;
+  gap: 1.2rem;
+  background: linear-gradient(170deg, var(--panel) 60%, var(--background) 160%);
+}
+
+.tester-pod-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--gold-border);
+}
+
+.tester-pod-title {
+  font-family: 'Playfair Display', 'Times New Roman', serif;
+  font-size: clamp(1.1rem, 2vw, 1.4rem);
+  color: var(--navy);
+  font-weight: 700;
+  margin: 0;
+}
+
+.tester-pod-subtitle {
+  color: var(--muted);
+  font-size: 0.82rem;
+  margin: 0.2rem 0 0;
+}
+
+.tester-pod-content-panel {
+  background: var(--card);
+  border-radius: 16px;
+}
+
+.tester-pod-cta {
+  display: grid;
+  gap: 0.75rem;
+  place-items: center;
+  margin-top: 0.5rem;
+}
+
+.tester-pod-note {
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-style: italic;
+  max-width: 52ch;
+  line-height: 1.55;
+  margin: 0;
+}
+
 /* ─── EARLY ACCESS MODAL ─── */
 .modal-overlay {
   position: fixed;

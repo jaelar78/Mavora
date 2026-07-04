@@ -42,6 +42,7 @@ import Header from './components/Header';
 import Footer from './components/Footer';
 import EarlyAccessModal from './components/EarlyAccessModal';
 import { redirectToCheckout, canCreatePod, getContentDays, TIER_LIMITS } from './lib/stripe';
+import TesterPodPreview from './components/TesterPodPreview';
 import WaitlistPage from './pages/Waitlist';
 import PodsPage from './pages/Pods';
 import NewPodPage from './pages/NewPod';
@@ -851,6 +852,8 @@ function LandingPage({ session }) {
         </div>
         <p className="platforms-note">Platform availability may depend on official account connection, permissions, region, and API access.</p>
       </section>
+
+      <TesterPodPreview onJoinEarlyAccess={() => setModalOpen(true)} />
 
       <section className="pricing-section">
         <p className="eyebrow">Early Access Pricing</p>
