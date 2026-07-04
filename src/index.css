@@ -359,11 +359,11 @@ h1 {
   background: var(--navy);
   border: 1px solid var(--gold-border);
   border-radius: 14px;
-  padding: 1rem 0.6rem 0.85rem;
+  padding: 0.85rem 0.6rem;
+  min-height: 3.2rem;
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 0.5rem;
+  justify-content: center;
   box-shadow: 0 4px 14px var(--shadow-soft);
   transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
@@ -373,23 +373,8 @@ h1 {
   box-shadow: 0 8px 20px var(--shadow-soft);
 }
 
-.platform-initials {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 2.4rem;
-  height: 2.4rem;
-  border-radius: 8px;
-  background: var(--gold);
-  color: var(--navy);
-  font-size: 0.78rem;
-  font-weight: 800;
-  letter-spacing: 0.04em;
-  flex-shrink: 0;
-}
-
 .platform-name {
-  font-size: 0.75rem;
+  font-size: 0.78rem;
   font-weight: 600;
   color: var(--panel);
   text-align: center;
@@ -942,6 +927,22 @@ select {
   .preview-cards-grid,
   .pricing-grid {
     grid-template-columns: 1fr;
+  }
+
+  .platforms-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.4rem;
+  }
+
+  .platform-tile {
+    border-radius: 8px;
+    padding: 0.45rem 0.35rem;
+    min-height: 2.1rem;
+    box-shadow: 0 2px 8px var(--shadow-soft);
+  }
+
+  .platform-name {
+    font-size: 0.68rem;
   }
 
   .sidebar nav {
