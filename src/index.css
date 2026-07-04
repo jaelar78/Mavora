@@ -81,9 +81,9 @@ h1,
 .landing-shell {
   width: min(1240px, calc(100% - 3rem));
   margin: 0 auto;
-  padding: 2rem 0 4rem;
+  padding: clamp(1.5rem, 3vw, 2.5rem) 0 clamp(4rem, 8vw, 6rem);
   display: grid;
-  gap: 3rem;
+  gap: clamp(3rem, 6vw, 4.75rem);
 }
 
 /* Header */
@@ -276,7 +276,7 @@ h1 {
 /* Dashboard Preview */
 .dashboard-preview {
   display: grid;
-  gap: 1.2rem;
+  gap: clamp(1.2rem, 2.5vw, 1.6rem);
   text-align: center;
 }
 
@@ -289,7 +289,7 @@ h1 {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   gap: 1rem;
-  margin-top: 0.5rem;
+  margin-top: 0.75rem;
 }
 
 .preview-card {
@@ -322,7 +322,7 @@ h1 {
 /* Landing Sections */
 .landing-sections {
   display: grid;
-  gap: 2.8rem;
+  gap: clamp(2.4rem, 5vw, 3.2rem);
   max-width: 640px;
   margin: 0 auto;
   text-align: center;
@@ -344,7 +344,7 @@ h1 {
 /* Platform Planning Section */
 .platforms-section {
   display: grid;
-  gap: 1.5rem;
+  gap: clamp(1.5rem, 2.5vw, 1.9rem);
   text-align: center;
 }
 
@@ -352,7 +352,7 @@ h1 {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
   gap: 0.75rem;
-  margin-top: 0.5rem;
+  margin-top: 0.75rem;
 }
 
 .platform-tile {
@@ -393,7 +393,7 @@ h1 {
 /* Pricing Section */
 .pricing-section {
   display: grid;
-  gap: 1.5rem;
+  gap: clamp(1.5rem, 2.5vw, 1.9rem);
   text-align: center;
 }
 
@@ -401,7 +401,7 @@ h1 {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   gap: 1.2rem;
-  margin-top: 0.5rem;
+  margin-top: 0.75rem;
 }
 
 .pricing-card {
@@ -897,12 +897,16 @@ select {
 @media (max-width: 640px) {
   .landing-shell {
     width: min(1240px, calc(100% - 1.5rem));
-    padding-top: 1.2rem;
-    gap: 2.2rem;
+    padding: 1.2rem 0 3.5rem;
+    gap: 2.75rem;
   }
 
   .hero-block {
-    padding: 1.5rem 1.2rem;
+    padding: 2rem 1.3rem;
+  }
+
+  .waitlist-section {
+    padding: 1.8rem 1.3rem;
   }
 
   .hero-actions {
@@ -965,7 +969,7 @@ select {
 /* Tester Pod Preview Section */
 .tester-pod-section {
   display: grid;
-  gap: 1.5rem;
+  gap: clamp(1.5rem, 2.5vw, 1.9rem);
   text-align: center;
 }
 
