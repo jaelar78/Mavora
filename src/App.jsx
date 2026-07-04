@@ -85,6 +85,41 @@ const DASHBOARD_PREVIEW_CARDS = [
   { title: 'Ad improvement', metric: 'Needs approval', description: 'AI suggestions are shown for review before anything changes.' },
 ];
 
+const PLATFORMS = [
+  { initials: 'FB', name: 'Facebook' },
+  { initials: 'IG', name: 'Instagram' },
+  { initials: 'TT', name: 'TikTok' },
+  { initials: 'GA', name: 'Google Ads' },
+  { initials: 'YT', name: 'YouTube' },
+  { initials: 'LI', name: 'LinkedIn' },
+  { initials: 'X', name: 'X / Twitter' },
+  { initials: 'PI', name: 'Pinterest' },
+  { initials: 'SC', name: 'Snapchat' },
+  { initials: 'RD', name: 'Reddit' },
+  { initials: 'WA', name: 'WhatsApp' },
+  { initials: 'TG', name: 'Telegram' },
+  { initials: 'DC', name: 'Discord' },
+  { initials: 'TH', name: 'Threads' },
+  { initials: 'WC', name: 'WeChat' },
+  { initials: 'LN', name: 'LINE' },
+  { initials: 'WB', name: 'Weibo' },
+  { initials: 'VK', name: 'VK' },
+  { initials: 'TW', name: 'Twitch' },
+  { initials: 'SP', name: 'Spotify' },
+  { initials: 'CH', name: 'Clubhouse' },
+  { initials: 'BR', name: 'BeReal' },
+  { initials: 'MD', name: 'Mastodon' },
+  { initials: 'BS', name: 'Bluesky' },
+  { initials: 'QR', name: 'Quora' },
+  { initials: 'ME', name: 'Medium' },
+  { initials: 'TB', name: 'Tumblr' },
+  { initials: 'SS', name: 'Substack' },
+  { initials: 'BA', name: 'Bing Ads' },
+  { initials: 'AZ', name: 'Amazon Ads' },
+  { initials: 'AN', name: 'Apple News' },
+  { initials: 'ND', name: 'Nextdoor' },
+];
+
 const PRICING_TIERS = [
   {
     name: 'Starter Pod',
@@ -801,6 +836,21 @@ function LandingPage({ session }) {
             <p>{section.body}</p>
           </article>
         ))}
+      </section>
+
+      <section className="platforms-section">
+        <p className="eyebrow">Platform Planning</p>
+        <h2 className="section-title">Plan campaigns for the places your audience already lives.</h2>
+        <p className="lede">Dovroyn helps shape campaign direction for major social, search, content, and community platforms. Posting and ads require users to connect their own approved accounts before anything can go live.</p>
+        <div className="platforms-grid">
+          {PLATFORMS.map((p) => (
+            <article key={p.name} className="platform-tile">
+              <span className="platform-initials">{p.initials}</span>
+              <span className="platform-name">{p.name}</span>
+            </article>
+          ))}
+        </div>
+        <p className="platforms-note">Platform availability may depend on official account connection, permissions, region, and API access.</p>
       </section>
 
       <section className="pricing-section">
