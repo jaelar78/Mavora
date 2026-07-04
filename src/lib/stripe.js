@@ -28,12 +28,13 @@ export function redirectToCheckout(tierKey, billing = 'monthly') {
 }
 
 // Tier limits for subscription gating
+// weeklyPostingDays = campaign posting days allowed per week (not per platform)
 export const TIER_LIMITS = {
-  free: { maxPods: 0, monthlyContentDays: 0 },
-  starter: { maxPods: 1, monthlyContentDays: 10 },
-  growth: { maxPods: 3, monthlyContentDays: 20 },
-  pro: { maxPods: 10, monthlyContentDays: 30 },
-  scale: { maxPods: 30, monthlyContentDays: 30 },
+  free:    { maxPods: 0,  monthlyContentDays: 0,  weeklyPostingDays: 0 },
+  starter: { maxPods: 1,  monthlyContentDays: 10, weeklyPostingDays: 2 },
+  growth:  { maxPods: 3,  monthlyContentDays: 20, weeklyPostingDays: 3 },
+  pro:     { maxPods: 7,  monthlyContentDays: 30, weeklyPostingDays: 6 },
+  scale:   { maxPods: 12, monthlyContentDays: 30, weeklyPostingDays: 7 },
 };
 
 export function canCreatePod(tier, currentPodCount) {
