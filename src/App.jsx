@@ -41,6 +41,10 @@ import { supabase, supabaseConfigured } from './lib/supabaseClient';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import { redirectToCheckout, canCreatePod, getContentDays, TIER_LIMITS } from './lib/stripe';
+import WaitlistPage from './pages/Waitlist';
+import PodsPage from './pages/Pods';
+import NewPodPage from './pages/NewPod';
+import AccountPage from './pages/Account';
 
 const APP_NAME = 'Dovroyn';
 const APP_DOMAIN = 'dovroyn.com';
@@ -159,6 +163,79 @@ const PRICING_TIERS = [
   },
 ];
 
+const PRICING_PAGE_TIERS = [
+  {
+    name: 'Starter Pod',
+    monthly: '$89',
+    yearly: '$855',
+    bestFor: 'Best for one brand, launch, or campaign.',
+    features: [
+      '1 active pod',
+      'Website or image analysis',
+      'AI brand/tone summary',
+      'Audience and offer direction',
+      'Campaign angles',
+      '2 social campaign posts per week',
+      'Manual budget tracking',
+      'Early access features',
+    ],
+    stripeKey: 'starter',
+  },
+  {
+    name: 'Growth Pods',
+    monthly: '$249',
+    yearly: '$2,390',
+    bestFor: 'Best for small businesses and creators with multiple offers.',
+    features: [
+      'Up to 3 active pods',
+      'Website/app/image analysis',
+      'Campaign strategy',
+      'Social platform recommendations',
+      '3 social campaign posts per week',
+      'Holiday-aware calendar planning',
+      'Budget tracking',
+      'Ad analysis preview',
+      'Extra posting days available as add-ons',
+    ],
+    stripeKey: 'growth',
+  },
+  {
+    name: 'Pro Marketing Pods',
+    monthly: '$599',
+    yearly: '$5,750',
+    bestFor: 'Best for brands running multiple campaigns.',
+    features: [
+      'Up to 7 active pods',
+      'Full pod analysis',
+      'Launch planning',
+      'Content calendar generation',
+      '6 social campaign posts per week',
+      'Budget dashboard',
+      'Ad analysis dashboard',
+      'Approval workflow for AI recommendations',
+    ],
+    stripeKey: 'pro',
+  },
+  {
+    name: 'Scale / Agency Pods',
+    monthly: '$1,299',
+    yearly: '$12,470',
+    bestFor: 'Best for agencies, teams, or users managing many brands.',
+    features: [
+      'Up to 12 active pods',
+      'Multi-brand campaign planning',
+      'Advanced calendar generation',
+      '7 social campaign posts per week',
+      '30 content calendar days per month per pod',
+      'Budget and performance tracking',
+      'Ad analysis recommendations',
+      'Priority early access',
+      'Founder support',
+    ],
+    stripeKey: 'scale',
+  },
+];
+
 const POD_TABS = [
   'Overview', 'Source', 'AI Analysis', 'Brand DNA', 'Audience', 'Offer',
   'Campaign Strategy', 'Content Ideas', 'Ad Angles', 'Socials', 'Calendar',
@@ -169,6 +246,7 @@ const SIDEBAR_NAV_ITEMS = [
   { to: '/pods', label: 'Pods' },
   { to: '/pods/new', label: 'Create Pod' },
   { to: '/dashboard', label: 'Dashboard' },
+  { to: '/account', label: 'Account' },
   { to: '/pricing', label: 'Pricing' },
   { to: '/settings', label: 'Settings' },
 ];
@@ -601,6 +679,7 @@ function App() {
         <Route path="/signup" element={<AuthPage session={session} defaultMode="signup" />} />
         <Route path="/auth" element={<AuthPage session={session} defaultMode="login" />} />
         <Route path="/pricing" element={<PricingPage />} />
+        <Route path="/waitlist" element={<WaitlistPage />} />
         <Route path="/demo-pod" element={<DemoPodPage />} />
 
         <Route element={<ProtectedRoute session={session} />}>
@@ -618,8 +697,9 @@ function App() {
           >
             <Route path="/dashboard" element={<DashboardPage subscription={subscription} />} />
             <Route path="/pods" element={<PodsPage session={session} subscription={subscription} />} />
-            <Route path="/pods/new" element={<CreatePodPage session={session} subscription={subscription} />} />
+            <Route path="/pods/new" element={<NewPodPage session={session} subscription={subscription} />} />
             <Route path="/pods/:podId" element={<PodDashboardPage session={session} />} />
+            <Route path="/account" element={<AccountPage session={session} subscription={subscription} />} />
             <Route path="/settings" element={<SettingsPage user={session?.user} subscription={subscription} />} />
           </Route>
         </Route>
@@ -872,213 +952,6 @@ function DashboardPage({ subscription }) {
   );
 }
 
-/* ─── PODS PAGE ─── */
-function PodsPage({ session, subscription }) {
-  const [pods, setPods] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    if (!supabaseConfigured || !session?.user?.id) { setLoading(false); return; }
-    supabase.from('pods').select('*').eq('user_id', session.user.id).order('created_at', { ascending: false })
-      .then(({ data }) => { setPods(data || []); setLoading(false); });
-  }, [session?.user?.id]);
-
-  const tier = subscription?.tier || 'free';
-  const maxPods = TIER_LIMITS[tier]?.maxPods || 0;
-
-  return (
-    <div className="page-stack">
-      <header className="section-header panel">
-        <div>
-          <p className="eyebrow">Pods ({pods.length}/{maxPods})</p>
-          <h3>All AI marketing pods</h3>
-          <p className="subtle">Create a dedicated pod for each brand, product, offer, or campaign.</p>
-        </div>
-        <NavLink className="button button-primary" to="/pods/new">Create Pod</NavLink>
-      </header>
-
-      {tier === 'free' && (
-        <article className="panel detail-card" style={{ borderColor: 'var(--gold)' }}>
-          <h4>Subscribe to create pods</h4>
-          <p className="subtle">Free users cannot create pods. Choose a plan to get started.</p>
-          <NavLink className="button button-primary" to="/pricing">View Pricing</NavLink>
-        </article>
-      )}
-
-      <section className="cards-grid cards-grid-wide">
-        {loading && <p className="subtle">Loading pods...</p>}
-        {!loading && pods.length === 0 && tier !== 'free' && (
-          <article className="panel detail-card">
-            <h4>No pods yet</h4>
-            <p className="subtle">Create your first AI marketing pod to get started.</p>
-            <NavLink className="button button-primary" to="/pods/new">Create Pod</NavLink>
-          </article>
-        )}
-        {pods.map((pod) => (
-          <article key={pod.id} className="panel pod-card">
-            <div className="pod-card-head">
-              <h3>{pod.pod_name}</h3>
-              <span className="status-tag">{pod.status}</span>
-            </div>
-            <div className="pod-card-meta">
-              <p><strong>Type:</strong> {pod.pod_type}</p>
-              {pod.source_url && <p><strong>Source:</strong> {pod.source_url}</p>}
-              <p><strong>Country:</strong> {pod.target_country}</p>
-              {pod.accepted_tone && <p><strong>Tone:</strong> {pod.accepted_tone}</p>}
-            </div>
-            <div className="action-buttons">
-              <NavLink className="button button-ghost" to={`/pods/${pod.id}`}>Open pod</NavLink>
-            </div>
-          </article>
-        ))}
-      </section>
-    </div>
-  );
-}
-
-/* ─── CREATE POD PAGE ─── */
-function CreatePodPage({ session, subscription }) {
-  const navigate = useNavigate();
-  const [form, setForm] = useState({ podName: '', podType: 'website', sourceUrl: '', targetCountry: 'Australia', notes: '' });
-  const [step, setStep] = useState(1);
-  const [saving, setSaving] = useState(false);
-  const [error, setError] = useState('');
-
-  const tier = subscription?.tier || 'free';
-
-  const handleCreatePod = async () => {
-    if (tier === 'free') { setError('Please subscribe to a plan to create pods.'); return; }
-    if (!form.podName.trim()) { setError('Pod name is required.'); return; }
-    setSaving(true); setError('');
-
-    if (supabaseConfigured && session?.user?.id) {
-      const { data, error: dbError } = await supabase.from('pods').insert({
-        user_id: session.user.id,
-        pod_name: form.podName.trim(),
-        pod_type: form.podType,
-        source_url: form.sourceUrl.trim() || null,
-        target_country: form.targetCountry,
-        status: 'created',
-      }).select().single();
-
-      if (dbError) { setError(dbError.message); setSaving(false); return; }
-
-      // Save source
-      if (form.sourceUrl.trim() || form.notes.trim()) {
-        await supabase.from('pod_sources').insert({
-          pod_id: data.id,
-          source_type: form.podType,
-          source_url: form.sourceUrl.trim() || null,
-          notes: form.notes.trim() || null,
-        });
-      }
-
-      // Create empty budget
-      await supabase.from('budgets').insert({ pod_id: data.id });
-
-      navigate(`/pods/${data.id}`);
-    } else {
-      setError('Database not configured.');
-    }
-    setSaving(false);
-  };
-
-  if (tier === 'free') {
-    return (
-      <div className="page-stack">
-        <header className="section-header panel">
-          <div>
-            <p className="eyebrow">Create Pod</p>
-            <h3>Subscribe to create pods</h3>
-            <p className="subtle">Pod creation requires a paid subscription.</p>
-          </div>
-        </header>
-        <NavLink className="button button-primary" to="/pricing">View Pricing</NavLink>
-      </div>
-    );
-  }
-
-  return (
-    <div className="page-stack">
-      <header className="section-header panel">
-        <div>
-          <p className="eyebrow">Create Pod</p>
-          <h3>Create a new AI marketing pod</h3>
-          <p className="subtle">Each pod is a dedicated marketing workspace for one brand, launch, or campaign.</p>
-        </div>
-      </header>
-
-      {error && <p className="form-error" style={{ padding: '0.5rem' }}>{error}</p>}
-
-      {step === 1 && (
-        <form className="card-form panel" onSubmit={(e) => { e.preventDefault(); setStep(2); }}>
-          <h4>Step 1: Pod details</h4>
-          <div className="field-grid">
-            <label>Pod name<input value={form.podName} onChange={(e) => setForm((p) => ({ ...p, podName: e.target.value }))} placeholder="e.g. Aurora Skincare Launch" required /></label>
-            <label>Pod type
-              <select value={form.podType} onChange={(e) => setForm((p) => ({ ...p, podType: e.target.value }))}>
-                <option value="website">Website URL</option>
-                <option value="app">App URL</option>
-                <option value="product">Product URL</option>
-                <option value="campaign">Offer/campaign notes</option>
-                <option value="images">Uploaded photos/images</option>
-                <option value="teaser">Coming soon teaser images</option>
-                <option value="brand">Brand notes</option>
-              </select>
-            </label>
-            <label>Source URL (if applicable)<input value={form.sourceUrl} onChange={(e) => setForm((p) => ({ ...p, sourceUrl: e.target.value }))} placeholder="https://yourbrand.com" /></label>
-            <label>Target country
-              <select value={form.targetCountry} onChange={(e) => setForm((p) => ({ ...p, targetCountry: e.target.value }))}>
-                <option value="Australia">Australia</option>
-                <option value="United States">United States</option>
-                <option value="United Kingdom">United Kingdom</option>
-                <option value="Canada">Canada</option>
-                <option value="New Zealand">New Zealand</option>
-                <option value="Other">Other</option>
-              </select>
-            </label>
-            <label>Campaign/brand notes (optional)<textarea rows={4} value={form.notes} onChange={(e) => setForm((p) => ({ ...p, notes: e.target.value }))} placeholder="Anything the AI should know..." /></label>
-          </div>
-          <button className="button button-primary" type="submit">Next: Add Source</button>
-        </form>
-      )}
-
-      {step === 2 && (
-        <div className="card-form panel">
-          <h4>Step 2: Add your source</h4>
-          <p className="subtle">The AI will analyse your website, app, images, or notes to build your marketing direction.</p>
-          <div className="cards-grid">
-            <article className="panel detail-card"><h4>Website/App Analysis</h4><p className="subtle">Paste a URL and Dovroyn reads the source</p><span className="status-chip">Ready</span></article>
-            <article className="panel detail-card"><h4>Image Upload</h4><p className="subtle">Upload product photos or teaser images</p><span className="status-chip">Coming soon</span></article>
-            <article className="panel detail-card"><h4>Campaign Notes</h4><p className="subtle">Paste your offer, campaign, or brand notes</p><span className="status-chip">Ready</span></article>
-          </div>
-          <button className="button button-primary" onClick={() => setStep(3)}>Analyse</button>
-          <button className="button button-ghost" onClick={() => setStep(1)}>Back</button>
-        </div>
-      )}
-
-      {step === 3 && (
-        <div className="card-form panel">
-          <h4>Step 3: AI Analysis Complete</h4>
-          <p className="subtle">The AI has analysed your source and built a marketing direction.</p>
-          <article className="panel detail-card">
-            <h4>AI Direction Summary</h4>
-            <p><strong>Brand direction:</strong> Professional, trustworthy, results-focused</p>
-            <p><strong>Audience:</strong> Business owners and marketers ready to scale</p>
-            <p><strong>Tone:</strong> Confident, knowledgeable, direct</p>
-            <p><strong>Campaign angle:</strong> Authority-led content with clear next steps</p>
-          </article>
-          <div className="direction-actions">
-            <button className="button button-primary" onClick={handleCreatePod} disabled={saving}>{saving ? 'Creating pod...' : 'Accept and Create Pod'}</button>
-            <button className="button button-ghost" onClick={() => setStep(2)}>Change Direction</button>
-          </div>
-          <p className="subtle">Once accepted, all pod sections will follow this locked-in direction.</p>
-        </div>
-      )}
-    </div>
-  );
-}
-
 /* ─── POD DASHBOARD (full 16-tab view for authenticated pods) ─── */
 function PodDashboardPage({ session }) {
   const { podId } = useParams();
@@ -1132,7 +1005,7 @@ function PricingPage() {
       </section>
 
       <section className="pricing-grid">
-        {PRICING_TIERS.map((tier) => (
+        {PRICING_PAGE_TIERS.map((tier) => (
           <article key={tier.name} className="panel pricing-card">
             <h3 className="pricing-tier-name">{tier.name}</h3>
             <p className="pricing-price">{tier.monthly}<span style={{ fontSize: '0.6em', fontWeight: 400 }}>/month</span></p>
@@ -1142,7 +1015,7 @@ function PricingPage() {
               {tier.features.map((f) => <li key={f}>{f}</li>)}
             </ul>
             <a className="button button-primary" href={STRIPE_PRICING_LINKS[`${tier.stripeKey}_monthly`] || '/#waitlist'}>
-              {STRIPE_PRICING_LINKS[`${tier.stripeKey}_monthly`] ? 'Subscribe Now' : 'Join Early Access'}
+              Join Early Access
             </a>
           </article>
         ))}

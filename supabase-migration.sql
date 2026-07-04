@@ -5,6 +5,7 @@
 CREATE TABLE IF NOT EXISTS waitlist (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   email TEXT NOT NULL UNIQUE,
+  source TEXT,
   created_at TIMESTAMPTZ DEFAULT now()
 );
 
@@ -32,6 +33,7 @@ CREATE TABLE IF NOT EXISTS pods (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
   pod_name TEXT NOT NULL,
+  brand_name TEXT,
   pod_type TEXT NOT NULL DEFAULT 'website' CHECK (pod_type IN ('website', 'app', 'product', 'campaign', 'images', 'teaser', 'brand')),
   source_type TEXT,
   source_url TEXT,
@@ -192,3 +194,7 @@ CREATE POLICY "Users can update own ad analysis" ON ad_analysis FOR UPDATE USING
 CREATE POLICY "Users can view own settings" ON user_settings FOR SELECT USING (auth.uid() = user_id);
 CREATE POLICY "Users can create own settings" ON user_settings FOR INSERT WITH CHECK (auth.uid() = user_id);
 CREATE POLICY "Users can update own settings" ON user_settings FOR UPDATE USING (auth.uid() = user_id);
+
+-- Additive columns for existing deployments (safe to run on already-created databases)
+ALTER TABLE waitlist ADD COLUMN IF NOT EXISTS source TEXT;
+ALTER TABLE pods    ADD COLUMN IF NOT EXISTS brand_name TEXT;
