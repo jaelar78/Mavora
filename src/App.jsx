@@ -759,8 +759,6 @@ function Wordmark() {
 
 /* ─── LANDING PAGE ─── */
 function LandingPage({ session }) {
-  const [waitlistEmail, setWaitlistEmail] = useState('');
-  const [waitlistStatus, setWaitlistStatus] = useState('');
   const [modalOpen, setModalOpen] = useState(false);
 
   useEffect(() => {
@@ -772,16 +770,6 @@ function LandingPage({ session }) {
   const closeModal = () => {
     localStorage.setItem('dovroynEarlyAccessDismissed', 'true');
     setModalOpen(false);
-  };
-
-  const handleWaitlist = async (e) => {
-    e.preventDefault();
-    if (!waitlistEmail.trim()) return;
-    if (supabaseConfigured) {
-      await supabase.from('waitlist').insert({ email: waitlistEmail.trim() }).select();
-    }
-    setWaitlistStatus('Thank you! You will receive early access updates and founder pricing soon.');
-    setWaitlistEmail('');
   };
 
   return (
@@ -802,18 +790,6 @@ function LandingPage({ session }) {
             <NavLink className="button button-ghost" to="/demo-pod">View Demo Pod</NavLink>
           </div>
         </div>
-      </section>
-
-      <section className="waitlist-section panel" id="waitlist">
-        <p className="eyebrow">Coming Soon</p>
-        <h2 className="waitlist-heading">Marketing pods built for brands ready to move.</h2>
-        <p className="lede">Enter your email to get early access. Free to join. Early users get launch updates, first access, and founder pricing.</p>
-        <form className="waitlist-form" onSubmit={handleWaitlist}>
-          <input type="email" placeholder="Enter your email to get early access" value={waitlistEmail} onChange={(e) => setWaitlistEmail(e.target.value)} required />
-          <button className="button button-primary" type="submit">Join Early Access</button>
-        </form>
-        {waitlistStatus && <p className="waitlist-confirmation">{waitlistStatus}</p>}
-        <p className="waitlist-note">Free to join. Early users get launch updates, first access, and founder pricing.</p>
       </section>
 
       <TesterPodPreview onJoinEarlyAccess={() => setModalOpen(true)} />
