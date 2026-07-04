@@ -43,6 +43,6 @@ Enable row-level security and policies so users can only access their own rows.
 
 Also create this table for early access signups collected by the landing page modal:
 
-- `waitlist` (`email`, `source`)
+- `waitlist` (`email`, `source`, plus an `id` primary key and `created_at` timestamp)
 
 Enable row-level security with a policy that allows anonymous inserts, since visitors join the waitlist before signing up.
