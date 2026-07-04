@@ -827,7 +827,7 @@ function LandingPage({ session }) {
         ))}
       </section>
 
-      <section className="platform-planning-section">
+      <section className="platform-planning-section" aria-label="Platform planning">
         <p className="eyebrow">PLATFORM PLANNING</p>
         <h2 className="section-title">Plan campaigns for the places your audience already lives.</h2>
         <p className="lede platform-planning-body">
