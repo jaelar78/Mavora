@@ -7,9 +7,34 @@ import {
   Route,
   Routes,
   useLocation,
+  Link,
   useNavigate,
   useParams,
 } from 'react-router-dom';
+import {
+  ArrowRight,
+  TrendingUp,
+  Lightbulb,
+  Target,
+  CheckCircle,
+  Megaphone,
+  PenTool,
+  Calendar,
+  BarChart3,
+  Users,
+  Rocket,
+  Sparkles,
+  Upload,
+  Search,
+  Brain,
+  Dna,
+  Gift,
+  Share2,
+  PartyPopper,
+  DollarSign,
+  MonitorPlay,
+  StickyNote,
+} from 'lucide-react';
 import { Analytics } from '@vercel/analytics/react';
 import './index.css';
 import { supabase, supabaseConfigured } from './lib/supabaseClient';
