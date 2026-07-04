@@ -62,24 +62,16 @@ const STRIPE_PRICING_LINKS = {
 
 const LANDING_SECTIONS = [
   {
-    heading: 'Analyse your website, app, offer, or teaser images.',
-    body: 'Add a link or upload images. Dovroyn reads the source, understands the brand, and builds a clear marketing direction inside a dedicated AI pod.',
+    heading: "Analyse your website, offer, or campaign.",
+    body: "Drop in a website, app, offer, or teaser images. Dovroyn reads the source, understands the brand, and builds a clear marketing direction inside a dedicated AI pod.",
   },
   {
-    heading: 'Lock in the direction before anything goes live.',
-    body: "Accept the AI's strategy or push back with your own choice. Once the direction is approved, every content idea, ad angle, calendar post, and campaign move follows that locked-in tone.",
+    heading: "Lock in the direction before anything goes live.",
+    body: "Accept the AI's strategy or push back with your own choice. Once approved, every content idea, ad angle, calendar post, and campaign move follows that locked-in tone.",
   },
   {
-    heading: 'Plan your content calendar by tier.',
-    body: 'Generate content only for the months you have paid for and the number of content days your tier allows. Preview, edit, approve, and schedule before anything posts.',
-  },
-  {
-    heading: 'Connect socials safely.',
-    body: 'Users connect each platform themselves and grant permission before Dovroyn can post content or ads. No connected account, no posting.',
-  },
-  {
-    heading: 'Track budget, results, and better moves.',
-    body: 'See what has been spent, what came back, what performed best, and what the AI recommends improving next, with approval required before changes go live.',
+    heading: "Plan campaigns for the platforms that matter.",
+    body: "Dovroyn recommends the best social, search, content, and community platforms for your campaign. Posting and ads require the user to connect each account and approve permissions first.",
   },
 ];
 
@@ -748,11 +740,12 @@ function LandingPage({ session }) {
       <Header />
 
       <section className="hero-block panel">
-        <p className="eyebrow">Luxury AI Marketing Pods</p>
+        <p className="eyebrow">AI Marketing Pods</p>
         <div className="divider-line" />
         <div className="hero-content-centered">
           <h1>AI marketing pods that turn your <span className="hero-emphasis">website</span>, launch, or campaign into a full growth plan.</h1>
-          <p className="hero-gold-line">Drop in a website, app, offer, campaign, or teaser images. Dovroyn analyses it, builds your campaign direction, recommends content, maps your calendar, and keeps every marketing move inside one intelligent pod.</p>
+          <p className="hero-gold-line">Built for founders and marketers who need sharper campaign direction without the chaos.</p>
+          <p className="lede">Drop in a website, app, offer, campaign, or teaser images. Dovroyn analyses it, shapes the campaign direction, recommends content, maps the calendar, and keeps every marketing move inside one intelligent pod.</p>
           <p className="lede">Each pod learns what you are building, who you are selling to, what tone fits best, what platforms matter, what content should go out, and what marketing move comes next.</p>
           <div className="hero-actions">
             <a className="button button-primary" href="#waitlist">Join Early Access</a>
