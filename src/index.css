@@ -35,7 +35,6 @@
 body {
   margin: 0;
   min-height: 100vh;
-  overflow-x: hidden;
   background:
     radial-gradient(ellipse 80% 50% at 50% -10%, rgba(184, 138, 50, 0.09), transparent 70%),
     radial-gradient(ellipse 60% 40% at 100% 40%, rgba(7, 22, 45, 0.045), transparent 70%),
@@ -1504,14 +1503,14 @@ select {
   color: var(--navy);
   font-weight: 700;
   margin: 0;
-  overflow-wrap: anywhere;
+  overflow-wrap: break-word;
 }
 
 .tester-pod-subtitle {
   color: var(--muted);
   font-size: 0.76rem;
   margin: 0.12rem 0 0;
-  overflow-wrap: anywhere;
+  overflow-wrap: break-word;
 }
 
 .tester-pod-tabs {
@@ -1658,8 +1657,7 @@ select {
   font-size: 0.78rem;
   font-weight: 700;
   line-height: 1.35;
-  overflow-wrap: anywhere;
-  word-break: normal;
+  overflow-wrap: break-word;
 }
 
 .tester-pod-row-detail {
@@ -1668,7 +1666,7 @@ select {
   font-size: 0.72rem;
   line-height: 1.35;
   min-width: 0;
-  overflow-wrap: anywhere;
+  overflow-wrap: break-word;
 }
 
 .tester-pod-row-action {
