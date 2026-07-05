@@ -21,46 +21,38 @@ import {
   PenTool,
   Calendar,
   BarChart3,
-  Users,
   Rocket,
   Sparkles,
   Upload,
-  Search,
   Brain,
   Dna,
   Gift,
-  Share2,
   PartyPopper,
   DollarSign,
-  MonitorPlay,
   StickyNote,
-  ThumbsUp,
-  Camera,
-  Clapperboard,
-  Play,
-  Hash,
-  Pin,
-  Ghost,
-  MessageSquare,
-  MessageCircle,
-  Send,
-  Gamepad2,
-  AtSign,
-  Smartphone,
-  Globe,
-  Music,
-  Mic,
-  Aperture,
-  Cloud,
-  HelpCircle,
-  BookOpen,
-  Feather,
   Mail,
-  ShoppingBag,
-  Newspaper,
-  MapPin,
   Plus,
 } from 'lucide-react';
+import {
+  FaFacebookF,
+  FaInstagram,
+  FaTiktok,
+  FaYoutube,
+  FaLinkedinIn,
+  FaXTwitter,
+  FaPinterestP,
+  FaSnapchat,
+  FaRedditAlien,
+  FaWhatsapp,
+  FaTelegram,
+  FaDiscord,
+  FaThreads,
+  FaWeixin,
+  FaLine,
+  FaSpotify,
+  FaAmazon,
+} from 'react-icons/fa6';
+import { SiGoogleads, SiApplenews, SiNextdoor } from 'react-icons/si';
 import { Analytics } from '@vercel/analytics/react';
 import './index.css';
 import { supabase, supabaseConfigured } from './lib/supabaseClient';
@@ -122,7 +114,7 @@ const MULTI_POD_CARDS = [
     nextMove: 'Approve week 3 reels batch',
     calendarHint: '12 posts scheduled this fortnight',
     budgetHint: 'Budget on track · 64% used',
-    platforms: [Camera, Clapperboard, Play],
+    platforms: [FaInstagram, FaTiktok, FaYoutube],
   },
   {
     name: 'House of MGNM',
@@ -132,7 +124,7 @@ const MULTI_POD_CARDS = [
     nextMove: 'Lock in campaign direction',
     calendarHint: 'Calendar drafts ready for review',
     budgetHint: 'Budget not set yet',
-    platforms: [Camera, Pin, Users],
+    platforms: [FaInstagram, FaPinterestP, FaLinkedinIn],
   },
   {
     name: 'Luxara',
@@ -142,7 +134,7 @@ const MULTI_POD_CARDS = [
     nextMove: 'Publish teaser sequence day 2',
     calendarHint: '7-day launch calendar live',
     budgetHint: 'Launch spend approved',
-    platforms: [Camera, Search, Mail],
+    platforms: [FaInstagram, SiGoogleads, Mail],
   },
   {
     name: 'Cheeky Drawers',
@@ -152,7 +144,7 @@ const MULTI_POD_CARDS = [
     nextMove: 'Review 3 suggested ad angles',
     calendarHint: 'Next drop planned for Friday',
     budgetHint: 'Awaiting spend sign-off',
-    platforms: [Clapperboard, Camera, Hash],
+    platforms: [FaTiktok, FaInstagram, FaXTwitter],
   },
   {
     name: 'The Cleaning Hub',
@@ -162,43 +154,31 @@ const MULTI_POD_CARDS = [
     nextMove: 'Add website for pod analysis',
     calendarHint: 'Calendar unlocks after analysis',
     budgetHint: 'Budget notes empty',
-    platforms: [ThumbsUp, Search, MapPin],
+    platforms: [FaFacebookF, SiGoogleads, SiNextdoor],
   },
 ];
 
 const PLATFORMS = [
-  { name: 'Facebook', icon: ThumbsUp },
-  { name: 'Instagram', icon: Camera },
-  { name: 'TikTok', icon: Clapperboard },
-  { name: 'Google Ads', icon: Search },
-  { name: 'YouTube', icon: Play },
-  { name: 'LinkedIn', icon: Users },
-  { name: 'X / Twitter', icon: Hash },
-  { name: 'Pinterest', icon: Pin },
-  { name: 'Snapchat', icon: Ghost },
-  { name: 'Reddit', icon: MessageSquare },
-  { name: 'WhatsApp', icon: MessageCircle },
-  { name: 'Telegram', icon: Send },
-  { name: 'Discord', icon: Gamepad2 },
-  { name: 'Threads', icon: AtSign },
-  { name: 'WeChat', icon: Smartphone },
-  { name: 'LINE', icon: MessageCircle },
-  { name: 'Weibo', icon: Globe },
-  { name: 'VK', icon: Share2 },
-  { name: 'Twitch', icon: MonitorPlay },
-  { name: 'Spotify', icon: Music },
-  { name: 'Clubhouse', icon: Mic },
-  { name: 'BeReal', icon: Aperture },
-  { name: 'Mastodon', icon: Globe },
-  { name: 'Bluesky', icon: Cloud },
-  { name: 'Quora', icon: HelpCircle },
-  { name: 'Medium', icon: BookOpen },
-  { name: 'Tumblr', icon: Feather },
-  { name: 'Substack', icon: Mail },
-  { name: 'Bing Ads', icon: Search },
-  { name: 'Amazon Ads', icon: ShoppingBag },
-  { name: 'Apple News', icon: Newspaper },
-  { name: 'Nextdoor', icon: MapPin },
+  { name: 'Facebook', icon: FaFacebookF, focus: 'Social planning' },
+  { name: 'Instagram', icon: FaInstagram, focus: 'Visual content' },
+  { name: 'TikTok', icon: FaTiktok, focus: 'Short-form video' },
+  { name: 'Google Ads', icon: SiGoogleads, focus: 'Search & ads' },
+  { name: 'YouTube', icon: FaYoutube, focus: 'Video campaigns' },
+  { name: 'LinkedIn', icon: FaLinkedinIn, focus: 'B2B outreach' },
+  { name: 'X / Twitter', icon: FaXTwitter, focus: 'Conversation' },
+  { name: 'Pinterest', icon: FaPinterestP, focus: 'Discovery boards' },
+  { name: 'Snapchat', icon: FaSnapchat, focus: 'Youth reach' },
+  { name: 'Reddit', icon: FaRedditAlien, focus: 'Community angles' },
+  { name: 'WhatsApp', icon: FaWhatsapp, focus: 'Direct messaging' },
+  { name: 'Telegram', icon: FaTelegram, focus: 'Broadcast channels' },
+  { name: 'Discord', icon: FaDiscord, focus: 'Community hubs' },
+  { name: 'Threads', icon: FaThreads, focus: 'Social conversation' },
+  { name: 'WeChat', icon: FaWeixin, focus: 'Regional reach' },
+  { name: 'LINE', icon: FaLine, focus: 'Regional messaging' },
+  { name: 'Spotify', icon: FaSpotify, focus: 'Audio ads' },
+  { name: 'Amazon Ads', icon: FaAmazon, focus: 'Retail ads' },
+  { name: 'Apple News', icon: SiApplenews, focus: 'Editorial reach' },
+  { name: 'Nextdoor', icon: SiNextdoor, focus: 'Local reach' },
 ];
 
 const PRICING_TIERS = [
@@ -938,13 +918,18 @@ function LandingPage({ session }) {
         <p className="eyebrow">Platform Planning</p>
         <h2 className="section-title">Plan campaigns for the places your audience already lives.</h2>
         <p className="lede">Dovroyn helps shape campaign direction for major social, search, content, and community platforms. Posting and ads require users to connect their own approved accounts before anything can go live.</p>
+        <div className="platforms-legend" aria-hidden="true">
+          <span className="platforms-legend-item"><span className="platform-dot" /> Planning-ready</span>
+          <span className="platforms-legend-item">Connect your own accounts to go live</span>
+        </div>
         <div className="platforms-grid">
           {PLATFORMS.map((platform) => {
             const PlatformIcon = platform.icon;
             return (
               <article key={platform.name} className="platform-tile">
-                <span className="platform-icon" aria-hidden="true"><PlatformIcon size={16} strokeWidth={1.75} /></span>
+                <span className="platform-icon" aria-hidden="true"><PlatformIcon size={15} /></span>
                 <span className="platform-name">{platform.name}</span>
+                <span className="platform-focus"><span className="platform-dot" aria-hidden="true" />{platform.focus}</span>
               </article>
             );
           })}
