@@ -9,6 +9,7 @@ import {
 import { FaFacebookF, FaInstagram, FaLinkedinIn, FaPinterestP, FaTiktok } from 'react-icons/fa6';
 
 const DASHBOARD_NAV_ITEMS = ['AI Brain', 'Content Calendar', 'Platforms', 'Files', 'Ad Performance', 'Budget'];
+const DASHBOARD_HEADING = 'AI Brain analysis';
 
 const PLATFORM_CHIPS = [
   { label: 'LinkedIn', Icon: FaLinkedinIn },
@@ -61,7 +62,7 @@ function TesterPodContent() {
   return (
     <div className="tester-pod-content-shell">
       <div className="tester-pod-content-head">
-        <h4>AI Brain analysis</h4>
+        <h4>{DASHBOARD_HEADING}</h4>
         <span className="tester-pod-panel-chip">Static preview</span>
       </div>
       <div className="tester-pod-dashboard-list">
