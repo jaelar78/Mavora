@@ -872,19 +872,21 @@ function LandingPage({ session }) {
 /* ─── BILLING TOGGLE ─── */
 function BillingToggle({ billing, onChange }) {
   return (
-    <div className="billing-toggle" role="group" aria-label="Billing period">
+    <div className="billing-toggle" role="radiogroup" aria-label="Billing period">
       <button
         type="button"
+        role="radio"
         className={`billing-toggle-option${billing === 'monthly' ? ' active' : ''}`}
-        aria-pressed={billing === 'monthly'}
+        aria-checked={billing === 'monthly'}
         onClick={() => onChange('monthly')}
       >
         Monthly
       </button>
       <button
         type="button"
+        role="radio"
         className={`billing-toggle-option${billing === 'yearly' ? ' active' : ''}`}
-        aria-pressed={billing === 'yearly'}
+        aria-checked={billing === 'yearly'}
         onClick={() => onChange('yearly')}
       >
         Yearly <span className="billing-toggle-badge">Save 20%</span>
