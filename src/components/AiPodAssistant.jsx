@@ -17,7 +17,7 @@ const ASSISTANT_QA = [
   {
     question: 'Which platforms should this brand focus on?',
     answer: {
-      lead: 'Gidgee & Co\u2019s audience lives where western and country lifestyle content already performs.',
+      lead: 'Gidgee & Co’s audience lives where western and country lifestyle content already performs.',
       points: [
         'Instagram — primary channel for styling reels, carousels, and brand story.',
         'TikTok — short-form styling and rodeo/festival culture content for reach.',
@@ -29,7 +29,7 @@ const ASSISTANT_QA = [
   {
     question: 'Give me 3 campaign angles.',
     answer: {
-      lead: 'Three angles that fit Gidgee & Co\u2019s heritage-meets-modern positioning:',
+      lead: 'Three angles that fit Gidgee & Co’s heritage-meets-modern positioning:',
       points: [
         '“Paddock to festival” — one hat that works across real Australian life.',
         '“Crafted, not costume” — quality and heritage over fast-fashion western wear.',
@@ -97,7 +97,7 @@ export default function AiPodAssistant() {
             <Sparkles size={16} strokeWidth={1.75} />
           </span>
           <div>
-            <p className="ai-assistant-name">Gidgee &amp; Co Pod</p>
+            <p className="ai-assistant-name">Gidgee & Co Pod</p>
             <p className="ai-assistant-status">Pod guide ready — try a question below</p>
           </div>
         </div>
