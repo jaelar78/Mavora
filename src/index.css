@@ -426,6 +426,183 @@ h1 {
   line-height: 1.5;
 }
 
+/* Multi-Pod Dashboard Preview */
+.multipod-preview {
+  display: grid;
+  gap: clamp(0.9rem, 2vw, 1.2rem);
+  text-align: center;
+}
+
+.multipod-lede {
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+.multipod-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1rem;
+  margin-top: 0.75rem;
+}
+
+.multipod-card {
+  position: relative;
+  display: grid;
+  gap: 0.65rem;
+  align-content: start;
+  text-align: left;
+  padding: 1.3rem 1.4rem;
+  background: var(--panel);
+  border: 1px solid var(--gold-border);
+  border-radius: 18px;
+  box-shadow: 0 10px 26px var(--shadow-soft);
+  overflow: hidden;
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.multipod-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--gold), var(--gold-soft));
+  opacity: 0.7;
+}
+
+.multipod-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--gold);
+  box-shadow: 0 16px 34px var(--shadow-soft);
+}
+
+.multipod-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+}
+
+.multipod-name {
+  font-family: 'Playfair Display', 'Times New Roman', serif;
+  font-size: 1.05rem;
+  color: var(--navy);
+}
+
+.multipod-status {
+  font-size: 0.66rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  padding: 0.25rem 0.6rem;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.multipod-status-active {
+  color: var(--success);
+  background: rgba(46, 125, 79, 0.1);
+  border: 1px solid rgba(46, 125, 79, 0.3);
+}
+
+.multipod-status-planning,
+.multipod-status-draft {
+  color: var(--muted);
+  background: var(--card);
+  border: 1px solid var(--gold-border);
+}
+
+.multipod-status-launching {
+  color: var(--gold);
+  background: rgba(184, 138, 50, 0.1);
+  border: 1px solid var(--gold-border);
+}
+
+.multipod-status-approval {
+  color: var(--error);
+  background: rgba(161, 66, 53, 0.08);
+  border: 1px solid rgba(161, 66, 53, 0.28);
+}
+
+.multipod-status-new {
+  color: var(--navy);
+  background: rgba(216, 184, 103, 0.22);
+  border: 1px solid var(--gold-border);
+}
+
+.multipod-stage {
+  color: var(--navy-65);
+  font-size: 0.84rem;
+}
+
+.multipod-platforms {
+  display: flex;
+  gap: 0.35rem;
+}
+
+.multipod-platform-dot {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.65rem;
+  height: 1.65rem;
+  border-radius: 999px;
+  background: var(--card);
+  border: 1px solid var(--gold-border);
+  color: var(--gold);
+}
+
+.multipod-details {
+  display: grid;
+  gap: 0.45rem;
+  margin: 0;
+  padding: 0.75rem 0 0;
+  list-style: none;
+  border-top: 1px solid rgba(184, 138, 50, 0.18);
+  font-size: 0.8rem;
+  color: var(--navy-65);
+  line-height: 1.45;
+}
+
+.multipod-detail-label {
+  display: block;
+  color: var(--gold);
+  font-size: 0.64rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 0.1rem;
+}
+
+.multipod-card-new {
+  justify-items: center;
+  align-content: center;
+  text-align: center;
+  gap: 0.55rem;
+  background: var(--panel-soft);
+  border-style: dashed;
+  cursor: pointer;
+  font: inherit;
+  color: inherit;
+}
+
+.multipod-card-new::before {
+  opacity: 0.35;
+}
+
+.multipod-new-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.6rem;
+  height: 2.6rem;
+  border-radius: 999px;
+  background: var(--card);
+  border: 1px solid var(--gold-border);
+  color: var(--gold);
+}
+
 /* Landing Sections */
 .landing-sections {
   display: grid;
@@ -1158,6 +1335,7 @@ select {
   }
 
   .preview-cards-grid,
+  .multipod-grid,
   .pricing-grid {
     grid-template-columns: 1fr;
   }
