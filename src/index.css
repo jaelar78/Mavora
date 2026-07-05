@@ -35,6 +35,7 @@
 body {
   margin: 0;
   min-height: 100vh;
+  overflow-x: hidden;
   background:
     radial-gradient(ellipse 80% 50% at 50% -10%, rgba(184, 138, 50, 0.09), transparent 70%),
     radial-gradient(ellipse 60% 40% at 100% 40%, rgba(7, 22, 45, 0.045), transparent 70%),
@@ -1429,6 +1430,8 @@ select {
   display: grid;
   gap: clamp(1.2rem, 2vw, 1.6rem);
   text-align: center;
+  max-width: 100%;
+  min-width: 0;
 }
 
 .tester-pod-card {
@@ -1440,6 +1443,7 @@ select {
   display: grid;
   gap: 0;
   overflow: hidden;
+  box-sizing: border-box;
   background:
     radial-gradient(ellipse 60% 45% at 100% 0%, rgba(216, 184, 103, 0.1), transparent 65%),
     linear-gradient(170deg, var(--panel) 60%, var(--background) 160%);
@@ -1476,6 +1480,10 @@ select {
   gap: 0.7rem;
 }
 
+.tester-pod-header-main > div {
+  min-width: 0;
+}
+
 .tester-pod-avatar {
   flex-shrink: 0;
   width: 2.1rem;
@@ -1496,18 +1504,21 @@ select {
   color: var(--navy);
   font-weight: 700;
   margin: 0;
+  overflow-wrap: anywhere;
 }
 
 .tester-pod-subtitle {
   color: var(--muted);
   font-size: 0.76rem;
   margin: 0.12rem 0 0;
+  overflow-wrap: anywhere;
 }
 
 .tester-pod-tabs {
   display: flex;
   gap: 0;
   overflow-x: auto;
+  max-width: 100%;
   padding: 0 0.55rem;
   scrollbar-width: thin;
   border-bottom: 1px solid rgba(184, 138, 50, 0.2);
@@ -1548,15 +1559,20 @@ select {
   border-radius: 16px;
   box-shadow: none;
   border-color: rgba(184, 138, 50, 0.22);
-  overflow-x: auto;
+  overflow-x: hidden;
   padding: 0;
+  max-width: 100%;
+  min-width: 0;
 }
 
 .tester-pod-content-shell {
   display: grid;
   gap: 0;
-  min-width: 720px;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
   padding: clamp(0.7rem, 1.8vw, 1rem);
+  box-sizing: border-box;
 }
 
 .tester-pod-content-head {
@@ -1592,15 +1608,19 @@ select {
 
 .tester-pod-dashboard-list {
   display: grid;
+  max-width: 100%;
+  min-width: 0;
 }
 
 .tester-pod-dashboard-row {
   display: grid;
-  grid-template-columns: auto minmax(210px, 1.1fr) minmax(180px, 0.9fr) auto;
+  grid-template-columns: auto minmax(0, 1.1fr) minmax(0, 0.9fr) auto;
   gap: 0.65rem;
   align-items: center;
   padding: 0.58rem 0;
   border-bottom: 1px solid rgba(184, 138, 50, 0.16);
+  max-width: 100%;
+  min-width: 0;
 }
 
 .tester-pod-dashboard-row:last-child {
@@ -1621,6 +1641,7 @@ select {
 .tester-pod-row-main {
   display: grid;
   gap: 0.18rem;
+  max-width: 100%;
   min-width: 0;
 }
 
@@ -1637,6 +1658,8 @@ select {
   font-size: 0.78rem;
   font-weight: 700;
   line-height: 1.35;
+  overflow-wrap: anywhere;
+  word-break: normal;
 }
 
 .tester-pod-row-detail {
@@ -1644,6 +1667,8 @@ select {
   color: var(--muted);
   font-size: 0.72rem;
   line-height: 1.35;
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .tester-pod-row-action {
@@ -1654,6 +1679,8 @@ select {
   display: flex;
   flex-wrap: wrap;
   gap: 0.25rem;
+  max-width: 100%;
+  min-width: 0;
 }
 
 .tester-pod-platform-chip {
@@ -1668,6 +1695,7 @@ select {
   font-weight: 700;
   padding: 0.16rem 0.38rem;
   line-height: 1.2;
+  max-width: 100%;
 }
 
 .tester-pod-platform-chip svg {
@@ -1693,13 +1721,14 @@ select {
 
 @media (max-width: 640px) {
   .tester-pod-card {
-    width: calc(100% + 0.5rem);
-    margin-left: -0.25rem;
-    margin-right: -0.25rem;
+    width: 100%;
+    max-width: 100%;
+    margin-left: 0;
+    margin-right: 0;
   }
 
   .tester-pod-header {
-    flex-wrap: nowrap;
+    flex-wrap: wrap;
     align-items: flex-start;
   }
 
@@ -1710,8 +1739,32 @@ select {
   }
 
   .tester-pod-content-shell {
-    min-width: 680px;
+    min-width: 0;
     padding: 0.7rem;
+  }
+
+  .tester-pod-content-head {
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .tester-pod-dashboard-row {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.35rem;
+    align-items: flex-start;
+  }
+
+  .tester-pod-row-icon {
+    justify-self: start;
+  }
+
+  .tester-pod-row-detail,
+  .tester-pod-row-action {
+    grid-column: 1;
+  }
+
+  .tester-pod-row-action {
+    justify-self: start;
   }
 
   .tester-pod-row-value {
