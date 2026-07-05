@@ -65,16 +65,9 @@ const PLATFORM_CHIPS = [
   { label: 'Google', Icon: SiGoogleads },
 ];
 
-const FALLBACK_ROW_LABELS = ['Core finding', 'Launch context', 'Planning signal', 'Approval note'];
-const FALLBACK_ROW_DETAILS = [
-  'Primary takeaway for this dashboard screen.',
-  'Context the pod uses for campaign planning.',
-  'Signal that shapes the next recommendation.',
-  'Guardrail kept visible before action.',
-];
-
 const TAB_CONTENT = {
   'Source / Intake': {
+    labels: ['Source', 'Pod type', 'Products detected', 'Site scan'],
     items: [
       'Source: www.gidgeeco.au — Australian western hat and lifestyle brand',
       'Pod type: website launch pod, target country Australia',
@@ -125,6 +118,7 @@ const TAB_CONTENT = {
     ],
   },
   'Brand DNA': {
+    labels: ['Brand tone', 'Brand voice', 'Words to use', 'Words to avoid'],
     items: [
       'Brand tone detected: earthy, premium, Australian, bold',
       'Brand voice: grounded confidence with outback character',
@@ -133,6 +127,7 @@ const TAB_CONTENT = {
     ],
   },
   Audience: {
+    labels: ['Audience', 'Pain points', 'Buying triggers', 'Channel habits'],
     items: [
       'Audience mapped for Australian country, western, rodeo, festival, and outdoor style buyers',
       'Pain points: hard to find quality western hats that suit everyday Australian life',
@@ -141,6 +136,7 @@ const TAB_CONTENT = {
     ],
   },
   Offer: {
+    labels: ['Core offer', 'Launch angle', 'Value framing', 'Suggested hook'],
     items: [
       'Core offer: premium crafted western hats built for real Australian wear',
       'Launch angle: limited first drop with early access for the brand community',
@@ -149,6 +145,7 @@ const TAB_CONTENT = {
     ],
   },
   'Campaign Strategy': {
+    labels: ['Campaign goal', 'Main message', 'Funnel', 'Best channels'],
     items: [
       'Campaign goal selected: launch and grow brand awareness',
       'Main campaign message: crafted western hats for country, rodeo, festival, and everyday wear',
@@ -157,6 +154,7 @@ const TAB_CONTENT = {
     ],
   },
   'Content Ideas': {
+    labels: ['Idea bank', 'Styling reel', 'Founder story', 'Countdown assets'],
     items: [
       'Content ideas for hats, styling, launches, product drops, and social posts',
       'Styling reel: one hat, three looks — paddock, festival, weekend',
@@ -165,6 +163,7 @@ const TAB_CONTENT = {
     ],
   },
   'Ad Angles': {
+    labels: ['Craftsmanship', 'Lifestyle', 'Scarcity', 'Identity'],
     items: [
       'Craftsmanship angle: built by hand, made for wide open country',
       'Lifestyle angle: from rodeo weekends to festival season in one hat',
@@ -173,6 +172,7 @@ const TAB_CONTENT = {
     ],
   },
   Socials: {
+    labels: ['Platforms', 'Instagram', 'TikTok', 'Approval'],
     items: [
       'Recommended platforms: Instagram, TikTok, Facebook, Pinterest',
       'Instagram: styling reels, launch countdown, and product drop posts',
@@ -181,6 +181,7 @@ const TAB_CONTENT = {
     ],
   },
   Calendar: {
+    labels: ['Week 1', 'Week 2', 'Week 3', 'Calendar logic'],
     items: [
       'Week 1: brand story reel and founder introduction posts',
       'Week 2: styling carousels and behind-the-scenes launch countdown',
@@ -189,6 +190,7 @@ const TAB_CONTENT = {
     ],
   },
   Holidays: {
+    labels: ['Seasonal moments', 'Country shows', 'Festival season', 'Gift periods'],
     items: [
       'Australian seasonal moments mapped around the launch window',
       'Rodeo and country show season flagged as a high-relevance content moment',
@@ -197,6 +199,7 @@ const TAB_CONTENT = {
     ],
   },
   Budget: {
+    labels: ['Budget split', 'Spend tracker', 'Launch weighting', 'Return tracking'],
     items: [
       'Launch budget split across Instagram, TikTok, and Facebook ads',
       'Planned spend, used spend, leads, and sales tracked inside the pod',
@@ -205,6 +208,7 @@ const TAB_CONTENT = {
     ],
   },
   'Ad Analysis': {
+    labels: ['Performance', 'Creative fatigue', 'Winning hooks', 'AI suggestions'],
     items: [
       'Ad performance reviewed against the locked campaign direction',
       'Creative fatigue flagged early with fresh angle suggestions',
@@ -213,6 +217,7 @@ const TAB_CONTENT = {
     ],
   },
   'AI Notes': {
+    labels: ['Pod memory', 'Brand lever', 'Content signal', 'Consistency rule'],
     items: [
       'Pod remembers the approved tone, strategy, and audience for every suggestion',
       'Note: limited drops and craftsmanship story are the strongest brand levers',
@@ -221,6 +226,7 @@ const TAB_CONTENT = {
     ],
   },
   'Next Moves': {
+    labels: ['Next campaign move', 'Prioritised actions', 'Production queue', 'Readiness'],
     items: [
       'Next campaign move suggested based on pod analysis',
       'Actions prioritised: what to write, post, test, and approve',
@@ -239,9 +245,9 @@ function getTabRows(tab, content) {
 
   return content.items.map((item, index) => ({
     icon: Icon,
-    label: item.includes(':') ? item.split(':')[0] : FALLBACK_ROW_LABELS[index] || 'Dashboard note',
-    value: item.includes(':') ? item.slice(item.indexOf(':') + 1).trim() : item,
-    detail: FALLBACK_ROW_DETAILS[index] || 'Additional pod context for this screen.',
+    label: content.labels[index],
+    value: item,
+    detail: 'Dashboard signal for this pod screen.',
   }));
 }
 

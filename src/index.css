@@ -1548,12 +1548,14 @@ select {
   border-radius: 16px;
   box-shadow: none;
   border-color: rgba(184, 138, 50, 0.22);
+  overflow-x: auto;
   padding: 0;
 }
 
 .tester-pod-content-shell {
   display: grid;
   gap: 0;
+  min-width: 720px;
   padding: clamp(0.7rem, 1.8vw, 1rem);
 }
 
@@ -1708,19 +1710,8 @@ select {
   }
 
   .tester-pod-content-shell {
+    min-width: 680px;
     padding: 0.7rem;
-  }
-
-  .tester-pod-dashboard-row {
-    grid-template-columns: auto minmax(0, 1fr);
-    gap: 0.45rem 0.55rem;
-    align-items: flex-start;
-    padding: 0.52rem 0;
-  }
-
-  .tester-pod-row-detail,
-  .tester-pod-row-action {
-    grid-column: 2;
   }
 
   .tester-pod-row-value {
