@@ -1735,7 +1735,7 @@ select {
 @media (max-width: 640px) {
   .tester-pod-card {
     width: calc(100vw - 32px);
-    max-width: 680px;
+    max-width: calc(100vw - 32px);
   }
 
   .tester-pod-header {
@@ -1774,7 +1774,10 @@ select {
   .tester-pod-dashboard-row {
     grid-template-columns: auto minmax(0, 1fr);
     grid-template-rows: auto auto auto;
-    grid-template-areas: none;
+    grid-template-areas:
+      "icon main"
+      "icon detail"
+      "icon action";
     column-gap: 8px;
     row-gap: 4px;
     align-items: center;
@@ -1782,32 +1785,26 @@ select {
   }
 
   .tester-pod-row-icon {
-    grid-area: auto;
-    grid-column: 1;
-    grid-row: 1;
+    grid-area: icon;
+    align-self: start;
     justify-self: start;
   }
 
   .tester-pod-row-main {
-    grid-area: auto;
-    grid-column: 2;
-    grid-row: 1;
+    grid-area: main;
   }
 
   .tester-pod-row-detail,
   .tester-pod-row-action {
-    grid-area: auto;
     grid-column: auto;
   }
 
   .tester-pod-row-detail {
-    grid-column: 2;
-    grid-row: 2;
+    grid-area: detail;
   }
 
   .tester-pod-row-action {
-    grid-column: 2;
-    grid-row: 3;
+    grid-area: action;
     justify-self: start;
   }
 
