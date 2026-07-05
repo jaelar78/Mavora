@@ -59,6 +59,7 @@ import {
   ShoppingBag,
   Newspaper,
   MapPin,
+  Plus,
 } from 'lucide-react';
 import { Analytics } from '@vercel/analytics/react';
 import './index.css';
@@ -109,6 +110,59 @@ const DASHBOARD_PREVIEW_CARDS = [
   { title: 'Socials connected', metric: 'Pending', description: 'Connect each platform securely before posting or ad permissions are enabled.' },
   { title: 'Budget tracker', metric: 'Active', description: 'Track planned spend, used spend, leads, sales, and return.' },
   { title: 'Ad improvement', metric: 'Needs approval', description: 'AI suggestions are shown for review before anything changes.' },
+];
+
+const MULTI_POD_CARDS = [
+  {
+    name: 'Gidgee & Co',
+    status: 'Active',
+    statusTone: 'active',
+    stage: 'Campaign running',
+    nextMove: 'Approve week 3 reels batch',
+    calendarHint: '12 posts scheduled this fortnight',
+    budgetHint: 'Budget on track · 64% used',
+    platforms: [Camera, Clapperboard, Play],
+  },
+  {
+    name: 'House of MGNM',
+    status: 'Planning',
+    statusTone: 'planning',
+    stage: 'Strategy shaping',
+    nextMove: 'Lock in campaign direction',
+    calendarHint: 'Calendar drafts ready for review',
+    budgetHint: 'Budget not set yet',
+    platforms: [Camera, Pin, Users],
+  },
+  {
+    name: 'Luxara',
+    status: 'Launching',
+    statusTone: 'launching',
+    stage: 'Launch week',
+    nextMove: 'Publish teaser sequence day 2',
+    calendarHint: '7-day launch calendar live',
+    budgetHint: 'Launch spend approved',
+    platforms: [Camera, Search, Mail],
+  },
+  {
+    name: 'Cheeky Drawers',
+    status: 'Needs approval',
+    statusTone: 'approval',
+    stage: 'Ad direction review',
+    nextMove: 'Review 3 suggested ad angles',
+    calendarHint: 'Next drop planned for Friday',
+    budgetHint: 'Awaiting spend sign-off',
+    platforms: [Clapperboard, Camera, Hash],
+  },
+  {
+    name: 'The Cleaning Hub',
+    status: 'Draft',
+    statusTone: 'draft',
+    stage: 'Analysis in progress',
+    nextMove: 'Add website for pod analysis',
+    calendarHint: 'Calendar unlocks after analysis',
+    budgetHint: 'Budget notes empty',
+    platforms: [ThumbsUp, Search, MapPin],
+  },
 ];
 
 const PLATFORMS = [
@@ -831,6 +885,39 @@ function LandingPage({ session }) {
               <p className="preview-note">{card.description}</p>
             </article>
           ))}
+        </div>
+      </section>
+
+      <section className="multipod-preview">
+        <p className="eyebrow">One Workspace, Many Pods</p>
+        <h2 className="section-title">Your brands, launches, and campaigns each get their own pod.</h2>
+        <p className="lede multipod-lede">Keep every brand move organised in one workspace. Each pod stores its own analysis, content ideas, platform planning, budget notes, ad direction, and next moves.</p>
+        <div className="multipod-grid">
+          {MULTI_POD_CARDS.map((pod) => (
+            <article key={pod.name} className="multipod-card">
+              <div className="multipod-card-top">
+                <h3 className="multipod-name">{pod.name}</h3>
+                <span className={`multipod-status multipod-status-${pod.statusTone}`}>{pod.status}</span>
+              </div>
+              <p className="multipod-stage">{pod.stage}</p>
+              <div className="multipod-platforms" aria-hidden="true">
+                {pod.platforms.map((PodIcon, iconIndex) => (
+                  <span key={iconIndex} className="multipod-platform-dot"><PodIcon size={13} strokeWidth={1.75} /></span>
+                ))}
+              </div>
+              <ul className="multipod-details">
+                <li><span className="multipod-detail-label">Next move</span>{pod.nextMove}</li>
+                <li><span className="multipod-detail-label">Calendar</span>{pod.calendarHint}</li>
+                <li><span className="multipod-detail-label">Budget</span>{pod.budgetHint}</li>
+              </ul>
+            </article>
+          ))}
+          <button type="button" className="multipod-card multipod-card-new" onClick={() => setModalOpen(true)}>
+            <span className="multipod-new-icon" aria-hidden="true"><Plus size={22} strokeWidth={1.75} /></span>
+            <span className="multipod-name">Create New Pod</span>
+            <span className="multipod-status multipod-status-new">Create New</span>
+            <p className="multipod-stage">Drop in a website, offer, or campaign and start a fresh pod.</p>
+          </button>
         </div>
       </section>
 
