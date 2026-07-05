@@ -125,7 +125,7 @@ const MULTI_POD_CARDS = [
   {
     name: 'Luxara',
     type: 'Launch Pod',
-    description: 'Skincare launch screen',
+    description: 'Skincare launch sequence',
     contentCount: '14 assets',
     calendarCount: '7 days',
     platforms: [FaInstagram, SiGoogleads, Mail],
