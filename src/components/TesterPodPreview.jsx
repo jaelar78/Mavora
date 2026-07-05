@@ -82,7 +82,7 @@ const TAB_CONTENT = {
         label: 'Brand tone',
         value: 'Earthy · premium · Australian · bold',
         detail: 'Western hat and lifestyle brand signals identified.',
-        action: 'Review',
+        action: 'Override',
       },
       {
         icon: Users,
@@ -113,7 +113,7 @@ const TAB_CONTENT = {
         label: 'Next move',
         value: 'Launch first styling reel and queue launch countdown assets',
         detail: 'First action is ready for review before scheduling.',
-        action: 'Review',
+        action: 'Override',
       },
     ],
   },
@@ -322,7 +322,7 @@ function TesterTabButton({ tab, index, tabContext, handlers }) {
       onFocus={handlers.onFocus}
       onKeyDown={(event) => handlers.onKeyDown(event, index)}
     >
-      <TabIcon size={12} strokeWidth={1.9} aria-hidden="true" />
+      <TabIcon size={14} strokeWidth={1.9} aria-hidden="true" />
       {tab}
     </button>
   );
