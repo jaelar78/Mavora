@@ -233,7 +233,7 @@ function getTabRows(tab, content) {
     icon: Icon,
     label: `${tab} ${index + 1}`,
     value: item,
-    detail: 'Pod preview row',
+    detail: `${tab} dashboard insight`,
   }));
 }
 
@@ -255,11 +255,11 @@ function TesterTabContent({ tab }) {
         <span className="tester-pod-panel-chip">Active screen</span>
       </div>
       <div className="tester-pod-dashboard-list">
-        {rows.map((row) => {
+        {rows.map((row, index) => {
           const RowIcon = row.icon || FileText;
 
           return (
-            <div key={`${row.label}-${row.value || row.detail}`} className="tester-pod-dashboard-row">
+            <div key={`${row.label}-${index}`} className="tester-pod-dashboard-row">
               <span className="tester-pod-row-icon" aria-hidden="true">
                 <RowIcon size={14} strokeWidth={1.9} />
               </span>
