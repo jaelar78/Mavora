@@ -82,7 +82,7 @@ const TAB_CONTENT = {
         label: 'Brand tone',
         value: 'Earthy · premium · Australian · bold',
         detail: 'Western hat and lifestyle brand signals identified.',
-        action: 'Review',
+        action: 'Override',
       },
       {
         icon: Users,
@@ -113,7 +113,7 @@ const TAB_CONTENT = {
         label: 'Next move',
         value: 'Launch first styling reel and queue launch countdown assets',
         detail: 'First action is ready for review before scheduling.',
-        action: 'Review',
+        action: 'Override',
       },
     ],
   },
@@ -293,7 +293,7 @@ function TesterTabContent({ tab }) {
                 )}
               </div>
               <p className="tester-pod-row-detail">{row.detail}</p>
-              {row.action && <span className="tester-pod-row-action">Override</span>}
+              {row.action && <span className="tester-pod-row-action">{row.action}</span>}
             </div>
           );
         })}
