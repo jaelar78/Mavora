@@ -156,7 +156,7 @@ const TAB_CONTENT = {
   },
 };
 
-const POD_DASHBOARD_SUMMARY = [
+const GIDGEE_PREVIEW_DASHBOARD_SUMMARY = [
   { label: 'Brand tone', value: 'Earthy, premium, Australian, bold' },
   {
     label: 'Audience',
@@ -207,6 +207,9 @@ function TesterTabContent({ tab }) {
 
 export default function TesterPodPreview({ onJoinEarlyAccess }) {
   const [activeTab, setActiveTab] = useState('AI Analysis');
+  const handleTabFocus = (event) => {
+    event.currentTarget.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+  };
 
   return (
     <section className="tester-pod-section">
@@ -245,7 +248,7 @@ export default function TesterPodPreview({ onJoinEarlyAccess }) {
         </div>
 
         <dl className="tester-pod-summary-grid" aria-label="Gidgee launch dashboard summary">
-          {POD_DASHBOARD_SUMMARY.map((entry) => (
+          {GIDGEE_PREVIEW_DASHBOARD_SUMMARY.map((entry) => (
             <div key={entry.label} className="tester-pod-summary-card">
               <dt>{entry.label}</dt>
               <dd>{entry.value}</dd>
@@ -262,6 +265,7 @@ export default function TesterPodPreview({ onJoinEarlyAccess }) {
               aria-selected={activeTab === tab}
               className={`tester-pod-tab ${activeTab === tab ? 'active' : ''}`}
               onClick={() => setActiveTab(tab)}
+              onFocus={handleTabFocus}
             >
               {tab}
             </button>
