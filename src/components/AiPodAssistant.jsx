@@ -120,7 +120,7 @@ export default function AiPodAssistant() {
                 <span className="ai-assistant-dot" />
                 <span className="ai-assistant-dot" />
                 <span className="ai-assistant-dot" />
-                <span className="ai-assistant-thinking-label">Dovroyn is typing…</span>
+                <span className="ai-assistant-thinking-label">Dovroyn is typing...</span>
               </div>
             </div>
           )}
