@@ -34,6 +34,31 @@ import {
   DollarSign,
   MonitorPlay,
   StickyNote,
+  ThumbsUp,
+  Camera,
+  Clapperboard,
+  Play,
+  Hash,
+  Pin,
+  Ghost,
+  MessageSquare,
+  MessageCircle,
+  Send,
+  Gamepad2,
+  AtSign,
+  Smartphone,
+  Globe,
+  Music,
+  Mic,
+  Aperture,
+  Cloud,
+  HelpCircle,
+  BookOpen,
+  Feather,
+  Mail,
+  ShoppingBag,
+  Newspaper,
+  MapPin,
 } from 'lucide-react';
 import { Analytics } from '@vercel/analytics/react';
 import './index.css';
@@ -87,38 +112,38 @@ const DASHBOARD_PREVIEW_CARDS = [
 ];
 
 const PLATFORMS = [
-  'Facebook',
-  'Instagram',
-  'TikTok',
-  'Google Ads',
-  'YouTube',
-  'LinkedIn',
-  'X / Twitter',
-  'Pinterest',
-  'Snapchat',
-  'Reddit',
-  'WhatsApp',
-  'Telegram',
-  'Discord',
-  'Threads',
-  'WeChat',
-  'LINE',
-  'Weibo',
-  'VK',
-  'Twitch',
-  'Spotify',
-  'Clubhouse',
-  'BeReal',
-  'Mastodon',
-  'Bluesky',
-  'Quora',
-  'Medium',
-  'Tumblr',
-  'Substack',
-  'Bing Ads',
-  'Amazon Ads',
-  'Apple News',
-  'Nextdoor',
+  { name: 'Facebook', icon: ThumbsUp },
+  { name: 'Instagram', icon: Camera },
+  { name: 'TikTok', icon: Clapperboard },
+  { name: 'Google Ads', icon: Search },
+  { name: 'YouTube', icon: Play },
+  { name: 'LinkedIn', icon: Users },
+  { name: 'X / Twitter', icon: Hash },
+  { name: 'Pinterest', icon: Pin },
+  { name: 'Snapchat', icon: Ghost },
+  { name: 'Reddit', icon: MessageSquare },
+  { name: 'WhatsApp', icon: MessageCircle },
+  { name: 'Telegram', icon: Send },
+  { name: 'Discord', icon: Gamepad2 },
+  { name: 'Threads', icon: AtSign },
+  { name: 'WeChat', icon: Smartphone },
+  { name: 'LINE', icon: MessageCircle },
+  { name: 'Weibo', icon: Globe },
+  { name: 'VK', icon: Share2 },
+  { name: 'Twitch', icon: MonitorPlay },
+  { name: 'Spotify', icon: Music },
+  { name: 'Clubhouse', icon: Mic },
+  { name: 'BeReal', icon: Aperture },
+  { name: 'Mastodon', icon: Globe },
+  { name: 'Bluesky', icon: Cloud },
+  { name: 'Quora', icon: HelpCircle },
+  { name: 'Medium', icon: BookOpen },
+  { name: 'Tumblr', icon: Feather },
+  { name: 'Substack', icon: Mail },
+  { name: 'Bing Ads', icon: Search },
+  { name: 'Amazon Ads', icon: ShoppingBag },
+  { name: 'Apple News', icon: Newspaper },
+  { name: 'Nextdoor', icon: MapPin },
 ];
 
 const PRICING_TIERS = [
@@ -810,8 +835,9 @@ function LandingPage({ session }) {
       </section>
 
       <section className="landing-sections">
-        {LANDING_SECTIONS.map((section) => (
+        {LANDING_SECTIONS.map((section, index) => (
           <article key={section.heading} className="landing-section-item">
+            <span className="landing-section-number">{String(index + 1).padStart(2, '0')}</span>
             <h2>{section.heading}</h2>
             <p>{section.body}</p>
           </article>
@@ -823,11 +849,15 @@ function LandingPage({ session }) {
         <h2 className="section-title">Plan campaigns for the places your audience already lives.</h2>
         <p className="lede">Dovroyn helps shape campaign direction for major social, search, content, and community platforms. Posting and ads require users to connect their own approved accounts before anything can go live.</p>
         <div className="platforms-grid">
-          {PLATFORMS.map((name) => (
-            <article key={name} className="platform-tile">
-              <span className="platform-name">{name}</span>
-            </article>
-          ))}
+          {PLATFORMS.map((platform) => {
+            const PlatformIcon = platform.icon;
+            return (
+              <article key={platform.name} className="platform-tile">
+                <span className="platform-icon" aria-hidden="true"><PlatformIcon size={16} strokeWidth={1.75} /></span>
+                <span className="platform-name">{platform.name}</span>
+              </article>
+            );
+          })}
         </div>
         <p className="platforms-note">Platform availability may depend on official account connection, permissions, region, and API access.</p>
       </section>
