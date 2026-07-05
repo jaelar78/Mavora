@@ -901,8 +901,8 @@ function LandingPage({ session }) {
               </div>
               <p className="multipod-stage">{pod.stage}</p>
               <div className="multipod-platforms" aria-hidden="true">
-                {pod.platforms.map((PodIcon, iconIndex) => (
-                  <span key={iconIndex} className="multipod-platform-dot"><PodIcon size={13} strokeWidth={1.75} /></span>
+                {pod.platforms.map((PodIcon) => (
+                  <span key={PodIcon.displayName || PodIcon.name} className="multipod-platform-dot"><PodIcon size={13} strokeWidth={1.75} /></span>
                 ))}
               </div>
               <ul className="multipod-details">
