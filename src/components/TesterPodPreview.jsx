@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 
 const TESTER_TABS = [
   'Source / Intake',
@@ -207,8 +207,35 @@ function TesterTabContent({ tab }) {
 
 export default function TesterPodPreview({ onJoinEarlyAccess }) {
   const [activeTab, setActiveTab] = useState('AI Analysis');
+  const tabRefs = useRef([]);
+  const activeTabIndex = TESTER_TABS.indexOf(activeTab);
+  const tabPanelId = 'gidgee-pod-tabpanel';
+
   const handleTabFocus = (event) => {
     event.currentTarget.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+  };
+  const handleTabKeyDown = (event, currentIndex) => {
+    if (!['ArrowRight', 'ArrowLeft', 'Home', 'End'].includes(event.key)) {
+      return;
+    }
+
+    event.preventDefault();
+    let nextIndex = currentIndex;
+
+    if (event.key === 'ArrowRight') {
+      nextIndex = (currentIndex + 1) % TESTER_TABS.length;
+    } else if (event.key === 'ArrowLeft') {
+      nextIndex = (currentIndex - 1 + TESTER_TABS.length) % TESTER_TABS.length;
+    } else if (event.key === 'Home') {
+      nextIndex = 0;
+    } else if (event.key === 'End') {
+      nextIndex = TESTER_TABS.length - 1;
+    }
+
+    setActiveTab(TESTER_TABS[nextIndex]);
+    requestAnimationFrame(() => {
+      tabRefs.current[nextIndex]?.focus();
+    });
   };
 
   return (
@@ -257,22 +284,34 @@ export default function TesterPodPreview({ onJoinEarlyAccess }) {
         </dl>
 
         <div className="tester-pod-tabs" role="tablist" aria-label="Gidgee pod sections">
-          {TESTER_TABS.map((tab) => (
+          {TESTER_TABS.map((tab, index) => (
             <button
               key={tab}
+              id={`gidgee-pod-tab-${index}`}
+              ref={(node) => {
+                tabRefs.current[index] = node;
+              }}
               type="button"
               role="tab"
+              aria-controls={tabPanelId}
               aria-selected={activeTab === tab}
+              tabIndex={activeTab === tab ? 0 : -1}
               className={`tester-pod-tab ${activeTab === tab ? 'active' : ''}`}
               onClick={() => setActiveTab(tab)}
               onFocus={handleTabFocus}
+              onKeyDown={(event) => handleTabKeyDown(event, index)}
             >
               {tab}
             </button>
           ))}
         </div>
 
-        <section className="panel tester-pod-content-panel">
+        <section
+          id={tabPanelId}
+          role="tabpanel"
+          aria-labelledby={`gidgee-pod-tab-${activeTabIndex}`}
+          className="panel tester-pod-content-panel"
+        >
           <TesterTabContent tab={activeTab} />
         </section>
       </div>
