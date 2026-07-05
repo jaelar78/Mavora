@@ -156,28 +156,59 @@ const TAB_CONTENT = {
   },
 };
 
+const POD_DASHBOARD_SUMMARY = [
+  { label: 'Brand tone', value: 'Earthy, premium, Australian, bold' },
+  {
+    label: 'Audience',
+    value: 'Australian country, western, rodeo, festival, and outdoor style buyers',
+  },
+  { label: 'Recommended platforms', value: 'Instagram, TikTok, Facebook, Pinterest, Google' },
+  {
+    label: 'Campaign direction',
+    value: 'Brand story reel → Styling carousel → Launch drop offer → Retarget',
+  },
+  { label: 'Next move', value: 'Launch the first styling reel and queue launch countdown assets' },
+  { label: 'Budget / ad note', value: 'Weight spend into launch week and monitor hook fatigue early' },
+];
+
 function TesterTabContent({ tab }) {
   const content = TAB_CONTENT[tab];
   if (!content) {
     return (
-      <div className="pod-section-content">
+      <div className="tester-pod-content-shell">
         <p className="subtle">Select a tab to preview this pod section.</p>
       </div>
     );
   }
   return (
-    <div className="pod-section-content">
-      <h4>{tab}</h4>
+    <div className="tester-pod-content-shell">
+      <div className="tester-pod-content-head">
+        <h4>{tab}</h4>
+      </div>
       <div className="tester-pod-chip-row">
         {content.chips.map((chip) => (
           <span key={chip} className="status-chip">{chip}</span>
         ))}
       </div>
-      <ul className="simple-list compact-list">
-        {content.items.map((item) => (
-          <li key={item}>{item}</li>
+      <dl className="tester-pod-summary-grid">
+        {POD_DASHBOARD_SUMMARY.map((entry) => (
+          <div key={entry.label} className="tester-pod-summary-card">
+            <dt>{entry.label}</dt>
+            <dd>{entry.value}</dd>
+          </div>
         ))}
-      </ul>
+      </dl>
+      <div className="tester-pod-insights">
+        <p className="tester-pod-insights-title">{tab} insights</p>
+        <div className="tester-pod-insights-list">
+          {content.items.map((item, index) => (
+            <div key={item} className="tester-pod-insight-row">
+              <span className="tester-pod-insight-index">{index + 1}</span>
+              <p>{item}</p>
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   );
 }
@@ -187,7 +218,6 @@ export default function TesterPodPreview({ onJoinEarlyAccess }) {
 
   return (
     <section className="tester-pod-section">
-      <p className="eyebrow">Tester Pod Preview</p>
       <h2 className="section-title">See what a Dovroyn pod gives you.</h2>
       <p className="lede">
         Every website, offer, launch, or campaign gets its own AI marketing pod. Explore every
@@ -222,11 +252,14 @@ export default function TesterPodPreview({ onJoinEarlyAccess }) {
           </div>
         </div>
 
-        <div className="pod-tabs">
+        <div className="tester-pod-tabs" role="tablist" aria-label="Gidgee pod sections">
           {TESTER_TABS.map((tab) => (
             <button
               key={tab}
-              className={`pod-tab ${activeTab === tab ? 'active' : ''}`}
+              type="button"
+              role="tab"
+              aria-selected={activeTab === tab}
+              className={`tester-pod-tab ${activeTab === tab ? 'active' : ''}`}
               onClick={() => setActiveTab(tab)}
             >
               {tab}

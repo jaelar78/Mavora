@@ -1500,11 +1500,139 @@ select {
   gap: 0.4rem;
 }
 
+.tester-pod-tabs {
+  display: flex;
+  gap: 0.45rem;
+  overflow-x: auto;
+  padding: 0.15rem;
+  scrollbar-width: thin;
+  border: 1px solid rgba(184, 138, 50, 0.2);
+  border-radius: 12px;
+  background: rgba(255, 253, 248, 0.8);
+}
+
+.tester-pod-tab {
+  border-radius: 8px;
+  padding: 0.36rem 0.58rem;
+  font-size: 0.73rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid transparent;
+  background: var(--panel);
+  color: var(--muted);
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: 140ms ease;
+}
+
+.tester-pod-tab.active {
+  background: var(--navy-soft);
+  color: var(--panel);
+  border-color: var(--gold-border);
+}
+
+.tester-pod-tab:hover {
+  border-color: var(--gold);
+}
+
 .tester-pod-content-panel {
-  background: var(--card);
+  background: var(--panel);
   border-radius: 16px;
   box-shadow: none;
   border-color: rgba(184, 138, 50, 0.22);
+  padding: 0;
+}
+
+.tester-pod-content-shell {
+  display: grid;
+  gap: 0.9rem;
+  padding: 1rem;
+}
+
+.tester-pod-content-head h4 {
+  margin: 0;
+}
+
+.tester-pod-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 0.6rem;
+  margin: 0;
+}
+
+.tester-pod-summary-card {
+  display: grid;
+  gap: 0.28rem;
+  margin: 0;
+  padding: 0.62rem 0.7rem;
+  border-radius: 10px;
+  background: rgba(243, 233, 216, 0.55);
+  border: 1px solid rgba(184, 138, 50, 0.2);
+}
+
+.tester-pod-summary-card dt {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-weight: 700;
+}
+
+.tester-pod-summary-card dd {
+  margin: 0;
+  color: var(--navy);
+  font-size: 0.8rem;
+  line-height: 1.45;
+}
+
+.tester-pod-insights {
+  display: grid;
+  gap: 0.55rem;
+}
+
+.tester-pod-insights-title {
+  margin: 0;
+  color: var(--navy);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-weight: 700;
+}
+
+.tester-pod-insights-list {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.tester-pod-insight-row {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.55rem;
+  align-items: flex-start;
+  padding: 0.58rem 0.62rem;
+  border-radius: 10px;
+  background: var(--background);
+  border: 1px solid rgba(184, 138, 50, 0.2);
+}
+
+.tester-pod-insight-index {
+  min-width: 1.2rem;
+  height: 1.2rem;
+  border-radius: 999px;
+  display: inline-grid;
+  place-items: center;
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: var(--navy);
+  background: rgba(216, 184, 103, 0.35);
+}
+
+.tester-pod-insight-row p {
+  margin: 0;
+  color: var(--navy);
+  font-size: 0.79rem;
+  line-height: 1.45;
 }
 
 .tester-pod-cta {
@@ -1521,6 +1649,21 @@ select {
   max-width: 52ch;
   line-height: 1.55;
   margin: 0;
+}
+
+@media (max-width: 640px) {
+  .tester-pod-tab {
+    padding: 0.4rem 0.62rem;
+    font-size: 0.72rem;
+  }
+
+  .tester-pod-content-shell {
+    padding: 0.88rem;
+  }
+
+  .tester-pod-summary-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* ─── AI POD ASSISTANT PREVIEW ─── */
