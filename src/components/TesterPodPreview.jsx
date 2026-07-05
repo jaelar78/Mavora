@@ -190,16 +190,8 @@ function TesterTabContent({ tab }) {
           <span key={chip} className="status-chip">{chip}</span>
         ))}
       </div>
-      <dl className="tester-pod-summary-grid">
-        {POD_DASHBOARD_SUMMARY.map((entry) => (
-          <div key={entry.label} className="tester-pod-summary-card">
-            <dt>{entry.label}</dt>
-            <dd>{entry.value}</dd>
-          </div>
-        ))}
-      </dl>
       <div className="tester-pod-insights">
-        <p className="tester-pod-insights-title">{tab} insights</p>
+        <p className="tester-pod-insights-title">Section insights</p>
         <div className="tester-pod-insights-list">
           {content.items.map((item, index) => (
             <div key={item} className="tester-pod-insight-row">
@@ -251,6 +243,15 @@ export default function TesterPodPreview({ onJoinEarlyAccess }) {
             <span className="tester-pod-stat-label">Next moves queued</span>
           </div>
         </div>
+
+        <dl className="tester-pod-summary-grid" aria-label="Gidgee launch dashboard summary">
+          {POD_DASHBOARD_SUMMARY.map((entry) => (
+            <div key={entry.label} className="tester-pod-summary-card">
+              <dt>{entry.label}</dt>
+              <dd>{entry.value}</dd>
+            </div>
+          ))}
+        </dl>
 
         <div className="tester-pod-tabs" role="tablist" aria-label="Gidgee pod sections">
           {TESTER_TABS.map((tab) => (
