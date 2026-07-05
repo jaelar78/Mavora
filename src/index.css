@@ -1500,7 +1500,7 @@ select {
 
 .tester-pod-title {
   font-family: 'Playfair Display', 'Times New Roman', serif;
-  font-size: clamp(1.25rem, 2vw, 1.38rem);
+  font-size: clamp(1.25rem, 1.1rem + 0.5vw, 1.38rem);
   color: var(--navy);
   font-weight: 700;
   margin: 0;
@@ -1618,7 +1618,7 @@ select {
 
 .tester-pod-dashboard-row {
   display: grid;
-  grid-template-columns: auto minmax(0, 1.1fr) minmax(120px, 0.9fr) auto;
+  grid-template-columns: auto minmax(0, 1.1fr) minmax(0, 0.9fr) auto;
   grid-template-areas: "icon main detail action";
   gap: 0.5rem;
   align-items: center;
@@ -1773,6 +1773,7 @@ select {
 
   .tester-pod-dashboard-row {
     grid-template-columns: auto minmax(0, 1fr);
+    grid-template-rows: auto auto auto;
     grid-template-areas:
       "icon main"
       ". detail"
