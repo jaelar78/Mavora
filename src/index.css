@@ -1504,8 +1504,8 @@ select {
   color: var(--navy);
   font-weight: 700;
   margin: 0;
-  line-height: 1.08;
-  overflow-wrap: anywhere;
+  line-height: 1.2;
+  overflow-wrap: break-word;
 }
 
 .tester-pod-subtitle {
@@ -1513,7 +1513,7 @@ select {
   font-size: clamp(0.81rem, 1.5vw, 0.88rem);
   margin: 0.12rem 0 0;
   line-height: 1.35;
-  overflow-wrap: anywhere;
+  overflow-wrap: break-word;
 }
 
 .tester-pod-tabs {
@@ -1665,7 +1665,7 @@ select {
   font-size: 0.86rem;
   font-weight: 700;
   line-height: 1.35;
-  overflow-wrap: anywhere;
+  overflow-wrap: break-word;
 }
 
 .tester-pod-row-detail {
@@ -1675,7 +1675,7 @@ select {
   font-size: 0.8rem;
   line-height: 1.35;
   min-width: 0;
-  overflow-wrap: anywhere;
+  overflow-wrap: break-word;
 }
 
 .tester-pod-row-action {
