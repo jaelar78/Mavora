@@ -760,6 +760,7 @@ function Wordmark() {
 /* ─── LANDING PAGE ─── */
 function LandingPage({ session }) {
   const [modalOpen, setModalOpen] = useState(false);
+  const [billing, setBilling] = useState('monthly');
 
   useEffect(() => {
     if (localStorage.getItem('dovroynEarlyAccessDismissed') === 'true') return;
@@ -834,18 +835,28 @@ function LandingPage({ session }) {
       <section className="pricing-section">
         <p className="eyebrow">Early Access Pricing</p>
         <h2 className="section-title">Four tiers. Scale when you are ready.</h2>
+        <BillingToggle billing={billing} onChange={setBilling} />
         <div className="pricing-grid">
           {PRICING_TIERS.map((tier) => (
             <article key={tier.name} className="panel pricing-card">
               <h3 className="pricing-tier-name">{tier.name}</h3>
-              <p className="pricing-price">{tier.monthly}<span style={{ fontSize: '0.6em', fontWeight: 400 }}>/month</span></p>
-              <p className="pricing-price-yearly">{tier.yearly}/year</p>
+              {billing === 'monthly' ? (
+                <>
+                  <p className="pricing-price">{tier.monthly}<span style={{ fontSize: '0.6em', fontWeight: 400 }}>/month</span></p>
+                  <p className="pricing-price-yearly">{tier.yearly}/year</p>
+                </>
+              ) : (
+                <>
+                  <p className="pricing-price">{tier.yearly}<span style={{ fontSize: '0.6em', fontWeight: 400 }}>/year</span></p>
+                  <p className="pricing-price-yearly">{tier.monthly}/month</p>
+                </>
+              )}
               <p className="pricing-best-for">{tier.bestFor}</p>
               <ul className="pricing-features">
                 {tier.features.map((f) => <li key={f}>{f}</li>)}
               </ul>
-              <a className="button button-primary" href={STRIPE_PRICING_LINKS[`${tier.stripeKey}_monthly`] || '#waitlist'}>
-                {STRIPE_PRICING_LINKS[`${tier.stripeKey}_monthly`] ? 'Subscribe' : 'Join Early Access'}
+              <a className="button button-primary" href={STRIPE_PRICING_LINKS[`${tier.stripeKey}_${billing}`] || '#waitlist'}>
+                {STRIPE_PRICING_LINKS[`${tier.stripeKey}_${billing}`] ? 'Subscribe' : 'Join Early Access'}
               </a>
             </article>
           ))}
@@ -855,6 +866,32 @@ function LandingPage({ session }) {
 
       <Footer variant="full" />
     </main>
+  );
+}
+
+/* ─── BILLING TOGGLE ─── */
+function BillingToggle({ billing, onChange }) {
+  return (
+    <div className="billing-toggle" role="radiogroup" aria-label="Billing period">
+      <button
+        type="button"
+        role="radio"
+        className={`billing-toggle-option${billing === 'monthly' ? ' active' : ''}`}
+        aria-checked={billing === 'monthly'}
+        onClick={() => onChange('monthly')}
+      >
+        Monthly
+      </button>
+      <button
+        type="button"
+        role="radio"
+        className={`billing-toggle-option${billing === 'yearly' ? ' active' : ''}`}
+        aria-checked={billing === 'yearly'}
+        onClick={() => onChange('yearly')}
+      >
+        Yearly <span className="billing-toggle-badge">Save 20%</span>
+      </button>
+    </div>
   );
 }
 
@@ -1022,6 +1059,7 @@ function PodDashboardPage({ session }) {
 
 /* ─── PRICING PAGE ─── */
 function PricingPage() {
+  const [billing, setBilling] = useState('monthly');
   return (
     <main className="landing-shell pricing-shell">
       <header className="top-nav">
@@ -1039,18 +1077,31 @@ function PricingPage() {
         <p className="lede">Scale from a focused single-brand pod to full multi-brand marketing intelligence. Every tier includes AI analysis, campaign strategy, and content direction.</p>
       </section>
 
+      <div className="pricing-toggle-row">
+        <BillingToggle billing={billing} onChange={setBilling} />
+      </div>
+
       <section className="pricing-grid">
         {PRICING_PAGE_TIERS.map((tier) => (
           <article key={tier.name} className="panel pricing-card">
             <h3 className="pricing-tier-name">{tier.name}</h3>
-            <p className="pricing-price">{tier.monthly}<span style={{ fontSize: '0.6em', fontWeight: 400 }}>/month</span></p>
-            <p className="pricing-price-yearly">{tier.yearly}/year</p>
+            {billing === 'monthly' ? (
+              <>
+                <p className="pricing-price">{tier.monthly}<span style={{ fontSize: '0.6em', fontWeight: 400 }}>/month</span></p>
+                <p className="pricing-price-yearly">{tier.yearly}/year</p>
+              </>
+            ) : (
+              <>
+                <p className="pricing-price">{tier.yearly}<span style={{ fontSize: '0.6em', fontWeight: 400 }}>/year</span></p>
+                <p className="pricing-price-yearly">{tier.monthly}/month</p>
+              </>
+            )}
             <p className="pricing-best-for">{tier.bestFor}</p>
             <ul className="pricing-features">
               {tier.features.map((f) => <li key={f}>{f}</li>)}
             </ul>
-            <a className="button button-primary" href={STRIPE_PRICING_LINKS[`${tier.stripeKey}_monthly`] || '/#waitlist'}>
-              Join Early Access
+            <a className="button button-primary" href={STRIPE_PRICING_LINKS[`${tier.stripeKey}_${billing}`] || '/#waitlist'}>
+              {STRIPE_PRICING_LINKS[`${tier.stripeKey}_${billing}`] ? 'Subscribe' : 'Join Early Access'}
             </a>
           </article>
         ))}
