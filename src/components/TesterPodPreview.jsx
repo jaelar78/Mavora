@@ -8,7 +8,7 @@ import {
 } from 'lucide-react';
 import { FaFacebookF, FaInstagram, FaLinkedinIn, FaPinterestP, FaTiktok } from 'react-icons/fa6';
 
-const TESTER_NAV_ITEMS = ['AI Brain', 'Content Calendar', 'Platforms', 'Files', 'Ad Performance', 'Budget'];
+const DASHBOARD_NAV_ITEMS = ['AI Brain', 'Content Calendar', 'Platforms', 'Files', 'Ad Performance', 'Budget'];
 
 const PLATFORM_CHIPS = [
   { label: 'LinkedIn', Icon: FaLinkedinIn },
@@ -134,7 +134,7 @@ function TesterPodChrome({ children }) {
 function TesterPodTabs() {
   return (
     <div className="tester-pod-tabs" aria-label="Gidgee pod sections">
-      {TESTER_NAV_ITEMS.map((item, index) => (
+      {DASHBOARD_NAV_ITEMS.map((item, index) => (
         <span key={item} className={`tester-pod-tab ${index === 0 ? 'active' : ''}`}>
           {item}
         </span>
