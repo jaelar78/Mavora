@@ -288,8 +288,9 @@ function TesterTabContent({ tab }) {
   );
 }
 
-function TesterTabButton({ tab, activeTab, index, tabPanelId, tabRefs, onClick, onFocus, onKeyDown }) {
+function TesterTabButton({ tab, index, tabContext, handlers }) {
   const TabIcon = TAB_ICONS[tab] || FileText;
+  const { activeTab, tabPanelId, tabRefs } = tabContext;
 
   return (
     <button
@@ -303,9 +304,9 @@ function TesterTabButton({ tab, activeTab, index, tabPanelId, tabRefs, onClick, 
       aria-selected={activeTab === tab}
       tabIndex={activeTab === tab ? 0 : -1}
       className={`tester-pod-tab ${activeTab === tab ? 'active' : ''}`}
-      onClick={onClick}
-      onFocus={onFocus}
-      onKeyDown={onKeyDown}
+      onClick={() => handlers.onClick(tab)}
+      onFocus={handlers.onFocus}
+      onKeyDown={(event) => handlers.onKeyDown(event, index)}
     >
       <TabIcon size={12} strokeWidth={1.9} aria-hidden="true" />
       {tab}
@@ -350,13 +351,9 @@ function TesterPodTabs({ activeTab, tabRefs, tabPanelId, onTabClick, onTabFocus,
         <TesterTabButton
           key={tab}
           tab={tab}
-          activeTab={activeTab}
           index={index}
-          tabPanelId={tabPanelId}
-          tabRefs={tabRefs}
-          onClick={() => onTabClick(tab)}
-          onFocus={onTabFocus}
-          onKeyDown={(event) => onTabKeyDown(event, index)}
+          tabContext={{ activeTab, tabPanelId, tabRefs }}
+          handlers={{ onClick: onTabClick, onFocus: onTabFocus, onKeyDown: onTabKeyDown }}
         />
       ))}
     </div>
