@@ -1433,27 +1433,66 @@ select {
 
 .tester-pod-card {
   text-align: left;
-  padding: clamp(1rem, 2vw, 1.35rem);
+  max-width: 920px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0;
   display: grid;
-  gap: 0.75rem;
+  gap: 0;
+  overflow: hidden;
   background:
     radial-gradient(ellipse 60% 45% at 100% 0%, rgba(216, 184, 103, 0.1), transparent 65%),
     linear-gradient(170deg, var(--panel) 60%, var(--background) 160%);
+}
+
+.tester-pod-window-bar {
+  display: flex;
+  gap: 0.35rem;
+  padding: 0.55rem 0.75rem;
+  border-bottom: 1px solid rgba(184, 138, 50, 0.2);
+  background: rgba(255, 253, 248, 0.8);
+}
+
+.tester-pod-window-bar span {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 999px;
+  background: rgba(184, 138, 50, 0.35);
 }
 
 .tester-pod-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 1rem;
-  flex-wrap: wrap;
-  padding-bottom: 0.65rem;
-  border-bottom: 1px solid var(--gold-border);
+  gap: 0.8rem;
+  padding: 0.8rem clamp(0.85rem, 2vw, 1.1rem);
+  border-bottom: 1px solid rgba(184, 138, 50, 0.2);
+}
+
+.tester-pod-header-main {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  gap: 0.7rem;
+}
+
+.tester-pod-avatar {
+  flex-shrink: 0;
+  width: 2.1rem;
+  height: 2.1rem;
+  border-radius: 10px;
+  display: inline-grid;
+  place-items: center;
+  color: var(--navy);
+  background: var(--card);
+  border: 1px solid var(--gold-border);
+  font-family: 'Playfair Display', 'Times New Roman', serif;
+  font-weight: 700;
 }
 
 .tester-pod-title {
   font-family: 'Playfair Display', 'Times New Roman', serif;
-  font-size: clamp(1.1rem, 2vw, 1.4rem);
+  font-size: clamp(1rem, 1.7vw, 1.18rem);
   color: var(--navy);
   font-weight: 700;
   margin: 0;
@@ -1461,29 +1500,32 @@ select {
 
 .tester-pod-subtitle {
   color: var(--muted);
-  font-size: 0.82rem;
-  margin: 0.2rem 0 0;
+  font-size: 0.76rem;
+  margin: 0.12rem 0 0;
 }
 
 .tester-pod-tabs {
   display: flex;
-  gap: 0.36rem;
+  gap: 0;
   overflow-x: auto;
-  padding: 0.12rem;
+  padding: 0 0.55rem;
   scrollbar-width: thin;
-  border: 1px solid rgba(184, 138, 50, 0.2);
-  border-radius: 12px;
+  border-bottom: 1px solid rgba(184, 138, 50, 0.2);
   background: rgba(255, 253, 248, 0.8);
 }
 
 .tester-pod-tab {
-  border-radius: 8px;
-  padding: 0.32rem 0.54rem;
-  font-size: 0.72rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.28rem;
+  min-height: 2.3rem;
+  padding: 0.15rem 0.5rem;
+  font-size: 0.68rem;
   font-weight: 600;
   cursor: pointer;
-  border: 1px solid transparent;
-  background: var(--panel);
+  border: 0;
+  border-bottom: 2px solid transparent;
+  background: transparent;
   color: var(--muted);
   white-space: nowrap;
   flex-shrink: 0;
@@ -1491,12 +1533,13 @@ select {
 }
 
 .tester-pod-tab.active {
-  background: var(--navy-soft);
-  color: var(--panel);
+  background: transparent;
+  color: var(--navy);
   border-color: var(--gold-border);
 }
 
 .tester-pod-tab:hover {
+  color: var(--navy);
   border-color: var(--gold);
 }
 
@@ -1510,52 +1553,124 @@ select {
 
 .tester-pod-content-shell {
   display: grid;
-  gap: 0.65rem;
-  padding: 0.85rem;
+  gap: 0;
+  padding: clamp(0.7rem, 1.8vw, 1rem);
+}
+
+.tester-pod-content-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+  padding-bottom: 0.55rem;
+  border-bottom: 1px solid rgba(184, 138, 50, 0.18);
 }
 
 .tester-pod-content-head h4 {
   margin: 0;
+  font-size: 0.86rem;
+  color: var(--navy);
 }
 
-.tester-pod-insights {
-  display: grid;
-  gap: 0.45rem;
+.tester-pod-panel-chip,
+.tester-pod-row-action {
+  border-radius: 999px;
+  border: 1px solid var(--gold-border);
+  background: var(--card);
+  color: var(--muted);
+  font-size: 0.64rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
 }
 
-.tester-pod-insights-list {
-  display: grid;
-  gap: 0.42rem;
+.tester-pod-panel-chip {
+  padding: 0.18rem 0.45rem;
 }
 
-.tester-pod-insight-row {
+.tester-pod-dashboard-list {
   display: grid;
-  grid-template-columns: auto 1fr;
-  gap: 0.55rem;
-  align-items: flex-start;
-  padding: 0.5rem 0.58rem;
-  border-radius: 10px;
-  background: var(--background);
+}
+
+.tester-pod-dashboard-row {
+  display: grid;
+  grid-template-columns: auto minmax(210px, 1.1fr) minmax(180px, 0.9fr) auto;
+  gap: 0.65rem;
+  align-items: center;
+  padding: 0.58rem 0;
+  border-bottom: 1px solid rgba(184, 138, 50, 0.16);
+}
+
+.tester-pod-dashboard-row:last-child {
+  border-bottom: 0;
+}
+
+.tester-pod-row-icon {
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 8px;
+  display: inline-grid;
+  place-items: center;
+  color: var(--navy);
+  background: var(--card);
   border: 1px solid rgba(184, 138, 50, 0.2);
 }
 
-.tester-pod-insight-index {
-  min-width: 1.2rem;
-  height: 1.2rem;
-  border-radius: 999px;
-  display: inline-grid;
-  place-items: center;
-  font-size: 0.68rem;
-  font-weight: 700;
-  color: var(--navy);
-  background: rgba(216, 184, 103, 0.35);
+.tester-pod-row-main {
+  display: grid;
+  gap: 0.18rem;
+  min-width: 0;
 }
 
-.tester-pod-insight-row p {
-  margin: 0;
+.tester-pod-row-label {
+  color: var(--muted);
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.tester-pod-row-value {
   color: var(--navy);
-  font-size: 0.79rem;
-  line-height: 1.45;
+  font-size: 0.78rem;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.tester-pod-row-detail {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.72rem;
+  line-height: 1.35;
+}
+
+.tester-pod-row-action {
+  padding: 0.16rem 0.4rem;
+}
+
+.tester-pod-platforms {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+}
+
+.tester-pod-platform-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  border-radius: 999px;
+  border: 1px solid rgba(184, 138, 50, 0.22);
+  background: var(--background);
+  color: var(--navy);
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 0.16rem 0.38rem;
+  line-height: 1.2;
+}
+
+.tester-pod-platform-chip svg {
+  width: 0.7rem;
+  height: 0.7rem;
 }
 
 .tester-pod-cta {
@@ -1575,13 +1690,41 @@ select {
 }
 
 @media (max-width: 640px) {
+  .tester-pod-card {
+    width: calc(100% + 0.5rem);
+    margin-left: -0.25rem;
+    margin-right: -0.25rem;
+  }
+
+  .tester-pod-header {
+    flex-wrap: nowrap;
+    align-items: flex-start;
+  }
+
   .tester-pod-tab {
-    padding: 0.36rem 0.58rem;
-    font-size: 0.72rem;
+    min-height: 2rem;
+    padding: 0.12rem 0.44rem;
+    font-size: 0.64rem;
   }
 
   .tester-pod-content-shell {
-    padding: 0.78rem;
+    padding: 0.7rem;
+  }
+
+  .tester-pod-dashboard-row {
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 0.45rem 0.55rem;
+    align-items: flex-start;
+    padding: 0.52rem 0;
+  }
+
+  .tester-pod-row-detail,
+  .tester-pod-row-action {
+    grid-column: 2;
+  }
+
+  .tester-pod-row-value {
+    font-size: 0.74rem;
   }
 }
 

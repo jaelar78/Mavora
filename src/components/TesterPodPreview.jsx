@@ -1,4 +1,25 @@
 import { useRef, useState } from 'react';
+import {
+  BarChart3,
+  Bot,
+  CalendarDays,
+  DollarSign,
+  FileText,
+  Flag,
+  Lightbulb,
+  MapPin,
+  Megaphone,
+  NotebookText,
+  Palette,
+  Rocket,
+  Search,
+  Share2,
+  Sparkles,
+  Target,
+  Users,
+} from 'lucide-react';
+import { FaFacebookF, FaInstagram, FaPinterestP, FaTiktok } from 'react-icons/fa6';
+import { SiGoogleads } from 'react-icons/si';
 
 const TESTER_TABS = [
   'Source / Intake',
@@ -18,6 +39,32 @@ const TESTER_TABS = [
   'Next Moves',
 ];
 
+const TAB_ICONS = {
+  'Source / Intake': Search,
+  'AI Analysis': Bot,
+  'Brand DNA': Palette,
+  Audience: Users,
+  Offer: Target,
+  'Campaign Strategy': Megaphone,
+  'Content Ideas': Lightbulb,
+  'Ad Angles': Rocket,
+  Socials: Share2,
+  Calendar: CalendarDays,
+  Holidays: Flag,
+  Budget: DollarSign,
+  'Ad Analysis': BarChart3,
+  'AI Notes': NotebookText,
+  'Next Moves': Sparkles,
+};
+
+const PLATFORM_CHIPS = [
+  { label: 'Instagram', Icon: FaInstagram },
+  { label: 'TikTok', Icon: FaTiktok },
+  { label: 'Facebook', Icon: FaFacebookF },
+  { label: 'Pinterest', Icon: FaPinterestP },
+  { label: 'Google', Icon: SiGoogleads },
+];
+
 const TAB_CONTENT = {
   'Source / Intake': {
     items: [
@@ -28,11 +75,45 @@ const TAB_CONTENT = {
     ],
   },
   'AI Analysis': {
-    items: [
-      'Western hat and lifestyle brand signals identified',
-      'Brand tone: earthy, premium, Australian, bold',
-      'Audience: Australian country, western, rodeo, festival, and outdoor style buyers',
-      'Next move: launch first styling reel and queue launch countdown assets',
+    rows: [
+      {
+        icon: Palette,
+        label: 'Brand tone',
+        value: 'Earthy · premium · Australian · bold',
+        detail: 'Western hat and lifestyle brand signals identified.',
+        action: 'Review',
+      },
+      {
+        icon: Users,
+        label: 'Audience',
+        value: 'Country, western, rodeo, festival, outdoor style buyers',
+        detail: 'Primary buyers mapped around authentic Australian lifestyle intent.',
+      },
+      {
+        icon: MapPin,
+        label: 'Geography / market',
+        value: 'Australia',
+        detail: 'Launch direction weighted to local country, rodeo, and festival moments.',
+      },
+      {
+        icon: Share2,
+        label: 'Recommended platforms',
+        platforms: PLATFORM_CHIPS,
+        detail: 'Small-channel mix for launch content, retargeting, and product discovery.',
+      },
+      {
+        icon: Megaphone,
+        label: 'Campaign direction',
+        value: 'Brand story reel → styling carousel → launch drop offer → retarget',
+        detail: 'Launch story builds from identity to product demand.',
+      },
+      {
+        icon: Rocket,
+        label: 'Next move',
+        value: 'Launch first styling reel and queue launch countdown assets',
+        detail: 'First action is ready for review before scheduling.',
+        action: 'Review',
+      },
     ],
   },
   'Brand DNA': {
@@ -141,6 +222,21 @@ const TAB_CONTENT = {
   },
 };
 
+function getTabRows(tab, content) {
+  if (content.rows) {
+    return content.rows;
+  }
+
+  const Icon = TAB_ICONS[tab] || FileText;
+
+  return content.items.map((item, index) => ({
+    icon: Icon,
+    label: `${tab} ${index + 1}`,
+    value: item,
+    detail: 'Pod preview row',
+  }));
+}
+
 function TesterTabContent({ tab }) {
   const content = TAB_CONTENT[tab];
   if (!content) {
@@ -150,22 +246,150 @@ function TesterTabContent({ tab }) {
       </div>
     );
   }
+  const rows = getTabRows(tab, content);
+
   return (
     <div className="tester-pod-content-shell">
       <div className="tester-pod-content-head">
         <h4>{tab}</h4>
+        <span className="tester-pod-panel-chip">Active screen</span>
       </div>
-      <div className="tester-pod-insights">
-        <div className="tester-pod-insights-list">
-          {content.items.map((item, index) => (
-            <div key={item} className="tester-pod-insight-row">
-              <span className="tester-pod-insight-index">{index + 1}</span>
-              <p>{item}</p>
+      <div className="tester-pod-dashboard-list">
+        {rows.map((row) => {
+          const RowIcon = row.icon || FileText;
+
+          return (
+            <div key={`${row.label}-${row.value || row.detail}`} className="tester-pod-dashboard-row">
+              <span className="tester-pod-row-icon" aria-hidden="true">
+                <RowIcon size={14} strokeWidth={1.9} />
+              </span>
+              <div className="tester-pod-row-main">
+                <span className="tester-pod-row-label">{row.label}</span>
+                {row.platforms ? (
+                  <span className="tester-pod-platforms" aria-label="Recommended platforms">
+                    {row.platforms.map(({ label, Icon }) => (
+                      <span key={label} className="tester-pod-platform-chip">
+                        <Icon aria-hidden="true" />
+                        {label}
+                      </span>
+                    ))}
+                  </span>
+                ) : (
+                  <span className="tester-pod-row-value">{row.value}</span>
+                )}
+              </div>
+              <p className="tester-pod-row-detail">{row.detail}</p>
+              {row.action && <span className="tester-pod-row-action">{row.action}</span>}
             </div>
-          ))}
-        </div>
+          );
+        })}
       </div>
     </div>
+  );
+}
+
+function TesterTabButton({ tab, activeTab, index, tabPanelId, tabRefs, onClick, onFocus, onKeyDown }) {
+  const TabIcon = TAB_ICONS[tab] || FileText;
+
+  return (
+    <button
+      id={`gidgee-pod-tab-${index}`}
+      ref={(node) => {
+        tabRefs.current[index] = node;
+      }}
+      type="button"
+      role="tab"
+      aria-controls={tabPanelId}
+      aria-selected={activeTab === tab}
+      tabIndex={activeTab === tab ? 0 : -1}
+      className={`tester-pod-tab ${activeTab === tab ? 'active' : ''}`}
+      onClick={onClick}
+      onFocus={onFocus}
+      onKeyDown={onKeyDown}
+    >
+      <TabIcon size={12} strokeWidth={1.9} aria-hidden="true" />
+      {tab}
+    </button>
+  );
+}
+
+function TesterPodHeader() {
+  return (
+    <div className="tester-pod-header">
+      <div className="tester-pod-header-main">
+        <span className="tester-pod-avatar" aria-hidden="true">
+          G
+        </span>
+        <div>
+          <p className="tester-pod-title">Gidgee &amp; Co Launch</p>
+          <p className="tester-pod-subtitle">Example AI marketing pod using www.gidgeeco.au</p>
+        </div>
+      </div>
+      <span className="status-chip-gold">Preview</span>
+    </div>
+  );
+}
+
+function TesterPodChrome({ children }) {
+  return (
+    <div className="tester-pod-card panel">
+      <div className="tester-pod-window-bar" aria-hidden="true">
+        <span />
+        <span />
+        <span />
+      </div>
+      {children}
+    </div>
+  );
+}
+
+function TesterPodTabs({ activeTab, tabRefs, tabPanelId, onTabClick, onTabFocus, onTabKeyDown }) {
+  return (
+    <div className="tester-pod-tabs" role="tablist" aria-label="Gidgee pod sections">
+      {TESTER_TABS.map((tab, index) => (
+        <TesterTabButton
+          key={tab}
+          tab={tab}
+          activeTab={activeTab}
+          index={index}
+          tabPanelId={tabPanelId}
+          tabRefs={tabRefs}
+          onClick={() => onTabClick(tab)}
+          onFocus={onTabFocus}
+          onKeyDown={(event) => onTabKeyDown(event, index)}
+        />
+      ))}
+    </div>
+  );
+}
+
+function TesterPodPanel({ activeTab, activeTabIndex, tabPanelId }) {
+  return (
+    <section
+      id={tabPanelId}
+      role="tabpanel"
+      aria-labelledby={`gidgee-pod-tab-${activeTabIndex}`}
+      className="panel tester-pod-content-panel"
+    >
+      <TesterTabContent tab={activeTab} />
+    </section>
+  );
+}
+
+function TesterPodDashboard({ activeTab, activeTabIndex, tabRefs, tabPanelId, handlers }) {
+  return (
+    <TesterPodChrome>
+      <TesterPodHeader />
+      <TesterPodTabs
+        activeTab={activeTab}
+        tabRefs={tabRefs}
+        tabPanelId={tabPanelId}
+        onTabClick={handlers.onTabClick}
+        onTabFocus={handlers.onTabFocus}
+        onTabKeyDown={handlers.onTabKeyDown}
+      />
+      <TesterPodPanel activeTab={activeTab} activeTabIndex={activeTabIndex} tabPanelId={tabPanelId} />
+    </TesterPodChrome>
   );
 }
 
@@ -208,47 +432,17 @@ export default function TesterPodPreview({ onJoinEarlyAccess }) {
         section of a real example pod below.
       </p>
 
-      <div className="tester-pod-card panel">
-        <div className="tester-pod-header">
-          <div>
-            <p className="tester-pod-title">Gidgee &amp; Co Launch</p>
-            <p className="tester-pod-subtitle">Example AI marketing pod using www.gidgeeco.au</p>
-          </div>
-          <span className="status-chip-gold">Preview</span>
-        </div>
-
-        <div className="tester-pod-tabs" role="tablist" aria-label="Gidgee pod sections">
-          {TESTER_TABS.map((tab, index) => (
-            <button
-              key={tab}
-              id={`gidgee-pod-tab-${index}`}
-              ref={(node) => {
-                tabRefs.current[index] = node;
-              }}
-              type="button"
-              role="tab"
-              aria-controls={tabPanelId}
-              aria-selected={activeTab === tab}
-              tabIndex={activeTab === tab ? 0 : -1}
-              className={`tester-pod-tab ${activeTab === tab ? 'active' : ''}`}
-              onClick={() => setActiveTab(tab)}
-              onFocus={handleTabScrollIntoView}
-              onKeyDown={(event) => handleTabKeyDown(event, index)}
-            >
-              {tab}
-            </button>
-          ))}
-        </div>
-
-        <section
-          id={tabPanelId}
-          role="tabpanel"
-          aria-labelledby={`gidgee-pod-tab-${activeTabIndex}`}
-          className="panel tester-pod-content-panel"
-        >
-          <TesterTabContent tab={activeTab} />
-        </section>
-      </div>
+      <TesterPodDashboard
+        activeTab={activeTab}
+        activeTabIndex={activeTabIndex}
+        tabRefs={tabRefs}
+        tabPanelId={tabPanelId}
+        handlers={{
+          onTabClick: setActiveTab,
+          onTabFocus: handleTabScrollIntoView,
+          onTabKeyDown: handleTabKeyDown,
+        }}
+      />
 
       <div className="tester-pod-cta">
         <button className="button button-primary" onClick={onJoinEarlyAccess}>
