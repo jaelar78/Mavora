@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 
 const TESTER_TABS = [
   'Source / Intake',
@@ -156,38 +156,88 @@ const TAB_CONTENT = {
   },
 };
 
+const GIDGEE_PREVIEW_DASHBOARD_SUMMARY = [
+  { label: 'Brand tone', value: 'Earthy, premium, Australian, bold' },
+  {
+    label: 'Audience',
+    value: 'Australian country, western, rodeo, festival, and outdoor style buyers',
+  },
+  { label: 'Recommended platforms', value: 'Instagram, TikTok, Facebook, Pinterest, Google' },
+  {
+    label: 'Campaign direction',
+    value: 'Brand story reel → Styling carousel → Launch drop offer → Retarget',
+  },
+  { label: 'Next move', value: 'Launch the first styling reel and queue launch countdown assets' },
+  { label: 'Budget / ad note', value: 'Weight spend into launch week and monitor hook fatigue early' },
+];
+
 function TesterTabContent({ tab }) {
   const content = TAB_CONTENT[tab];
   if (!content) {
     return (
-      <div className="pod-section-content">
+      <div className="tester-pod-content-shell">
         <p className="subtle">Select a tab to preview this pod section.</p>
       </div>
     );
   }
   return (
-    <div className="pod-section-content">
-      <h4>{tab}</h4>
+    <div className="tester-pod-content-shell">
+      <div className="tester-pod-content-head">
+        <h4>{tab}</h4>
+      </div>
       <div className="tester-pod-chip-row">
         {content.chips.map((chip) => (
           <span key={chip} className="status-chip">{chip}</span>
         ))}
       </div>
-      <ul className="simple-list compact-list">
-        {content.items.map((item) => (
-          <li key={item}>{item}</li>
-        ))}
-      </ul>
+      <div className="tester-pod-insights">
+        <p className="tester-pod-insights-title">Section insights</p>
+        <div className="tester-pod-insights-list">
+          {content.items.map((item, index) => (
+            <div key={item} className="tester-pod-insight-row">
+              <span className="tester-pod-insight-index">{index + 1}</span>
+              <p>{item}</p>
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   );
 }
 
 export default function TesterPodPreview({ onJoinEarlyAccess }) {
   const [activeTab, setActiveTab] = useState('AI Analysis');
+  const tabRefs = useRef([]);
+  const activeTabIndex = TESTER_TABS.indexOf(activeTab);
+  const tabPanelId = 'gidgee-pod-tabpanel';
+
+  const handleTabScrollIntoView = (event) => {
+    event.currentTarget.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+  };
+  const handleTabKeyDown = (event, currentIndex) => {
+    if (!['ArrowRight', 'ArrowLeft', 'Home', 'End'].includes(event.key)) {
+      return;
+    }
+
+    event.preventDefault();
+    let nextIndex = currentIndex;
+
+    if (event.key === 'ArrowRight') {
+      nextIndex = (currentIndex + 1) % TESTER_TABS.length;
+    } else if (event.key === 'ArrowLeft') {
+      nextIndex = (currentIndex - 1 + TESTER_TABS.length) % TESTER_TABS.length;
+    } else if (event.key === 'Home') {
+      nextIndex = 0;
+    } else if (event.key === 'End') {
+      nextIndex = TESTER_TABS.length - 1;
+    }
+
+    setActiveTab(TESTER_TABS[nextIndex]);
+    tabRefs.current[nextIndex]?.focus();
+  };
 
   return (
     <section className="tester-pod-section">
-      <p className="eyebrow">Tester Pod Preview</p>
       <h2 className="section-title">See what a Dovroyn pod gives you.</h2>
       <p className="lede">
         Every website, offer, launch, or campaign gets its own AI marketing pod. Explore every
@@ -222,19 +272,44 @@ export default function TesterPodPreview({ onJoinEarlyAccess }) {
           </div>
         </div>
 
-        <div className="pod-tabs">
-          {TESTER_TABS.map((tab) => (
+        <dl className="tester-pod-summary-grid" aria-label="Gidgee launch dashboard summary">
+          {GIDGEE_PREVIEW_DASHBOARD_SUMMARY.map((entry) => (
+            <div key={entry.label} className="tester-pod-summary-card">
+              <dt>{entry.label}</dt>
+              <dd>{entry.value}</dd>
+            </div>
+          ))}
+        </dl>
+
+        <div className="tester-pod-tabs" role="tablist" aria-label="Gidgee pod sections">
+          {TESTER_TABS.map((tab, index) => (
             <button
               key={tab}
-              className={`pod-tab ${activeTab === tab ? 'active' : ''}`}
+              id={`gidgee-pod-tab-${index}`}
+              ref={(node) => {
+                tabRefs.current[index] = node;
+              }}
+              type="button"
+              role="tab"
+              aria-controls={tabPanelId}
+              aria-selected={activeTab === tab}
+              tabIndex={activeTab === tab ? 0 : -1}
+              className={`tester-pod-tab ${activeTab === tab ? 'active' : ''}`}
               onClick={() => setActiveTab(tab)}
+              onFocus={handleTabScrollIntoView}
+              onKeyDown={(event) => handleTabKeyDown(event, index)}
             >
               {tab}
             </button>
           ))}
         </div>
 
-        <section className="panel tester-pod-content-panel">
+        <section
+          id={tabPanelId}
+          role="tabpanel"
+          aria-labelledby={`gidgee-pod-tab-${activeTabIndex}`}
+          className="panel tester-pod-content-panel"
+        >
           <TesterTabContent tab={activeTab} />
         </section>
       </div>
