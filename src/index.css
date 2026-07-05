@@ -1481,6 +1481,220 @@ select {
   margin: 0;
 }
 
+/* ─── AI POD ASSISTANT PREVIEW ─── */
+.ai-assistant-section {
+  display: grid;
+  gap: clamp(0.9rem, 1.6vw, 1.2rem);
+  text-align: center;
+}
+
+.ai-assistant-lede {
+  max-width: 62ch;
+  margin: 0 auto;
+}
+
+.ai-assistant-card {
+  text-align: left;
+  max-width: 760px;
+  width: 100%;
+  margin: 0 auto;
+  padding: clamp(1.2rem, 2.5vw, 1.7rem);
+  display: grid;
+  gap: 1rem;
+  background:
+    radial-gradient(ellipse 60% 45% at 0% 0%, rgba(216, 184, 103, 0.12), transparent 65%),
+    linear-gradient(170deg, var(--panel) 60%, var(--background) 160%);
+}
+
+.ai-assistant-header {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  padding-bottom: 0.8rem;
+  border-bottom: 1px solid var(--gold-border);
+}
+
+.ai-assistant-orb {
+  position: relative;
+  flex-shrink: 0;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  color: var(--gold);
+  background: radial-gradient(circle at 32% 28%, var(--panel), var(--card) 75%);
+  border: 1px solid var(--gold-border);
+  box-shadow: 0 4px 14px var(--shadow-soft);
+}
+
+.ai-assistant-orb-ring {
+  position: absolute;
+  inset: -5px;
+  border-radius: 50%;
+  border: 1px solid var(--gold-border);
+  border-top-color: var(--gold);
+  animation: ai-orb-spin 6s linear infinite;
+}
+
+@keyframes ai-orb-spin {
+  to { transform: rotate(360deg); }
+}
+
+.ai-assistant-name {
+  font-family: 'Playfair Display', 'Times New Roman', serif;
+  font-size: 1.02rem;
+  font-weight: 700;
+  color: var(--navy);
+  margin: 0;
+}
+
+.ai-assistant-status {
+  color: var(--muted);
+  font-size: 0.78rem;
+  margin: 0.15rem 0 0;
+}
+
+.ai-assistant-questions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.ai-assistant-question {
+  font: inherit;
+  font-size: 0.82rem;
+  color: var(--navy);
+  background: var(--card);
+  border: 1px solid var(--gold-border);
+  border-radius: 999px;
+  padding: 0.45rem 0.9rem;
+  cursor: pointer;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.ai-assistant-question:hover {
+  border-color: var(--gold);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px var(--shadow-soft);
+}
+
+.ai-assistant-question.active {
+  background: linear-gradient(135deg, var(--gold-soft), var(--gold));
+  border-color: var(--gold);
+  color: var(--navy);
+  font-weight: 600;
+}
+
+.ai-assistant-answer-area {
+  min-height: 132px;
+  border-radius: 16px;
+  background: var(--card);
+  border: 1px solid rgba(184, 138, 50, 0.22);
+  padding: clamp(0.9rem, 2vw, 1.2rem);
+  display: grid;
+  align-content: center;
+}
+
+.ai-assistant-placeholder {
+  color: var(--muted);
+  font-size: 0.85rem;
+  font-style: italic;
+  text-align: center;
+  margin: 0;
+}
+
+.ai-assistant-thinking {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+}
+
+.ai-assistant-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--gold);
+  animation: ai-dot-pulse 1s ease-in-out infinite;
+}
+
+.ai-assistant-dot:nth-child(2) { animation-delay: 0.15s; }
+.ai-assistant-dot:nth-child(3) { animation-delay: 0.3s; }
+
+@keyframes ai-dot-pulse {
+  0%, 100% { opacity: 0.35; transform: translateY(0); }
+  50% { opacity: 1; transform: translateY(-3px); }
+}
+
+.ai-assistant-thinking-label {
+  color: var(--muted);
+  font-size: 0.8rem;
+  margin-left: 0.4rem;
+}
+
+.ai-assistant-answer {
+  display: grid;
+  gap: 0.6rem;
+  animation: ai-answer-in 0.35s ease;
+}
+
+@keyframes ai-answer-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.ai-assistant-answer-lead {
+  color: var(--navy);
+  font-weight: 600;
+  font-size: 0.92rem;
+  line-height: 1.55;
+  margin: 0;
+}
+
+.ai-assistant-answer-points {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.4rem;
+}
+
+.ai-assistant-answer-points li {
+  position: relative;
+  padding-left: 1.1rem;
+  color: var(--navy-65);
+  font-size: 0.86rem;
+  line-height: 1.55;
+}
+
+.ai-assistant-answer-points li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.55em;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--gold);
+}
+
+.ai-assistant-answer-closing {
+  color: var(--navy-65);
+  font-size: 0.86rem;
+  line-height: 1.55;
+  font-style: italic;
+  margin: 0;
+}
+
+.ai-assistant-note {
+  color: var(--muted);
+  font-size: 0.75rem;
+  font-style: italic;
+  text-align: center;
+  margin: 0;
+}
+
 /* ─── EARLY ACCESS MODAL ─── */
 .modal-overlay {
   position: fixed;

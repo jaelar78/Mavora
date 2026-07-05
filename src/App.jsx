@@ -69,6 +69,7 @@ import Footer from './components/Footer';
 import EarlyAccessModal from './components/EarlyAccessModal';
 import { redirectToCheckout, canCreatePod, getContentDays, TIER_LIMITS } from './lib/stripe';
 import TesterPodPreview from './components/TesterPodPreview';
+import AiPodAssistant from './components/AiPodAssistant';
 import WaitlistPage from './pages/Waitlist';
 import PodsPage from './pages/Pods';
 import NewPodPage from './pages/NewPod';
@@ -873,6 +874,8 @@ function LandingPage({ session }) {
       </section>
 
       <TesterPodPreview onJoinEarlyAccess={() => setModalOpen(true)} />
+
+      <AiPodAssistant />
 
       <section className="dashboard-preview">
         <p className="eyebrow">Inside Every Pod</p>
