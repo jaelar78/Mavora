@@ -293,7 +293,7 @@ function TesterTabContent({ tab }) {
                 )}
               </div>
               <p className="tester-pod-row-detail">{row.detail}</p>
-              {row.action && <span className="tester-pod-row-action">{row.action}</span>}
+              {row.action && <span className="tester-pod-row-action">Override</span>}
             </div>
           );
         })}
@@ -322,7 +322,7 @@ function TesterTabButton({ tab, index, tabContext, handlers }) {
       onFocus={handlers.onFocus}
       onKeyDown={(event) => handlers.onKeyDown(event, index)}
     >
-      <TabIcon size={12} strokeWidth={1.9} aria-hidden="true" />
+      <TabIcon size={14} strokeWidth={1.9} aria-hidden="true" />
       {tab}
     </button>
   );

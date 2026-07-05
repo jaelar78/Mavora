@@ -1435,14 +1435,15 @@ select {
 
 .tester-pod-card {
   text-align: left;
-  max-width: 920px;
-  width: 100%;
+  width: calc(100% - 32px);
+  max-width: 860px;
   margin: 0 auto;
   padding: 0;
   display: grid;
   gap: 0;
   overflow: hidden;
   box-sizing: border-box;
+  border-radius: 22px;
   background:
     radial-gradient(ellipse 60% 45% at 100% 0%, rgba(216, 184, 103, 0.1), transparent 65%),
     linear-gradient(170deg, var(--panel) 60%, var(--background) 160%);
@@ -1468,7 +1469,7 @@ select {
   align-items: center;
   justify-content: space-between;
   gap: 0.8rem;
-  padding: 0.8rem clamp(0.85rem, 2vw, 1.1rem);
+  padding: 14px 16px;
   border-bottom: 1px solid rgba(184, 138, 50, 0.2);
 }
 
@@ -1485,8 +1486,8 @@ select {
 
 .tester-pod-avatar {
   flex-shrink: 0;
-  width: 2.1rem;
-  height: 2.1rem;
+  width: 42px;
+  height: 42px;
   border-radius: 10px;
   display: inline-grid;
   place-items: center;
@@ -1499,18 +1500,20 @@ select {
 
 .tester-pod-title {
   font-family: 'Playfair Display', 'Times New Roman', serif;
-  font-size: clamp(1rem, 1.7vw, 1.18rem);
+  font-size: clamp(1.25rem, 2vw, 1.38rem);
   color: var(--navy);
   font-weight: 700;
   margin: 0;
-  overflow-wrap: break-word;
+  line-height: 1.08;
+  overflow-wrap: anywhere;
 }
 
 .tester-pod-subtitle {
   color: var(--muted);
-  font-size: 0.76rem;
+  font-size: clamp(0.81rem, 1.5vw, 0.88rem);
   margin: 0.12rem 0 0;
-  overflow-wrap: break-word;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
 }
 
 .tester-pod-tabs {
@@ -1518,7 +1521,8 @@ select {
   gap: 0;
   overflow-x: auto;
   max-width: 100%;
-  padding: 0 0.55rem;
+  min-height: 44px;
+  padding: 0 0.5rem;
   scrollbar-width: thin;
   border-bottom: 1px solid rgba(184, 138, 50, 0.2);
   background: rgba(255, 253, 248, 0.8);
@@ -1527,10 +1531,10 @@ select {
 .tester-pod-tab {
   display: inline-flex;
   align-items: center;
-  gap: 0.28rem;
-  min-height: 2.3rem;
-  padding: 0.15rem 0.5rem;
-  font-size: 0.68rem;
+  gap: 0.32rem;
+  min-height: 44px;
+  padding: 0 10px;
+  font-size: 0.78rem;
   font-weight: 600;
   cursor: pointer;
   border: 0;
@@ -1570,7 +1574,7 @@ select {
   width: 100%;
   max-width: 100%;
   min-width: 0;
-  padding: clamp(0.7rem, 1.8vw, 1rem);
+  padding: clamp(0.75rem, 1.8vw, 0.95rem);
   box-sizing: border-box;
 }
 
@@ -1585,8 +1589,9 @@ select {
 
 .tester-pod-content-head h4 {
   margin: 0;
-  font-size: 0.86rem;
+  font-size: clamp(1.08rem, 2vw, 1.2rem);
   color: var(--navy);
+  line-height: 1.15;
 }
 
 .tester-pod-panel-chip,
@@ -1595,7 +1600,7 @@ select {
   border: 1px solid var(--gold-border);
   background: var(--card);
   color: var(--muted);
-  font-size: 0.64rem;
+  font-size: 0.66rem;
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -1613,10 +1618,11 @@ select {
 
 .tester-pod-dashboard-row {
   display: grid;
-  grid-template-columns: auto minmax(0, 1.1fr) minmax(0, 0.9fr) auto;
-  gap: 0.65rem;
+  grid-template-columns: auto minmax(0, 1.1fr) minmax(120px, 0.9fr) auto;
+  grid-template-areas: "icon main detail action";
+  gap: 0.5rem;
   align-items: center;
-  padding: 0.58rem 0;
+  padding: 10px 12px;
   border-bottom: 1px solid rgba(184, 138, 50, 0.16);
   max-width: 100%;
   min-width: 0;
@@ -1627,8 +1633,9 @@ select {
 }
 
 .tester-pod-row-icon {
-  width: 1.5rem;
-  height: 1.5rem;
+  grid-area: icon;
+  width: 28px;
+  height: 28px;
   border-radius: 8px;
   display: inline-grid;
   place-items: center;
@@ -1638,6 +1645,7 @@ select {
 }
 
 .tester-pod-row-main {
+  grid-area: main;
   display: grid;
   gap: 0.18rem;
   max-width: 100%;
@@ -1646,7 +1654,7 @@ select {
 
 .tester-pod-row-label {
   color: var(--muted);
-  font-size: 0.65rem;
+  font-size: 0.68rem;
   font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;
@@ -1654,23 +1662,28 @@ select {
 
 .tester-pod-row-value {
   color: var(--navy);
-  font-size: 0.78rem;
+  font-size: 0.86rem;
   font-weight: 700;
   line-height: 1.35;
-  overflow-wrap: break-word;
+  overflow-wrap: anywhere;
 }
 
 .tester-pod-row-detail {
+  grid-area: detail;
   margin: 0;
   color: var(--muted);
-  font-size: 0.72rem;
+  font-size: 0.8rem;
   line-height: 1.35;
   min-width: 0;
-  overflow-wrap: break-word;
+  overflow-wrap: anywhere;
 }
 
 .tester-pod-row-action {
-  padding: 0.16rem 0.4rem;
+  grid-area: action;
+  align-self: center;
+  justify-self: end;
+  padding: 5px 8px;
+  line-height: 1;
 }
 
 .tester-pod-platforms {
@@ -1685,20 +1698,22 @@ select {
   display: inline-flex;
   align-items: center;
   gap: 0.25rem;
+  min-height: 24px;
   border-radius: 999px;
   border: 1px solid rgba(184, 138, 50, 0.22);
   background: var(--background);
   color: var(--navy);
-  font-size: 0.68rem;
+  font-size: 0.72rem;
   font-weight: 700;
-  padding: 0.16rem 0.38rem;
+  padding: 0.16rem 0.42rem;
   line-height: 1.2;
   max-width: 100%;
 }
 
 .tester-pod-platform-chip svg {
-  width: 0.7rem;
-  height: 0.7rem;
+  flex-shrink: 0;
+  width: 0.78rem;
+  height: 0.78rem;
 }
 
 .tester-pod-cta {
@@ -1719,37 +1734,53 @@ select {
 
 @media (max-width: 640px) {
   .tester-pod-card {
-    width: 100%;
-    max-width: 100%;
-    margin-left: 0;
-    margin-right: 0;
+    width: calc(100vw - 32px);
+    max-width: 680px;
   }
 
   .tester-pod-header {
-    flex-wrap: wrap;
-    align-items: flex-start;
+    flex-wrap: nowrap;
+    align-items: center;
+    padding: 14px 16px;
+  }
+
+  .tester-pod-header .status-chip-gold {
+    flex-shrink: 0;
+    padding: 0.18rem 0.46rem;
+    font-size: 0.75rem;
   }
 
   .tester-pod-tab {
-    min-height: 2rem;
-    padding: 0.12rem 0.44rem;
-    font-size: 0.64rem;
+    min-height: 42px;
+    padding: 0 10px;
+    font-size: 0.76rem;
   }
 
   .tester-pod-content-shell {
     min-width: 0;
-    padding: 0.7rem;
+    padding: 12px;
   }
 
   .tester-pod-content-head {
-    align-items: flex-start;
-    flex-wrap: wrap;
+    align-items: center;
+    flex-wrap: nowrap;
+  }
+
+  .tester-pod-content-head h4 {
+    font-size: 1.12rem;
+    min-width: 0;
   }
 
   .tester-pod-dashboard-row {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 0.35rem;
-    align-items: flex-start;
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-areas:
+      "icon main"
+      ". detail"
+      ". action";
+    column-gap: 8px;
+    row-gap: 4px;
+    align-items: center;
+    padding: 10px 12px;
   }
 
   .tester-pod-row-icon {
@@ -1758,7 +1789,7 @@ select {
 
   .tester-pod-row-detail,
   .tester-pod-row-action {
-    grid-column: 1;
+    grid-column: auto;
   }
 
   .tester-pod-row-action {
@@ -1766,7 +1797,7 @@ select {
   }
 
   .tester-pod-row-value {
-    font-size: 0.74rem;
+    font-size: 0.84rem;
   }
 }
 
