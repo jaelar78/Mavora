@@ -20,7 +20,6 @@ const TESTER_TABS = [
 
 const TAB_CONTENT = {
   'Source / Intake': {
-    chips: ['Source analysed', 'Website pod'],
     items: [
       'Source: www.gidgeeco.au — Australian western hat and lifestyle brand',
       'Pod type: website launch pod, target country Australia',
@@ -29,16 +28,14 @@ const TAB_CONTENT = {
     ],
   },
   'AI Analysis': {
-    chips: ['Analysis complete', '4 signals found'],
     items: [
       'Western hat and lifestyle brand signals identified',
-      'Brand tone detected: earthy, premium, Australian, bold',
-      'Audience mapped for Australian country, western, rodeo, festival, and outdoor style buyers',
-      'Next campaign move suggested based on analysis',
+      'Brand tone: earthy, premium, Australian, bold',
+      'Audience: Australian country, western, rodeo, festival, and outdoor style buyers',
+      'Next move: launch first styling reel and queue launch countdown assets',
     ],
   },
   'Brand DNA': {
-    chips: ['Tone locked', 'Voice mapped'],
     items: [
       'Brand tone detected: earthy, premium, Australian, bold',
       'Brand voice: grounded confidence with outback character',
@@ -47,7 +44,6 @@ const TAB_CONTENT = {
     ],
   },
   Audience: {
-    chips: ['3 segments', 'AU focus'],
     items: [
       'Audience mapped for Australian country, western, rodeo, festival, and outdoor style buyers',
       'Pain points: hard to find quality western hats that suit everyday Australian life',
@@ -56,7 +52,6 @@ const TAB_CONTENT = {
     ],
   },
   Offer: {
-    chips: ['Launch drop', 'Offer shaped'],
     items: [
       'Core offer: premium crafted western hats built for real Australian wear',
       'Launch angle: limited first drop with early access for the brand community',
@@ -65,7 +60,6 @@ const TAB_CONTENT = {
     ],
   },
   'Campaign Strategy': {
-    chips: ['Direction locked', '4-step funnel'],
     items: [
       'Campaign goal selected: launch and grow brand awareness',
       'Main campaign message: crafted western hats for country, rodeo, festival, and everyday wear',
@@ -74,7 +68,6 @@ const TAB_CONTENT = {
     ],
   },
   'Content Ideas': {
-    chips: ['12 ideas ready', '4 shortlisted'],
     items: [
       'Content ideas for hats, styling, launches, product drops, and social posts',
       'Styling reel: one hat, three looks — paddock, festival, weekend',
@@ -83,7 +76,6 @@ const TAB_CONTENT = {
     ],
   },
   'Ad Angles': {
-    chips: ['5 angles drafted', 'Awaiting approval'],
     items: [
       'Craftsmanship angle: built by hand, made for wide open country',
       'Lifestyle angle: from rodeo weekends to festival season in one hat',
@@ -92,7 +84,6 @@ const TAB_CONTENT = {
     ],
   },
   Socials: {
-    chips: ['4 platforms planned', 'Connect to post'],
     items: [
       'Recommended platforms: Instagram, TikTok, Facebook, Pinterest',
       'Instagram: styling reels, launch countdown, and product drop posts',
@@ -101,7 +92,6 @@ const TAB_CONTENT = {
     ],
   },
   Calendar: {
-    chips: ['3 weeks mapped', 'Launch scheduled'],
     items: [
       'Week 1: brand story reel and founder introduction posts',
       'Week 2: styling carousels and behind-the-scenes launch countdown',
@@ -110,7 +100,6 @@ const TAB_CONTENT = {
     ],
   },
   Holidays: {
-    chips: ['AU calendar', '3 moments flagged'],
     items: [
       'Australian seasonal moments mapped around the launch window',
       'Rodeo and country show season flagged as a high-relevance content moment',
@@ -119,7 +108,6 @@ const TAB_CONTENT = {
     ],
   },
   Budget: {
-    chips: ['Tracker active', 'Launch budget set'],
     items: [
       'Launch budget split across Instagram, TikTok, and Facebook ads',
       'Planned spend, used spend, leads, and sales tracked inside the pod',
@@ -128,7 +116,6 @@ const TAB_CONTENT = {
     ],
   },
   'Ad Analysis': {
-    chips: ['Monitoring ready', 'Needs approval'],
     items: [
       'Ad performance reviewed against the locked campaign direction',
       'Creative fatigue flagged early with fresh angle suggestions',
@@ -137,7 +124,6 @@ const TAB_CONTENT = {
     ],
   },
   'AI Notes': {
-    chips: ['Pod memory', 'Always learning'],
     items: [
       'Pod remembers the approved tone, strategy, and audience for every suggestion',
       'Note: limited drops and craftsmanship story are the strongest brand levers',
@@ -146,7 +132,6 @@ const TAB_CONTENT = {
     ],
   },
   'Next Moves': {
-    chips: ['3 actions queued', '1 ready to go'],
     items: [
       'Next campaign move suggested based on pod analysis',
       'Actions prioritised: what to write, post, test, and approve',
@@ -155,21 +140,6 @@ const TAB_CONTENT = {
     ],
   },
 };
-
-const GIDGEE_PREVIEW_DASHBOARD_SUMMARY = [
-  { label: 'Brand tone', value: 'Earthy, premium, Australian, bold' },
-  {
-    label: 'Audience',
-    value: 'Australian country, western, rodeo, festival, and outdoor style buyers',
-  },
-  { label: 'Recommended platforms', value: 'Instagram, TikTok, Facebook, Pinterest, Google' },
-  {
-    label: 'Campaign direction',
-    value: 'Brand story reel → Styling carousel → Launch drop offer → Retarget',
-  },
-  { label: 'Next move', value: 'Launch the first styling reel and queue launch countdown assets' },
-  { label: 'Budget / ad note', value: 'Weight spend into launch week and monitor hook fatigue early' },
-];
 
 function TesterTabContent({ tab }) {
   const content = TAB_CONTENT[tab];
@@ -185,13 +155,7 @@ function TesterTabContent({ tab }) {
       <div className="tester-pod-content-head">
         <h4>{tab}</h4>
       </div>
-      <div className="tester-pod-chip-row">
-        {content.chips.map((chip) => (
-          <span key={chip} className="status-chip">{chip}</span>
-        ))}
-      </div>
       <div className="tester-pod-insights">
-        <p className="tester-pod-insights-title">Section insights</p>
         <div className="tester-pod-insights-list">
           {content.items.map((item, index) => (
             <div key={item} className="tester-pod-insight-row">
@@ -252,34 +216,6 @@ export default function TesterPodPreview({ onJoinEarlyAccess }) {
           </div>
           <span className="status-chip-gold">Preview</span>
         </div>
-
-        <div className="tester-pod-stats">
-          <div className="tester-pod-stat">
-            <span className="tester-pod-stat-value">Locked</span>
-            <span className="tester-pod-stat-label">Direction</span>
-          </div>
-          <div className="tester-pod-stat">
-            <span className="tester-pod-stat-value">12</span>
-            <span className="tester-pod-stat-label">Content ideas</span>
-          </div>
-          <div className="tester-pod-stat">
-            <span className="tester-pod-stat-value">3 wks</span>
-            <span className="tester-pod-stat-label">Calendar mapped</span>
-          </div>
-          <div className="tester-pod-stat">
-            <span className="tester-pod-stat-value">3</span>
-            <span className="tester-pod-stat-label">Next moves queued</span>
-          </div>
-        </div>
-
-        <dl className="tester-pod-summary-grid" aria-label="Gidgee launch dashboard summary">
-          {GIDGEE_PREVIEW_DASHBOARD_SUMMARY.map((entry) => (
-            <div key={entry.label} className="tester-pod-summary-card">
-              <dt>{entry.label}</dt>
-              <dd>{entry.value}</dd>
-            </div>
-          ))}
-        </dl>
 
         <div className="tester-pod-tabs" role="tablist" aria-label="Gidgee pod sections">
           {TESTER_TABS.map((tab, index) => (

@@ -1433,9 +1433,9 @@ select {
 
 .tester-pod-card {
   text-align: left;
-  padding: clamp(1.2rem, 2.5vw, 1.7rem);
+  padding: clamp(1rem, 2vw, 1.35rem);
   display: grid;
-  gap: 1rem;
+  gap: 0.75rem;
   background:
     radial-gradient(ellipse 60% 45% at 100% 0%, rgba(216, 184, 103, 0.1), transparent 65%),
     linear-gradient(170deg, var(--panel) 60%, var(--background) 160%);
@@ -1447,7 +1447,7 @@ select {
   justify-content: space-between;
   gap: 1rem;
   flex-wrap: wrap;
-  padding-bottom: 0.8rem;
+  padding-bottom: 0.65rem;
   border-bottom: 1px solid var(--gold-border);
 }
 
@@ -1465,46 +1465,11 @@ select {
   margin: 0.2rem 0 0;
 }
 
-.tester-pod-stats {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-  gap: 0.6rem;
-}
-
-.tester-pod-stat {
-  display: grid;
-  gap: 0.15rem;
-  padding: 0.6rem 0.75rem;
-  border-radius: 12px;
-  background: var(--card);
-  border: 1px solid rgba(184, 138, 50, 0.22);
-}
-
-.tester-pod-stat-value {
-  font-family: 'Playfair Display', 'Times New Roman', serif;
-  font-size: 1.05rem;
-  font-weight: 700;
-  color: var(--navy);
-}
-
-.tester-pod-stat-label {
-  color: var(--muted);
-  font-size: 0.72rem;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-}
-
-.tester-pod-chip-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.4rem;
-}
-
 .tester-pod-tabs {
   display: flex;
-  gap: 0.45rem;
+  gap: 0.36rem;
   overflow-x: auto;
-  padding: 0.15rem;
+  padding: 0.12rem;
   scrollbar-width: thin;
   border: 1px solid rgba(184, 138, 50, 0.2);
   border-radius: 12px;
@@ -1513,8 +1478,8 @@ select {
 
 .tester-pod-tab {
   border-radius: 8px;
-  padding: 0.36rem 0.58rem;
-  font-size: 0.73rem;
+  padding: 0.32rem 0.54rem;
+  font-size: 0.72rem;
   font-weight: 600;
   cursor: pointer;
   border: 1px solid transparent;
@@ -1545,64 +1510,22 @@ select {
 
 .tester-pod-content-shell {
   display: grid;
-  gap: 0.9rem;
-  padding: 1rem;
+  gap: 0.65rem;
+  padding: 0.85rem;
 }
 
 .tester-pod-content-head h4 {
   margin: 0;
 }
 
-.tester-pod-summary-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 0.6rem;
-  margin: 0;
-}
-
-.tester-pod-summary-card {
-  display: grid;
-  gap: 0.28rem;
-  margin: 0;
-  padding: 0.62rem 0.7rem;
-  border-radius: 10px;
-  background: rgba(243, 233, 216, 0.55);
-  border: 1px solid rgba(184, 138, 50, 0.2);
-}
-
-.tester-pod-summary-card dt {
-  margin: 0;
-  color: var(--muted);
-  font-size: 0.68rem;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  font-weight: 700;
-}
-
-.tester-pod-summary-card dd {
-  margin: 0;
-  color: var(--navy);
-  font-size: 0.8rem;
-  line-height: 1.45;
-}
-
 .tester-pod-insights {
   display: grid;
-  gap: 0.55rem;
-}
-
-.tester-pod-insights-title {
-  margin: 0;
-  color: var(--navy);
-  font-size: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  font-weight: 700;
+  gap: 0.45rem;
 }
 
 .tester-pod-insights-list {
   display: grid;
-  gap: 0.5rem;
+  gap: 0.42rem;
 }
 
 .tester-pod-insight-row {
@@ -1610,7 +1533,7 @@ select {
   grid-template-columns: auto 1fr;
   gap: 0.55rem;
   align-items: flex-start;
-  padding: 0.58rem 0.62rem;
+  padding: 0.5rem 0.58rem;
   border-radius: 10px;
   background: var(--background);
   border: 1px solid rgba(184, 138, 50, 0.2);
@@ -1653,16 +1576,12 @@ select {
 
 @media (max-width: 640px) {
   .tester-pod-tab {
-    padding: 0.4rem 0.62rem;
+    padding: 0.36rem 0.58rem;
     font-size: 0.72rem;
   }
 
   .tester-pod-content-shell {
-    padding: 0.88rem;
-  }
-
-  .tester-pod-summary-grid {
-    grid-template-columns: 1fr;
+    padding: 0.78rem;
   }
 }
 
