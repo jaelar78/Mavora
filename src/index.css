@@ -1435,7 +1435,7 @@ select {
 
 .tester-pod-card {
   text-align: left;
-  width: min(100%, 860px);
+  width: 100%;
   max-width: 860px;
   margin: 0 auto;
   padding: 0;
@@ -1628,7 +1628,7 @@ select {
 
 .tester-pod-dashboard-row {
   display: grid;
-  grid-template-columns: auto minmax(0, 1.08fr) minmax(0, 0.92fr) auto;
+  grid-template-columns: auto minmax(0, 1.2fr) minmax(0, 0.8fr) auto;
   grid-template-areas: "icon main detail action";
   gap: 0.48rem;
   align-items: center;

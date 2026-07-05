@@ -1,6 +1,5 @@
 import {
   Bot,
-  FileText,
   MapPin,
   Megaphone,
   Palette,
@@ -67,7 +66,7 @@ function TesterPodContent() {
       </div>
       <div className="tester-pod-dashboard-list">
         {DASHBOARD_ROWS.map((row) => {
-          const RowIcon = row.icon || FileText;
+          const RowIcon = row.icon;
 
           return (
             <div key={row.label} className="tester-pod-dashboard-row">
