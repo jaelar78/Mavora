@@ -211,7 +211,7 @@ export default function TesterPodPreview({ onJoinEarlyAccess }) {
   const activeTabIndex = TESTER_TABS.indexOf(activeTab);
   const tabPanelId = 'gidgee-pod-tabpanel';
 
-  const handleTabFocus = (event) => {
+  const handleTabScrollIntoView = (event) => {
     event.currentTarget.scrollIntoView({ block: 'nearest', inline: 'nearest' });
   };
   const handleTabKeyDown = (event, currentIndex) => {
@@ -233,9 +233,7 @@ export default function TesterPodPreview({ onJoinEarlyAccess }) {
     }
 
     setActiveTab(TESTER_TABS[nextIndex]);
-    requestAnimationFrame(() => {
-      tabRefs.current[nextIndex]?.focus();
-    });
+    tabRefs.current[nextIndex]?.focus();
   };
 
   return (
@@ -298,7 +296,7 @@ export default function TesterPodPreview({ onJoinEarlyAccess }) {
               tabIndex={activeTab === tab ? 0 : -1}
               className={`tester-pod-tab ${activeTab === tab ? 'active' : ''}`}
               onClick={() => setActiveTab(tab)}
-              onFocus={handleTabFocus}
+              onFocus={handleTabScrollIntoView}
               onKeyDown={(event) => handleTabKeyDown(event, index)}
             >
               {tab}
