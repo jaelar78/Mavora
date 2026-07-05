@@ -821,7 +821,7 @@ function LandingPage({ session }) {
       <TesterPodPreview onJoinEarlyAccess={() => setModalOpen(true)} />
 
       <section className="dashboard-preview">
-        <p className="eyebrow">Demo Pod Preview</p>
+        <p className="eyebrow">Inside Every Pod</p>
         <h2 className="section-title">Every marketing move visible. Every brand organised.</h2>
         <div className="preview-cards-grid">
           {DASHBOARD_PREVIEW_CARDS.map((card) => (

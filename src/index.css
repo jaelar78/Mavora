@@ -1245,6 +1245,41 @@ select {
   margin: 0.2rem 0 0;
 }
 
+.tester-pod-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 0.6rem;
+}
+
+.tester-pod-stat {
+  display: grid;
+  gap: 0.15rem;
+  padding: 0.6rem 0.75rem;
+  border-radius: 12px;
+  background: var(--card);
+  border: 1px solid rgba(184, 138, 50, 0.22);
+}
+
+.tester-pod-stat-value {
+  font-family: 'Playfair Display', 'Times New Roman', serif;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--navy);
+}
+
+.tester-pod-stat-label {
+  color: var(--muted);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.tester-pod-chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
 .tester-pod-content-panel {
   background: var(--card);
   border-radius: 16px;
