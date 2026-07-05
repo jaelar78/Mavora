@@ -65,6 +65,14 @@ const PLATFORM_CHIPS = [
   { label: 'Google', Icon: SiGoogleads },
 ];
 
+const FALLBACK_ROW_LABELS = ['Core finding', 'Launch context', 'Planning signal', 'Approval note'];
+const FALLBACK_ROW_DETAILS = [
+  'Primary takeaway for this dashboard screen.',
+  'Context the pod uses for campaign planning.',
+  'Signal that shapes the next recommendation.',
+  'Guardrail kept visible before action.',
+];
+
 const TAB_CONTENT = {
   'Source / Intake': {
     items: [
@@ -231,9 +239,9 @@ function getTabRows(tab, content) {
 
   return content.items.map((item, index) => ({
     icon: Icon,
-    label: `${tab} ${index + 1}`,
-    value: item,
-    detail: `${tab} dashboard insight`,
+    label: item.includes(':') ? item.split(':')[0] : FALLBACK_ROW_LABELS[index] || 'Dashboard note',
+    value: item.includes(':') ? item.slice(item.indexOf(':') + 1).trim() : item,
+    detail: FALLBACK_ROW_DETAILS[index] || 'Additional pod context for this screen.',
   }));
 }
 
@@ -259,7 +267,7 @@ function TesterTabContent({ tab }) {
           const RowIcon = row.icon || FileText;
 
           return (
-            <div key={`${row.label}-${index}`} className="tester-pod-dashboard-row">
+            <div key={index} className="tester-pod-dashboard-row">
               <span className="tester-pod-row-icon" aria-hidden="true">
                 <RowIcon size={14} strokeWidth={1.9} />
               </span>
