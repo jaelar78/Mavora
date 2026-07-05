@@ -1500,7 +1500,7 @@ select {
 
 .tester-pod-title {
   font-family: 'Playfair Display', 'Times New Roman', serif;
-  font-size: clamp(1.25rem, 1.1rem + 0.5vw, 1.38rem);
+  font-size: clamp(1.25rem, 2.5vw, 1.38rem);
   color: var(--navy);
   font-weight: 700;
   margin: 0;
@@ -1774,10 +1774,7 @@ select {
   .tester-pod-dashboard-row {
     grid-template-columns: auto minmax(0, 1fr);
     grid-template-rows: auto auto auto;
-    grid-template-areas:
-      "icon main"
-      ". detail"
-      ". action";
+    grid-template-areas: none;
     column-gap: 8px;
     row-gap: 4px;
     align-items: center;
@@ -1785,15 +1782,32 @@ select {
   }
 
   .tester-pod-row-icon {
+    grid-area: auto;
+    grid-column: 1;
+    grid-row: 1;
     justify-self: start;
+  }
+
+  .tester-pod-row-main {
+    grid-area: auto;
+    grid-column: 2;
+    grid-row: 1;
   }
 
   .tester-pod-row-detail,
   .tester-pod-row-action {
+    grid-area: auto;
     grid-column: auto;
   }
 
+  .tester-pod-row-detail {
+    grid-column: 2;
+    grid-row: 2;
+  }
+
   .tester-pod-row-action {
+    grid-column: 2;
+    grid-row: 3;
     justify-self: start;
   }
 
