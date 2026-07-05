@@ -853,7 +853,7 @@ function LandingPage({ session }) {
             const PlatformIcon = platform.icon;
             return (
               <article key={platform.name} className="platform-tile">
-                <span className="platform-icon"><PlatformIcon size={16} strokeWidth={1.75} /></span>
+                <span className="platform-icon" aria-hidden="true"><PlatformIcon size={16} strokeWidth={1.75} /></span>
                 <span className="platform-name">{platform.name}</span>
               </article>
             );

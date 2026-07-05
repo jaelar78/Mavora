@@ -258,7 +258,6 @@ h1 {
 .hero-emphasis {
   color: var(--gold);
   position: relative;
-  white-space: nowrap;
 }
 
 .hero-emphasis::after {
