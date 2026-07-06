@@ -45,7 +45,8 @@ export default function WaitlistPage() {
           Your AI marketing pods are almost ready.
         </h1>
         <p className="lede">
-         Dovroyn lets you create 1–12 dedicated AI pods, each built for a specific brand, offer, campaign, or business. Every pod analyses its source, understands the audience, shapes the strategy, and prepares content before anything goes live.
+          Dovroyn lets you create 1–12 dedicated AI pods, each built for a specific brand, offer, campaign, or business. Every pod analyses its source, understands the audience, shapes the strategy, and prepares content before anything goes live.
+        </p>
       </section>
 
       <section className="waitlist-section panel" id="waitlist">
@@ -60,10 +61,9 @@ export default function WaitlistPage() {
         ) : (
           <>
             <p className="eyebrow">Coming Soon</p>
-<h2 className="waitlist-heading">See one of Dovroyn's AI pods.</h2>
-<p className="lede">
-  This preview shows one dedicated Dovroyn AI pod after it has analysed a brand. Each pod has its own AI brain, brand memory, content calendar, platform strategy, ad view, files, and budget tracker.
-</p>
+            <h2 className="waitlist-heading">See one of Dovroyn's AI pods.</h2>
+            <p className="lede">
+              This preview shows one dedicated Dovroyn AI pod after it has analysed a brand. Each pod has its own AI brain, brand memory, content calendar, platform strategy, ad view, files, and budget tracker.
             </p>
             <form className="waitlist-form" onSubmit={handleSubmit}>
               <input
