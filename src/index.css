@@ -1570,460 +1570,371 @@ select {
   }
 }
 
-/* Tester Pod Preview Section */
-.tester-pod-section {
+/* ─── AI POD PREVIEW (House of Magnum dashboard card) ─── */
+.pod-preview-section {
   display: grid;
-  gap: clamp(1.2rem, 2vw, 1.6rem);
+  gap: clamp(1rem, 2vw, 1.4rem);
   text-align: center;
   max-width: 100%;
   min-width: 0;
 }
 
-.tester-pod-card {
+.pod-preview-lede {
+  max-width: 60ch;
+  margin: 0 auto;
+}
+
+.pod-card {
   text-align: left;
   width: 100%;
-  max-width: 860px;
+  max-width: 880px;
   margin: 0 auto;
-  padding: 0;
   display: grid;
   gap: 0;
   overflow: hidden;
   box-sizing: border-box;
-  border-radius: 22px;
-  background:
-    radial-gradient(ellipse 60% 45% at 100% 0%, rgba(216, 184, 103, 0.1), transparent 65%),
-    linear-gradient(170deg, var(--panel) 60%, var(--background) 160%);
+  border-radius: 20px;
+  background: var(--panel);
+  border: 1px solid var(--gold-border);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.6) inset,
+    0 18px 44px -24px var(--shadow-soft),
+    0 4px 16px -12px var(--shadow-soft);
 }
 
-.tester-pod-window-bar {
+/* Header */
+.pod-card-header {
   display: flex;
-  gap: 0.35rem;
-  padding: 0.55rem 0.75rem;
-  border-bottom: 1px solid rgba(184, 138, 50, 0.2);
-  background: rgba(255, 253, 248, 0.8);
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: clamp(0.7rem, 2vw, 1rem);
+  padding: clamp(1rem, 3vw, 1.25rem) clamp(1rem, 3vw, 1.4rem);
+  border-bottom: 1px solid var(--gold-border);
+  background:
+    radial-gradient(ellipse 70% 120% at 100% 0%, rgba(216, 184, 103, 0.12), transparent 60%),
+    var(--panel);
 }
 
-.tester-pod-window-bar span {
+.pod-card-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 0;
+}
+
+.pod-card-avatar {
+  flex-shrink: 0;
+  width: clamp(44px, 12vw, 52px);
+  height: clamp(44px, 12vw, 52px);
+  border-radius: 14px;
+  display: inline-grid;
+  place-items: center;
+  color: var(--gold);
+  background: linear-gradient(155deg, var(--navy), var(--navy-soft));
+  border: 1px solid var(--gold-border);
+  box-shadow: 0 6px 16px -10px var(--shadow-soft);
+  font-family: 'Playfair Display', 'Times New Roman', serif;
+  font-size: clamp(1.3rem, 4vw, 1.55rem);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.pod-card-brand-text {
+  min-width: 0;
+}
+
+.pod-card-brand-name {
+  font-family: 'Playfair Display', 'Times New Roman', serif;
+  font-size: clamp(1.2rem, 4vw, 1.45rem);
+  color: var(--navy);
+  font-weight: 700;
+  line-height: 1.15;
+  overflow-wrap: break-word;
+}
+
+.pod-card-brand-subtitle {
+  color: var(--muted);
+  font-size: clamp(0.85rem, 2.4vw, 0.92rem);
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  margin-top: 0.15rem;
+}
+
+.pod-card-header-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.pod-card-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.34rem 0.7rem;
+  border-radius: 999px;
+  border: 1px solid var(--gold-border);
+  background: rgba(216, 184, 103, 0.14);
+  color: var(--gold);
+  font-size: clamp(0.72rem, 2vw, 0.78rem);
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+}
+
+.pod-card-status-dot {
   width: 0.5rem;
   height: 0.5rem;
   border-radius: 999px;
-  background: rgba(184, 138, 50, 0.35);
+  background: var(--gold);
+  box-shadow: 0 0 0 0 rgba(184, 138, 50, 0.5);
+  animation: pod-status-pulse 2.4s ease-out infinite;
 }
 
-.tester-pod-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.8rem;
-  padding: 14px 16px;
-  border-bottom: 1px solid rgba(184, 138, 50, 0.2);
+@keyframes pod-status-pulse {
+  0% { box-shadow: 0 0 0 0 rgba(184, 138, 50, 0.5); }
+  70% { box-shadow: 0 0 0 6px rgba(184, 138, 50, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(184, 138, 50, 0); }
 }
 
-.tester-pod-controls {
+.pod-card-style-button {
   display: inline-flex;
   align-items: center;
-  justify-content: flex-end;
-  gap: 0.45rem;
-  flex-shrink: 0;
-  color: var(--muted);
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  white-space: nowrap;
-}
-
-.tester-pod-controls > span:not(.status-chip-gold) {
+  gap: 0.35rem;
+  padding: 0.42rem 0.85rem;
   border-radius: 999px;
-  border: 1px solid rgba(184, 138, 50, 0.2);
-  background: var(--card);
-  padding: 0.24rem 0.56rem;
-}
-
-.tester-pod-header-main {
-  display: flex;
-  align-items: center;
-  min-width: 0;
-  gap: 0.7rem;
-}
-
-.tester-pod-header-main > div {
-  min-width: 0;
-}
-
-.tester-pod-avatar {
-  flex-shrink: 0;
-  width: 42px;
-  height: 42px;
-  border-radius: 10px;
-  display: inline-grid;
-  place-items: center;
-  color: var(--navy);
-  background: var(--card);
   border: 1px solid var(--gold-border);
-  font-family: 'Playfair Display', 'Times New Roman', serif;
-  font-weight: 700;
-}
-
-.tester-pod-title {
-  font-family: 'Playfair Display', 'Times New Roman', serif;
-  font-size: clamp(1.25rem, 2.5vw, 1.38rem);
-  color: var(--navy);
-  font-weight: 700;
-  margin: 0;
-  line-height: 1.2;
-  overflow-wrap: break-word;
-}
-
-.tester-pod-subtitle {
-  color: var(--muted);
-  font-size: clamp(0.81rem, 1.5vw, 0.88rem);
-  margin: 0.12rem 0 0;
-  line-height: 1.35;
-  overflow-wrap: break-word;
-}
-
-.tester-pod-tabs {
-  display: flex;
-  gap: 0;
-  overflow: hidden;
-  max-width: 100%;
-  min-height: 38px;
-  padding: 0 0.5rem;
-  border-bottom: 1px solid rgba(184, 138, 50, 0.2);
-  background: rgba(255, 253, 248, 0.8);
-}
-
-.tester-pod-tab {
-  display: inline-flex;
-  align-items: center;
-  min-height: 38px;
-  padding: 0 12px;
-  font-size: 0.76rem;
-  font-weight: 600;
-  border-bottom: 2px solid transparent;
-  color: var(--muted);
-  white-space: nowrap;
-  flex-shrink: 0;
-}
-
-.tester-pod-tab.active {
-  background: transparent;
-  color: var(--navy);
-  border-color: var(--gold-border);
-}
-
-.tester-pod-content-panel {
   background: var(--panel);
-  border: 0;
-  border-radius: 0;
-  box-shadow: none;
-  overflow-x: hidden;
-  padding: 0;
-  max-width: 100%;
-  min-width: 0;
-}
-
-.tester-pod-content-shell {
-  display: grid;
-  gap: 0;
-  width: 100%;
-  max-width: 100%;
-  min-width: 0;
-  padding: clamp(0.72rem, 1.6vw, 0.9rem);
-  box-sizing: border-box;
-}
-
-.tester-pod-content-head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.6rem;
-  padding-bottom: 0.55rem;
-  border-bottom: 1px solid rgba(184, 138, 50, 0.18);
-}
-
-.tester-pod-content-head h4 {
-  margin: 0;
-  font-size: clamp(1.08rem, 2vw, 1.2rem);
   color: var(--navy);
-  line-height: 1.15;
-}
-
-.tester-pod-panel-chip,
-.tester-pod-row-action {
-  border-radius: 999px;
-  border: 1px solid var(--gold-border);
-  background: var(--card);
-  color: var(--muted);
-  font-size: 0.66rem;
+  font-size: clamp(0.74rem, 2vw, 0.8rem);
   font-weight: 700;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.18s ease, border-color 0.18s ease, transform 0.18s ease;
 }
 
-.tester-pod-panel-chip {
-  padding: 0.18rem 0.45rem;
+.pod-card-style-button span {
+  color: var(--gold);
 }
 
-.tester-pod-dashboard-list {
-  display: grid;
-  max-width: 100%;
+.pod-card-style-button:hover {
+  background: rgba(216, 184, 103, 0.12);
+  border-color: var(--gold);
+  transform: translateY(-1px);
+}
+
+/* Tabs */
+.pod-card-tabs {
+  display: flex;
+  gap: 0.25rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  padding: 0.4rem clamp(0.7rem, 3vw, 1.1rem);
+  border-bottom: 1px solid var(--gold-border);
+  background: var(--panel-soft);
+}
+
+.pod-card-tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.pod-card-tab {
+  flex-shrink: 0;
+  border: 0;
+  background: transparent;
+  padding: 0.5rem 0.75rem;
+  border-radius: 10px;
+  color: var(--muted);
+  font-size: clamp(0.78rem, 2.2vw, 0.86rem);
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: color 0.18s ease, background 0.18s ease;
+}
+
+.pod-card-tab:hover {
+  color: var(--navy);
+}
+
+.pod-card-tab.active {
+  color: var(--navy);
+  background: rgba(216, 184, 103, 0.16);
+  box-shadow: inset 0 -2px 0 var(--gold);
+}
+
+/* Panel + rows */
+.pod-card-panel {
+  padding: clamp(0.5rem, 2vw, 0.85rem) clamp(0.8rem, 3vw, 1.4rem) clamp(0.9rem, 3vw, 1.25rem);
+  background: var(--panel);
   min-width: 0;
 }
 
-.tester-pod-dashboard-row {
+.pod-card-brain {
   display: grid;
-  grid-template-columns: auto minmax(0, 1.2fr) minmax(0, 0.8fr) auto;
-  grid-template-areas: "icon main detail action";
-  gap: 0.48rem;
-  align-items: center;
-  padding: 9px 11px;
+  min-width: 0;
+}
+
+.pod-card-row {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  grid-template-areas:
+    "icon body"
+    "action action";
+  align-items: start;
+  gap: 0.55rem 0.85rem;
+  padding: clamp(0.85rem, 3vw, 1.05rem) 0;
   border-bottom: 1px solid rgba(184, 138, 50, 0.16);
-  max-width: 100%;
   min-width: 0;
 }
 
-.tester-pod-dashboard-row:last-child {
+.pod-card-row:last-child {
   border-bottom: 0;
 }
 
-.tester-pod-row-icon {
+.pod-card-row-icon {
   grid-area: icon;
-  width: 28px;
-  height: 28px;
-  border-radius: 8px;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
   display: inline-grid;
   place-items: center;
-  color: var(--navy);
+  color: var(--gold);
   background: var(--card);
-  border: 1px solid rgba(184, 138, 50, 0.2);
+  border: 1px solid var(--gold-border);
 }
 
-.tester-pod-row-main {
-  grid-area: main;
+.pod-card-row-body {
+  grid-area: body;
   display: grid;
-  gap: 0.18rem;
-  max-width: 100%;
+  gap: 0.5rem;
   min-width: 0;
 }
 
-.tester-pod-row-label {
-  color: var(--muted);
-  font-size: 0.68rem;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-}
-
-.tester-pod-row-value {
+.pod-card-row-label {
+  display: block;
   color: var(--navy);
-  font-size: 0.86rem;
+  font-size: clamp(0.95rem, 2.6vw, 1.02rem);
   font-weight: 700;
-  line-height: 1.35;
-  overflow-wrap: break-word;
+  line-height: 1.25;
 }
 
-.tester-pod-row-detail {
-  grid-area: detail;
-  margin: 0;
+.pod-card-row-detail {
   color: var(--muted);
-  font-size: 0.8rem;
+  font-size: clamp(0.82rem, 2.3vw, 0.88rem);
+  line-height: 1.4;
+  margin-top: 0.15rem;
+}
+
+.pod-card-value {
+  color: var(--navy);
+  font-size: clamp(0.9rem, 2.5vw, 0.98rem);
+  font-weight: 600;
   line-height: 1.35;
-  min-width: 0;
   overflow-wrap: break-word;
 }
 
-.tester-pod-row-action {
-  grid-area: action;
-  align-self: center;
-  justify-self: end;
-  padding: 5px 8px;
-  line-height: 1;
-}
-
-.tester-pod-platforms {
+.pod-card-chips {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.25rem;
-  max-width: 100%;
+  gap: 0.4rem;
   min-width: 0;
 }
 
-.tester-pod-platform-chip {
+.pod-card-chip {
   display: inline-flex;
   align-items: center;
-  gap: 0.25rem;
-  min-height: 24px;
+  gap: 0.35rem;
+  padding: 0.3rem 0.65rem;
   border-radius: 999px;
-  border: 1px solid rgba(184, 138, 50, 0.22);
-  background: var(--background);
+  border: 1px solid var(--gold-border);
+  background: var(--card);
   color: var(--navy);
-  font-size: 0.72rem;
-  font-weight: 700;
-  padding: 0.16rem 0.42rem;
+  font-size: clamp(0.8rem, 2.2vw, 0.86rem);
+  font-weight: 600;
   line-height: 1.2;
-  max-width: 100%;
 }
 
-.tester-pod-platform-chip svg {
-  flex-shrink: 0;
-  width: 0.78rem;
-  height: 0.78rem;
+.pod-card-chip-platform svg {
+  width: 0.85rem;
+  height: 0.85rem;
+  color: var(--gold);
 }
 
-.tester-pod-cta {
+.pod-card-swatches {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+}
+
+.pod-card-swatch {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--navy);
+  font-size: clamp(0.82rem, 2.2vw, 0.88rem);
+  font-weight: 600;
+}
+
+.pod-card-swatch-chip {
+  width: 1.15rem;
+  height: 1.15rem;
+  border-radius: 7px;
+  border: 1px solid rgba(7, 22, 45, 0.14);
+  box-shadow: 0 2px 6px -3px var(--shadow-soft);
+}
+
+.pod-card-override {
+  grid-area: action;
+  justify-self: start;
+  border: 1px solid var(--gold-border);
+  background: var(--panel);
+  color: var(--muted);
+  border-radius: 999px;
+  padding: 0.36rem 0.85rem;
+  font-size: clamp(0.72rem, 2vw, 0.78rem);
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  cursor: pointer;
+  transition: color 0.18s ease, border-color 0.18s ease, background 0.18s ease;
+}
+
+.pod-card-override:hover {
+  color: var(--navy);
+  border-color: var(--gold);
+  background: rgba(216, 184, 103, 0.1);
+}
+
+/* CTA */
+.pod-preview-cta {
   display: grid;
   gap: 0.75rem;
   place-items: center;
   margin-top: 0.5rem;
 }
 
-.tester-pod-note {
+.pod-preview-note {
   color: var(--muted);
-  font-size: 0.78rem;
+  font-size: 0.82rem;
   font-style: italic;
   max-width: 52ch;
   line-height: 1.55;
-  margin: 0;
 }
 
-@media (max-width: 640px) {
-  .tester-pod-card {
-    width: 100%;
-    max-width: 100%;
-  }
-
-  .tester-pod-header {
-    flex-wrap: nowrap;
+/* Larger screens: override moves inline to the right */
+@media (min-width: 640px) {
+  .pod-card-row {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    grid-template-areas: "icon body action";
     align-items: center;
-    padding: 10px 9px;
-    gap: 0.4rem;
+    gap: 1rem;
   }
 
-  .tester-pod-header-main {
-    gap: 0.45rem;
-  }
-
-  .tester-pod-avatar {
-    width: 32px;
-    height: 32px;
-    border-radius: 8px;
-    font-size: 0.9rem;
-  }
-
-  .tester-pod-title {
-    font-size: 1rem;
-  }
-
-  .tester-pod-subtitle {
-    font-size: 0.66rem;
-    line-height: 1.2;
-  }
-
-  .tester-pod-controls {
-    gap: 0.24rem;
-    font-size: 0.52rem;
-    letter-spacing: 0.02em;
-  }
-
-  .tester-pod-controls > span:not(.status-chip-gold) {
-    padding: 0.14rem 0.28rem;
-  }
-
-  .tester-pod-header .status-chip-gold {
-    flex-shrink: 0;
-    padding: 0.14rem 0.28rem;
-    font-size: 0.52rem;
-  }
-
-  .tester-pod-tabs {
-    min-height: 28px;
-    padding: 0 0.2rem;
-  }
-
-  .tester-pod-tab {
-    min-height: 28px;
-    padding: 0 0.32rem;
-    font-size: clamp(0.5rem, 1.75vw, 0.66rem);
-  }
-
-  .tester-pod-content-shell {
-    min-width: 0;
-    padding: 7px;
-  }
-
-  .tester-pod-content-head {
-    align-items: center;
-    flex-wrap: nowrap;
-    padding-bottom: 0.34rem;
-    gap: 0.35rem;
-  }
-
-  .tester-pod-content-head h4 {
-    font-size: 0.86rem;
-    min-width: 0;
-  }
-
-  .tester-pod-panel-chip,
-  .tester-pod-row-action {
-    font-size: 0.48rem;
-  }
-
-  .tester-pod-panel-chip {
-    padding: 0.12rem 0.28rem;
-  }
-
-  .tester-pod-dashboard-row {
-    grid-template-columns: 22px minmax(0, 1fr) minmax(0, 0.85fr) minmax(38px, auto);
-    grid-template-areas: "icon main detail action";
-    gap: 4px;
-    align-items: center;
-    padding: 6px 5px;
-  }
-
-  .tester-pod-row-icon {
-    grid-area: icon;
-    width: 22px;
-    height: 22px;
-    border-radius: 7px;
-  }
-
-  .tester-pod-row-action {
-    grid-area: action;
+  .pod-card-override {
     justify-self: end;
-    padding: 4px 5px;
-  }
-
-  .tester-pod-row-label {
-    font-size: 0.5rem;
-    letter-spacing: 0.03em;
-  }
-
-  .tester-pod-row-value {
-    font-size: 0.58rem;
-    line-height: 1.22;
-  }
-
-  .tester-pod-row-detail {
-    font-size: 0.55rem;
-    line-height: 1.2;
-  }
-
-  .tester-pod-platforms {
-    gap: 0.14rem;
-  }
-
-  .tester-pod-platform-chip {
-    gap: 0.12rem;
-    min-height: 17px;
-    padding: 0.08rem 0.18rem;
-    font-size: 0.48rem;
-  }
-
-  .tester-pod-platform-chip svg {
-    width: 0.52rem;
-    height: 0.52rem;
+    align-self: center;
   }
 }
 
