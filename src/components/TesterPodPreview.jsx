@@ -1,183 +1,203 @@
 import {
-  Bot,
-  MapPin,
-  Megaphone,
+  Globe2,
   Palette,
   Share2,
+  Sparkles,
   Users,
 } from 'lucide-react';
-import { FaFacebookF, FaInstagram, FaLinkedinIn, FaPinterestP, FaTiktok } from 'react-icons/fa6';
+import {
+  FaInstagram,
+  FaLinkedinIn,
+  FaTiktok,
+  FaYoutube,
+} from 'react-icons/fa6';
 
-const DASHBOARD_NAV_ITEMS = ['AI Brain', 'Content Calendar', 'Platforms', 'Files', 'Ad Performance', 'Budget'];
-const DASHBOARD_HEADING = 'AI Brain analysis';
+const TABS = [
+  'AI Brain',
+  'Content Calendar',
+  'Platforms',
+  'Files',
+  'Ad Performance',
+  'Budget',
+];
+
+const BRAND_SWATCHES = [
+  { label: 'Gold', hex: '#B88A32' },
+  { label: 'Black', hex: '#0B0B0B' },
+  { label: 'Ivory', hex: '#F3EAD5' },
+];
+
+const BRAND_TONE_CHIPS = ['Luxury', 'Refined', 'Aspirational'];
 
 const PLATFORM_CHIPS = [
   { label: 'LinkedIn', Icon: FaLinkedinIn },
   { label: 'Instagram', Icon: FaInstagram },
-  { label: 'Facebook', Icon: FaFacebookF },
+  { label: 'YouTube', Icon: FaYoutube },
   { label: 'TikTok', Icon: FaTiktok },
-  { label: 'Pinterest', Icon: FaPinterestP },
 ];
 
-const DASHBOARD_ROWS = [
+const ROWS = [
   {
+    id: 'colours',
     icon: Palette,
-    label: 'Brand colours',
-    value: 'Warm neutrals · brass accents · deep navy',
-    detail: 'Palette inferred from Gidgee & Co launch styling.',
+    label: 'Brand Colours',
+    detail: 'Signature palette locked from brand review.',
+    render: () => (
+      <div className="pod-preview-swatches" aria-label="Brand palette">
+        {BRAND_SWATCHES.map((swatch) => (
+          <span key={swatch.hex} className="pod-preview-swatch" title={`${swatch.label} · ${swatch.hex}`}>
+            <span
+              className="pod-preview-swatch-dot"
+              style={{ background: swatch.hex }}
+              aria-hidden="true"
+            />
+            <span className="pod-preview-swatch-label">{swatch.label}</span>
+          </span>
+        ))}
+      </div>
+    ),
   },
   {
-    icon: Bot,
-    label: 'Brand tone',
-    value: 'Earthy · premium · Australian · bold',
-    detail: 'Voice locked for captions, ads, and creative briefs.',
+    id: 'tone',
+    icon: Sparkles,
+    label: 'Brand Tone',
+    detail: 'Voice tuned for aspirational luxury audiences.',
+    render: () => (
+      <div className="pod-preview-chips" aria-label="Brand tone">
+        {BRAND_TONE_CHIPS.map((tone) => (
+          <span key={tone} className="pod-preview-chip">{tone}</span>
+        ))}
+      </div>
+    ),
   },
   {
+    id: 'audience',
     icon: Users,
-    label: 'Target audience',
-    value: 'Country, western, rodeo, festival, outdoor style buyers',
-    detail: 'Primary buyers mapped around authentic lifestyle intent.',
+    label: 'Target Audience',
+    detail: 'Buyers with intent, budget, and taste.',
+    render: () => (
+      <p className="pod-preview-row-value">
+        Men 25–55 · Professionals · High intent buyers
+      </p>
+    ),
   },
   {
-    icon: MapPin,
+    id: 'geography',
+    icon: Globe2,
     label: 'Geography',
-    value: 'Australia',
-    detail: 'Launch focus weighted to local country and event moments.',
+    detail: 'Global reach with premium market weighting.',
+    render: () => <p className="pod-preview-row-value">Worldwide</p>,
   },
   {
+    id: 'platforms',
     icon: Share2,
-    label: 'Recommended platforms',
-    platforms: PLATFORM_CHIPS,
-    detail: 'Channel mix for launch content and product discovery.',
-  },
-  {
-    icon: Megaphone,
-    label: 'Campaign direction',
-    value: 'Brand story → styling reel → launch drop → retarget',
-    detail: 'Campaign path moves from identity into product demand.',
+    label: 'Recommended Platforms',
+    detail: 'Channels chosen for prestige and reach.',
+    render: () => (
+      <div className="pod-preview-platforms" aria-label="Recommended platforms">
+        {PLATFORM_CHIPS.map(({ label, Icon }) => (
+          <span key={label} className="pod-preview-platform-chip">
+            <Icon aria-hidden="true" />
+            {label}
+          </span>
+        ))}
+      </div>
+    ),
   },
 ];
 
-function TesterPodContent() {
+function PodPreviewHeader() {
   return (
-    <div className="tester-pod-content-shell">
-      <div className="tester-pod-content-head">
-        <h4>{DASHBOARD_HEADING}</h4>
-        <span className="tester-pod-panel-chip">Static preview</span>
-      </div>
-      <div className="tester-pod-dashboard-list">
-        {DASHBOARD_ROWS.map((row) => {
-          const RowIcon = row.icon;
-
-          return (
-            <div key={row.label} className="tester-pod-dashboard-row">
-              <span className="tester-pod-row-icon" aria-hidden="true">
-                <RowIcon size={14} strokeWidth={1.9} />
-              </span>
-              <div className="tester-pod-row-main">
-                <span className="tester-pod-row-label">{row.label}</span>
-                {row.platforms ? (
-                  <span className="tester-pod-platforms" aria-label="Recommended platforms">
-                    {row.platforms.map(({ label, Icon }) => (
-                      <span key={label} className="tester-pod-platform-chip">
-                        <Icon aria-hidden="true" />
-                        {label}
-                      </span>
-                    ))}
-                  </span>
-                ) : (
-                  <span className="tester-pod-row-value">{row.value}</span>
-                )}
-              </div>
-              <p className="tester-pod-row-detail">{row.detail}</p>
-              <span className="tester-pod-row-action">Override</span>
-            </div>
-          );
-        })}
-      </div>
-    </div>
-  );
-}
-
-function TesterPodHeader() {
-  return (
-    <div className="tester-pod-header">
-      <div className="tester-pod-header-main">
-        <span className="tester-pod-avatar" aria-hidden="true">
-          G
-        </span>
-        <div>
-          <p className="tester-pod-title">Gidgee &amp; Co Launch</p>
-          <p className="tester-pod-subtitle">Example AI marketing pod using www.gidgeeco.au</p>
+    <header className="pod-preview-header">
+      <div className="pod-preview-brand">
+        <span className="pod-preview-avatar" aria-hidden="true">H</span>
+        <div className="pod-preview-brand-copy">
+          <p className="pod-preview-brand-name">House of Magnum</p>
+          <p className="pod-preview-brand-subtitle">Luxury Watches</p>
         </div>
       </div>
-      <div className="tester-pod-controls" aria-label="Preview controls">
-        <span>Project Actions</span>
-        <span className="status-chip-gold">Preview</span>
-      </div>
-    </div>
-  );
-}
-
-function TesterPodChrome({ children }) {
-  return (
-    <div className="tester-pod-card panel">
-      <div className="tester-pod-window-bar" aria-hidden="true">
-        <span />
-        <span />
-        <span />
-      </div>
-      {children}
-    </div>
-  );
-}
-
-function TesterPodTabs() {
-  return (
-    <div className="tester-pod-tabs" aria-label="Gidgee pod sections">
-      {DASHBOARD_NAV_ITEMS.map((item, index) => (
-        <span key={item} className={`tester-pod-tab ${index === 0 ? 'active' : ''}`}>
-          {item}
+      <div className="pod-preview-header-actions">
+        <span className="pod-preview-status" role="status">
+          <span className="pod-preview-status-dot" aria-hidden="true" />
+          AI Brain Active
         </span>
-      ))}
-    </div>
+        <button type="button" className="pod-preview-header-cta">
+          Ready to be styled
+          <span className="pod-preview-header-cta-glyph" aria-hidden="true">✦</span>
+        </button>
+      </div>
+    </header>
   );
 }
 
-function TesterPodPanel() {
+function PodPreviewTabs() {
   return (
-    <section className="tester-pod-content-panel">
-      <TesterPodContent />
-    </section>
+    <nav className="pod-preview-tabs" aria-label="Pod sections">
+      <div className="pod-preview-tabs-track">
+        {TABS.map((tab, index) => (
+          <span
+            key={tab}
+            className={`pod-preview-tab${index === 0 ? ' is-active' : ''}`}
+          >
+            {tab}
+          </span>
+        ))}
+      </div>
+    </nav>
   );
 }
 
-function TesterPodDashboard() {
+function PodPreviewRow({ row }) {
+  const Icon = row.icon;
   return (
-    <TesterPodChrome>
-      <TesterPodHeader />
-      <TesterPodTabs />
-      <TesterPodPanel />
-    </TesterPodChrome>
+    <li className="pod-preview-row">
+      <span className="pod-preview-row-icon" aria-hidden="true">
+        <Icon size={18} strokeWidth={1.75} />
+      </span>
+      <div className="pod-preview-row-body">
+        <p className="pod-preview-row-label">{row.label}</p>
+        <p className="pod-preview-row-detail">{row.detail}</p>
+        <div className="pod-preview-row-content">{row.render()}</div>
+      </div>
+      <button type="button" className="pod-preview-row-override">
+        Override
+      </button>
+    </li>
+  );
+}
+
+function PodPreviewCard() {
+  return (
+    <article className="pod-preview-card" aria-label="House of Magnum AI marketing pod preview">
+      <PodPreviewHeader />
+      <PodPreviewTabs />
+      <div className="pod-preview-panel">
+        <ul className="pod-preview-rows">
+          {ROWS.map((row) => (
+            <PodPreviewRow key={row.id} row={row} />
+          ))}
+        </ul>
+      </div>
+    </article>
   );
 }
 
 export default function TesterPodPreview({ onJoinEarlyAccess }) {
   return (
-    <section className="tester-pod-section">
+    <section className="pod-preview-section">
       <h2 className="section-title">See one of Dovroyn's AI pods.</h2>
-      <p className="lede">
-        This preview shows one dedicated Dovroyn AI pod after it has analysed a brand. Each pod has its own AI brain, brand memory, content calendar, platform strategy, ad view, files, and budget tracker.
+      <p className="lede pod-preview-lede">
+        This is a preview of one Dovroyn AI pod after it has learned a brand. Each pod carries its own AI brain, brand memory, content calendar, platforms, ad view, files, and budget.
       </p>
 
-      <TesterPodDashboard />
+      <PodPreviewCard />
 
-      <div className="tester-pod-cta">
-        <button className="button button-primary" onClick={onJoinEarlyAccess}>
+      <div className="pod-preview-footer">
+        <button type="button" className="button button-primary" onClick={onJoinEarlyAccess}>
           Join Early Access
         </button>
-        <p className="tester-pod-note">
-          This is a preview. Live posting and ad actions require connected accounts and user approval.
+        <p className="pod-preview-note">
+          Preview only. Live posting and ad actions require connected accounts and user approval.
         </p>
       </div>
     </section>
