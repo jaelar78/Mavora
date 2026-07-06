@@ -1571,6 +1571,7 @@ select {
 }
 
 /* Tester Pod Preview Section */
+/* ─── TESTER POD PREVIEW — House of Magnum ─── */
 .tester-pod-section {
   display: grid;
   gap: clamp(1.2rem, 2vw, 1.6rem);
@@ -1590,6 +1591,7 @@ select {
   overflow: hidden;
   box-sizing: border-box;
   border-radius: 22px;
+  box-shadow: 0 4px 32px rgba(7, 22, 45, 0.09), 0 1px 4px rgba(7, 22, 45, 0.05);
   background:
     radial-gradient(ellipse 60% 45% at 100% 0%, rgba(216, 184, 103, 0.1), transparent 65%),
     linear-gradient(170deg, var(--panel) 60%, var(--background) 160%);
@@ -1614,30 +1616,10 @@ select {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 0.8rem;
+  flex-wrap: wrap;
+  gap: 0.7rem;
   padding: 14px 16px;
   border-bottom: 1px solid rgba(184, 138, 50, 0.2);
-}
-
-.tester-pod-controls {
-  display: inline-flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 0.45rem;
-  flex-shrink: 0;
-  color: var(--muted);
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  white-space: nowrap;
-}
-
-.tester-pod-controls > span:not(.status-chip-gold) {
-  border-radius: 999px;
-  border: 1px solid rgba(184, 138, 50, 0.2);
-  background: var(--card);
-  padding: 0.24rem 0.56rem;
 }
 
 .tester-pod-header-main {
@@ -1663,11 +1645,13 @@ select {
   border: 1px solid var(--gold-border);
   font-family: 'Playfair Display', 'Times New Roman', serif;
   font-weight: 700;
+  font-size: 0.82rem;
+  letter-spacing: 0.04em;
 }
 
 .tester-pod-title {
   font-family: 'Playfair Display', 'Times New Roman', serif;
-  font-size: clamp(1.25rem, 2.5vw, 1.38rem);
+  font-size: clamp(1.05rem, 2.5vw, 1.38rem);
   color: var(--navy);
   font-weight: 700;
   margin: 0;
@@ -1677,21 +1661,84 @@ select {
 
 .tester-pod-subtitle {
   color: var(--muted);
-  font-size: clamp(0.81rem, 1.5vw, 0.88rem);
-  margin: 0.12rem 0 0;
+  font-size: clamp(0.78rem, 1.5vw, 0.88rem);
+  margin: 0.1rem 0 0;
   line-height: 1.35;
   overflow-wrap: break-word;
 }
 
+.tester-pod-controls {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  flex-shrink: 0;
+  flex-wrap: wrap;
+}
+
+/* AI Brain Active status pill */
+.hm-active-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  border-radius: 999px;
+  padding: 0.22rem 0.6rem;
+  background: rgba(46, 125, 79, 0.1);
+  border: 1px solid rgba(46, 125, 79, 0.3);
+  color: #1f6b42;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.045em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.hm-active-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #2E7D4F;
+  flex-shrink: 0;
+}
+
+/* Ready to be styled button */
+.hm-style-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.28rem;
+  border-radius: 999px;
+  border: 1px solid var(--gold-border);
+  background: var(--card);
+  color: var(--navy);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  padding: 0.26rem 0.72rem;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 130ms ease, border-color 130ms ease;
+}
+
+.hm-style-btn:hover {
+  background: var(--background);
+  border-color: var(--gold);
+}
+
+/* Tabs — horizontally scrollable on all viewports */
 .tester-pod-tabs {
   display: flex;
   gap: 0;
-  overflow: hidden;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
   max-width: 100%;
   min-height: 38px;
   padding: 0 0.5rem;
   border-bottom: 1px solid rgba(184, 138, 50, 0.2);
   background: rgba(255, 253, 248, 0.8);
+}
+
+.tester-pod-tabs::-webkit-scrollbar {
+  display: none;
 }
 
 .tester-pod-tab {
@@ -1705,19 +1752,16 @@ select {
   color: var(--muted);
   white-space: nowrap;
   flex-shrink: 0;
+  cursor: default;
 }
 
 .tester-pod-tab.active {
-  background: transparent;
   color: var(--navy);
   border-color: var(--gold-border);
 }
 
 .tester-pod-content-panel {
   background: var(--panel);
-  border: 0;
-  border-radius: 0;
-  box-shadow: none;
   overflow-x: hidden;
   padding: 0;
   max-width: 100%;
@@ -1730,7 +1774,7 @@ select {
   width: 100%;
   max-width: 100%;
   min-width: 0;
-  padding: clamp(0.72rem, 1.6vw, 0.9rem);
+  padding: clamp(0.8rem, 1.6vw, 1rem);
   box-sizing: border-box;
 }
 
@@ -1739,13 +1783,13 @@ select {
   align-items: center;
   justify-content: space-between;
   gap: 0.6rem;
-  padding-bottom: 0.55rem;
+  padding-bottom: 0.6rem;
   border-bottom: 1px solid rgba(184, 138, 50, 0.18);
 }
 
 .tester-pod-content-head h4 {
   margin: 0;
-  font-size: clamp(1.08rem, 2vw, 1.2rem);
+  font-size: clamp(0.95rem, 2vw, 1.15rem);
   color: var(--navy);
   line-height: 1.15;
 }
@@ -1756,14 +1800,14 @@ select {
   border: 1px solid var(--gold-border);
   background: var(--card);
   color: var(--muted);
-  font-size: 0.66rem;
+  font-size: 0.68rem;
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
 }
 
 .tester-pod-panel-chip {
-  padding: 0.18rem 0.45rem;
+  padding: 0.18rem 0.5rem;
 }
 
 .tester-pod-dashboard-list {
@@ -1772,13 +1816,21 @@ select {
   min-width: 0;
 }
 
+/*
+ * Mobile-first row layout:
+ *   [icon] [label + value]  [Override]
+ *          [detail text — full width below]
+ */
 .tester-pod-dashboard-row {
   display: grid;
-  grid-template-columns: auto minmax(0, 1.2fr) minmax(0, 0.8fr) auto;
-  grid-template-areas: "icon main detail action";
-  gap: 0.48rem;
-  align-items: center;
-  padding: 9px 11px;
+  grid-template-columns: 30px 1fr auto;
+  grid-template-rows: auto auto;
+  grid-template-areas:
+    "icon main action"
+    ". detail detail";
+  gap: 0.28rem 0.55rem;
+  align-items: start;
+  padding: 11px 12px;
   border-bottom: 1px solid rgba(184, 138, 50, 0.16);
   max-width: 100%;
   min-width: 0;
@@ -1790,21 +1842,21 @@ select {
 
 .tester-pod-row-icon {
   grid-area: icon;
-  width: 28px;
-  height: 28px;
+  width: 30px;
+  height: 30px;
   border-radius: 8px;
   display: inline-grid;
   place-items: center;
   color: var(--navy);
   background: var(--card);
   border: 1px solid rgba(184, 138, 50, 0.2);
+  margin-top: 1px;
 }
 
 .tester-pod-row-main {
   grid-area: main;
   display: grid;
-  gap: 0.18rem;
-  max-width: 100%;
+  gap: 0.22rem;
   min-width: 0;
 }
 
@@ -1818,9 +1870,9 @@ select {
 
 .tester-pod-row-value {
   color: var(--navy);
-  font-size: 0.86rem;
-  font-weight: 700;
-  line-height: 1.35;
+  font-size: 0.88rem;
+  font-weight: 600;
+  line-height: 1.4;
   overflow-wrap: break-word;
 }
 
@@ -1828,24 +1880,103 @@ select {
   grid-area: detail;
   margin: 0;
   color: var(--muted);
-  font-size: 0.8rem;
-  line-height: 1.35;
+  font-size: 0.78rem;
+  line-height: 1.4;
   min-width: 0;
   overflow-wrap: break-word;
 }
 
 .tester-pod-row-action {
   grid-area: action;
-  align-self: center;
+  align-self: start;
   justify-self: end;
-  padding: 5px 8px;
+  padding: 5px 9px;
   line-height: 1;
+  margin-top: 1px;
+  white-space: nowrap;
 }
 
+/* Expand to side-by-side on larger screens */
+@media (min-width: 640px) {
+  .tester-pod-dashboard-row {
+    grid-template-columns: 28px minmax(0, 1.3fr) minmax(0, 0.9fr) auto;
+    grid-template-rows: auto;
+    grid-template-areas: "icon main detail action";
+    align-items: center;
+    gap: 0.5rem;
+    padding: 9px 11px;
+  }
+
+  .tester-pod-row-icon {
+    width: 28px;
+    height: 28px;
+    margin-top: 0;
+  }
+
+  .tester-pod-row-action {
+    align-self: center;
+    margin-top: 0;
+  }
+
+  .tester-pod-row-detail {
+    font-size: 0.8rem;
+  }
+}
+
+/* Brand colour swatches */
+.hm-swatches {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  align-items: center;
+}
+
+.hm-swatch-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.hm-swatch {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border-radius: 4px;
+  border: 1px solid rgba(7, 22, 45, 0.15);
+  flex-shrink: 0;
+}
+
+.hm-swatch-label {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--navy);
+}
+
+/* Brand tone chips */
+.hm-tone-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+}
+
+.hm-tone-chip {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  border: 1px solid var(--gold-border);
+  background: var(--card);
+  color: var(--navy);
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 0.15rem 0.52rem;
+  white-space: nowrap;
+}
+
+/* Platform chips */
 .tester-pod-platforms {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.25rem;
+  gap: 0.28rem;
   max-width: 100%;
   min-width: 0;
 }
@@ -1859,17 +1990,16 @@ select {
   border: 1px solid rgba(184, 138, 50, 0.22);
   background: var(--background);
   color: var(--navy);
-  font-size: 0.72rem;
+  font-size: 0.76rem;
   font-weight: 700;
-  padding: 0.16rem 0.42rem;
+  padding: 0.16rem 0.45rem;
   line-height: 1.2;
-  max-width: 100%;
 }
 
 .tester-pod-platform-chip svg {
   flex-shrink: 0;
-  width: 0.78rem;
-  height: 0.78rem;
+  width: 0.8rem;
+  height: 0.8rem;
 }
 
 .tester-pod-cta {
@@ -1886,145 +2016,6 @@ select {
   max-width: 52ch;
   line-height: 1.55;
   margin: 0;
-}
-
-@media (max-width: 640px) {
-  .tester-pod-card {
-    width: 100%;
-    max-width: 100%;
-  }
-
-  .tester-pod-header {
-    flex-wrap: nowrap;
-    align-items: center;
-    padding: 10px 9px;
-    gap: 0.4rem;
-  }
-
-  .tester-pod-header-main {
-    gap: 0.45rem;
-  }
-
-  .tester-pod-avatar {
-    width: 32px;
-    height: 32px;
-    border-radius: 8px;
-    font-size: 0.9rem;
-  }
-
-  .tester-pod-title {
-    font-size: 1rem;
-  }
-
-  .tester-pod-subtitle {
-    font-size: 0.66rem;
-    line-height: 1.2;
-  }
-
-  .tester-pod-controls {
-    gap: 0.24rem;
-    font-size: 0.52rem;
-    letter-spacing: 0.02em;
-  }
-
-  .tester-pod-controls > span:not(.status-chip-gold) {
-    padding: 0.14rem 0.28rem;
-  }
-
-  .tester-pod-header .status-chip-gold {
-    flex-shrink: 0;
-    padding: 0.14rem 0.28rem;
-    font-size: 0.52rem;
-  }
-
-  .tester-pod-tabs {
-    min-height: 28px;
-    padding: 0 0.2rem;
-  }
-
-  .tester-pod-tab {
-    min-height: 28px;
-    padding: 0 0.32rem;
-    font-size: clamp(0.5rem, 1.75vw, 0.66rem);
-  }
-
-  .tester-pod-content-shell {
-    min-width: 0;
-    padding: 7px;
-  }
-
-  .tester-pod-content-head {
-    align-items: center;
-    flex-wrap: nowrap;
-    padding-bottom: 0.34rem;
-    gap: 0.35rem;
-  }
-
-  .tester-pod-content-head h4 {
-    font-size: 0.86rem;
-    min-width: 0;
-  }
-
-  .tester-pod-panel-chip,
-  .tester-pod-row-action {
-    font-size: 0.48rem;
-  }
-
-  .tester-pod-panel-chip {
-    padding: 0.12rem 0.28rem;
-  }
-
-  .tester-pod-dashboard-row {
-    grid-template-columns: 22px minmax(0, 1fr) minmax(0, 0.85fr) minmax(38px, auto);
-    grid-template-areas: "icon main detail action";
-    gap: 4px;
-    align-items: center;
-    padding: 6px 5px;
-  }
-
-  .tester-pod-row-icon {
-    grid-area: icon;
-    width: 22px;
-    height: 22px;
-    border-radius: 7px;
-  }
-
-  .tester-pod-row-action {
-    grid-area: action;
-    justify-self: end;
-    padding: 4px 5px;
-  }
-
-  .tester-pod-row-label {
-    font-size: 0.5rem;
-    letter-spacing: 0.03em;
-  }
-
-  .tester-pod-row-value {
-    font-size: 0.58rem;
-    line-height: 1.22;
-  }
-
-  .tester-pod-row-detail {
-    font-size: 0.55rem;
-    line-height: 1.2;
-  }
-
-  .tester-pod-platforms {
-    gap: 0.14rem;
-  }
-
-  .tester-pod-platform-chip {
-    gap: 0.12rem;
-    min-height: 17px;
-    padding: 0.08rem 0.18rem;
-    font-size: 0.48rem;
-  }
-
-  .tester-pod-platform-chip svg {
-    width: 0.52rem;
-    height: 0.52rem;
-  }
 }
 
 /* ─── AI POD ASSISTANT PREVIEW ─── */

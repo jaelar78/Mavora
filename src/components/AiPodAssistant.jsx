@@ -90,7 +90,7 @@ export default function AiPodAssistant() {
           </span>
           <div>
             <p className="ai-assistant-name">Dovroyn</p>
-            <p className="ai-assistant-subtitle">AI Social Media Manager · Preview</p>
+            <p className="ai-assistant-subtitle">AI Marketing Pod · Preview</p>
             <p className="ai-assistant-status"><span aria-hidden="true" />Online</p>
           </div>
         </div>
