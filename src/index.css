@@ -1588,45 +1588,29 @@ select {
 .tester-pod-card {
   position: relative;
   text-align: left;
-  width: min(100%, 940px);
+  width: min(100%, 790px);
   margin: 0 auto;
   padding: 0;
   display: grid;
   gap: 0;
   overflow: hidden;
   box-sizing: border-box;
-  border: 1px solid rgba(184, 138, 50, 0.28);
-  border-radius: clamp(20px, 3vw, 30px);
+  border: 1px solid rgba(184, 138, 50, 0.24);
+  border-radius: clamp(18px, 2.4vw, 24px);
   background:
-    radial-gradient(ellipse 52% 45% at 100% 0%, rgba(216, 184, 103, 0.13), transparent 68%),
+    radial-gradient(ellipse 42% 34% at 100% 0%, rgba(216, 184, 103, 0.1), transparent 68%),
     linear-gradient(180deg, #FFFFFF 0%, var(--panel) 100%);
   box-shadow:
-    0 30px 70px rgba(7, 22, 45, 0.14),
+    0 24px 54px rgba(7, 22, 45, 0.16),
     0 1px 0 rgba(255, 255, 255, 0.8) inset;
-}
-
-.tester-pod-window-bar {
-  display: flex;
-  gap: 0.42rem;
-  padding: 0.72rem clamp(1rem, 2.6vw, 1.45rem);
-  border-bottom: 1px solid rgba(184, 138, 50, 0.14);
-  background: rgba(255, 253, 248, 0.72);
-}
-
-.tester-pod-window-bar span {
-  width: 0.56rem;
-  height: 0.56rem;
-  border-radius: 999px;
-  background: rgba(184, 138, 50, 0.34);
 }
 
 .tester-pod-header {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
-  gap: 1rem;
-  padding: clamp(1rem, 2.7vw, 1.55rem);
-  border-bottom: 1px solid rgba(184, 138, 50, 0.18);
+  gap: 0.9rem;
+  padding: clamp(0.95rem, 2.2vw, 1.2rem) clamp(1rem, 2.4vw, 1.35rem) 0.8rem;
 }
 
 .tester-pod-header-main {
@@ -1642,17 +1626,17 @@ select {
 
 .tester-pod-avatar {
   flex-shrink: 0;
-  width: clamp(46px, 8vw, 58px);
-  height: clamp(46px, 8vw, 58px);
-  border-radius: 18px;
+  width: clamp(42px, 7vw, 50px);
+  height: clamp(42px, 7vw, 50px);
+  border-radius: 12px;
   display: inline-grid;
   place-items: center;
-  color: var(--navy);
+  color: var(--gold-soft);
   background:
-    linear-gradient(135deg, rgba(255, 255, 255, 0.86), rgba(216, 184, 103, 0.26)),
-    var(--card);
-  border: 1px solid rgba(184, 138, 50, 0.42);
-  box-shadow: 0 12px 26px rgba(7, 22, 45, 0.1);
+    radial-gradient(circle at 30% 18%, rgba(216, 184, 103, 0.28), transparent 36%),
+    #05070A;
+  border: 1px solid rgba(184, 138, 50, 0.35);
+  box-shadow: 0 10px 22px rgba(7, 22, 45, 0.14);
   font-family: 'Playfair Display', 'Times New Roman', serif;
   font-size: clamp(0.92rem, 2.2vw, 1.08rem);
   font-weight: 800;
@@ -1661,7 +1645,7 @@ select {
 
 .tester-pod-title {
   font-family: 'Playfair Display', 'Times New Roman', serif;
-  font-size: clamp(1.35rem, 3vw, 1.8rem);
+  font-size: clamp(1.28rem, 2.6vw, 1.62rem);
   color: var(--navy);
   font-weight: 800;
   margin: 0;
@@ -1671,8 +1655,8 @@ select {
 
 .tester-pod-subtitle {
   color: var(--muted);
-  font-size: clamp(0.9rem, 1.7vw, 1rem);
-  margin: 0.22rem 0 0;
+  font-size: clamp(0.78rem, 1.5vw, 0.88rem);
+  margin: 0.12rem 0 0;
   line-height: 1.35;
   overflow-wrap: break-word;
 }
@@ -1681,10 +1665,10 @@ select {
   display: flex;
   align-items: flex-end;
   justify-content: flex-end;
-  gap: 0.55rem;
+  gap: 0.6rem;
   flex-wrap: wrap;
   flex-shrink: 0;
-  max-width: 46%;
+  max-width: 52%;
 }
 
 .tester-pod-status,
@@ -1693,19 +1677,19 @@ select {
   align-items: center;
   justify-content: center;
   width: fit-content;
-  min-height: 36px;
+  min-height: 34px;
   border-radius: 999px;
   border: 1px solid var(--gold-border);
-  padding: 0.42rem 0.78rem;
-  font-size: 0.78rem;
+  padding: 0.38rem 0.72rem;
+  font-size: 0.74rem;
   font-weight: 800;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.02em;
   white-space: nowrap;
 }
 
 .tester-pod-status {
   color: var(--navy);
-  background: rgba(216, 184, 103, 0.16);
+  background: rgba(216, 184, 103, 0.12);
 }
 
 .tester-pod-status::before {
@@ -1719,22 +1703,23 @@ select {
 }
 
 .tester-pod-style-button {
-  border-color: rgba(184, 138, 50, 0.48);
-  color: var(--panel);
-  background: linear-gradient(180deg, #0A2140, var(--navy));
-  box-shadow: 0 10px 20px rgba(7, 22, 45, 0.16);
+  border-color: rgba(184, 138, 50, 0.46);
+  color: var(--navy);
+  background: linear-gradient(180deg, #E1C577, var(--gold-soft));
+  box-shadow: 0 9px 18px rgba(184, 138, 50, 0.22);
   cursor: default;
 }
 
 .tester-pod-tabs {
   display: flex;
-  gap: 0.35rem;
+  gap: 0.2rem;
   overflow-x: auto;
   overflow-y: hidden;
   max-width: 100%;
-  padding: 0.72rem clamp(0.85rem, 2.4vw, 1.35rem);
+  padding: 0 clamp(0.85rem, 2.4vw, 1.35rem);
   border-bottom: 1px solid rgba(184, 138, 50, 0.16);
-  background: rgba(247, 242, 232, 0.52);
+  border-top: 1px solid rgba(184, 138, 50, 0.14);
+  background: rgba(255, 253, 248, 0.78);
   scrollbar-width: thin;
   scrollbar-color: rgba(184, 138, 50, 0.42) transparent;
 }
@@ -1742,23 +1727,23 @@ select {
 .tester-pod-tab {
   display: inline-flex;
   align-items: center;
-  min-height: 38px;
-  padding: 0 0.88rem;
-  border: 1px solid rgba(184, 138, 50, 0.2);
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.58);
+  min-height: 36px;
+  padding: 0 0.78rem;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  border-radius: 0;
+  background: transparent;
   color: var(--muted);
-  font-size: 0.82rem;
+  font-size: 0.74rem;
   font-weight: 700;
   white-space: nowrap;
   flex-shrink: 0;
 }
 
 .tester-pod-tab.active {
-  background: var(--navy);
-  color: var(--panel);
-  border-color: rgba(184, 138, 50, 0.58);
-  box-shadow: 0 8px 18px rgba(7, 22, 45, 0.12);
+  color: var(--gold);
+  border-color: var(--gold);
+  box-shadow: none;
 }
 
 .tester-pod-content-panel {
@@ -1774,11 +1759,11 @@ select {
 
 .tester-pod-content-shell {
   display: grid;
-  gap: clamp(0.85rem, 1.9vw, 1.05rem);
+  gap: 0;
   width: 100%;
   max-width: 100%;
   min-width: 0;
-  padding: clamp(1rem, 2.7vw, 1.55rem);
+  padding: clamp(0.8rem, 2vw, 1rem) clamp(0.85rem, 2.4vw, 1.35rem) clamp(1rem, 2.4vw, 1.35rem);
   box-sizing: border-box;
 }
 
@@ -1826,31 +1811,38 @@ select {
 
 .tester-pod-dashboard-list {
   display: grid;
-  gap: 0.72rem;
+  gap: 0;
   max-width: 100%;
   min-width: 0;
+  border: 1px solid rgba(184, 138, 50, 0.12);
+  border-radius: 16px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.58);
 }
 
 .tester-pod-dashboard-row {
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr) minmax(220px, 0.9fr) auto;
+  grid-template-columns: auto minmax(0, 1fr) minmax(240px, 0.95fr) auto;
   grid-template-areas: "icon main values action";
-  gap: clamp(0.75rem, 1.8vw, 1rem);
+  gap: clamp(0.65rem, 1.5vw, 0.9rem);
   align-items: center;
-  padding: clamp(0.85rem, 2vw, 1rem);
-  border: 1px solid rgba(184, 138, 50, 0.16);
-  border-radius: 18px;
+  padding: 0.62rem clamp(0.7rem, 1.8vw, 0.9rem);
+  border-bottom: 1px solid rgba(184, 138, 50, 0.12);
   max-width: 100%;
   min-width: 0;
-  background: rgba(255, 255, 255, 0.7);
-  box-shadow: 0 10px 22px rgba(7, 22, 45, 0.055);
+  background: transparent;
+  box-shadow: none;
+}
+
+.tester-pod-dashboard-row:last-child {
+  border-bottom: 0;
 }
 
 .tester-pod-row-icon {
   grid-area: icon;
-  width: 40px;
-  height: 40px;
-  border-radius: 14px;
+  width: 30px;
+  height: 30px;
+  border-radius: 999px;
   display: inline-grid;
   place-items: center;
   color: var(--gold);
@@ -1861,14 +1853,14 @@ select {
 .tester-pod-row-main {
   grid-area: main;
   display: grid;
-  gap: 0.28rem;
+  gap: 0.14rem;
   max-width: 100%;
   min-width: 0;
 }
 
 .tester-pod-row-label {
   color: var(--navy);
-  font-size: 0.88rem;
+  font-size: 0.8rem;
   font-weight: 800;
   letter-spacing: 0.02em;
 }
@@ -1876,8 +1868,8 @@ select {
 .tester-pod-row-detail {
   margin: 0;
   color: var(--muted);
-  font-size: 0.84rem;
-  line-height: 1.48;
+  font-size: 0.68rem;
+  line-height: 1.35;
   min-width: 0;
   overflow-wrap: break-word;
 }
@@ -1891,50 +1883,61 @@ select {
 .tester-pod-swatches {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.38rem;
+  gap: 0.3rem;
   max-width: 100%;
   min-width: 0;
 }
 
-.tester-pod-platform-chip,
-.tester-pod-swatch-item {
+.tester-pod-platform-chip {
   display: inline-flex;
   align-items: center;
-  gap: 0.32rem;
-  min-height: 30px;
+  gap: 0.28rem;
+  min-height: 24px;
   border-radius: 999px;
   border: 1px solid rgba(184, 138, 50, 0.24);
   background: var(--panel);
   color: var(--navy);
-  font-size: 0.78rem;
+  font-size: 0.7rem;
   font-weight: 800;
-  padding: 0.24rem 0.58rem;
+  padding: 0.16rem 0.46rem;
   line-height: 1.2;
   max-width: 100%;
 }
 
 .tester-pod-platform-chip svg {
   flex-shrink: 0;
-  width: 0.86rem;
-  height: 0.86rem;
+  width: 0.78rem;
+  height: 0.78rem;
   color: var(--gold);
 }
 
+.tester-pod-swatch-item {
+  display: inline-flex;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  border: 1px solid rgba(184, 138, 50, 0.2);
+  padding: 2px;
+  background: var(--panel);
+  box-shadow: 0 7px 14px rgba(7, 22, 45, 0.08);
+}
+
 .tester-pod-swatch {
-  width: 0.86rem;
-  height: 0.86rem;
-  border-radius: 999px;
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 6px;
   border: 1px solid rgba(7, 22, 45, 0.16);
-  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.75);
 }
 
 .tester-pod-row-action {
   grid-area: action;
   align-self: center;
   justify-self: end;
-  min-height: 34px;
-  padding: 0 0.78rem;
+  min-height: 28px;
+  padding: 0 0.65rem;
   line-height: 1;
+  font-size: 0.66rem;
   cursor: default;
 }
 
@@ -1989,10 +1992,6 @@ select {
     max-width: 100%;
   }
 
-  .tester-pod-window-bar {
-    padding: 0.62rem 0.9rem;
-  }
-
   .tester-pod-header,
   .tester-pod-content-shell {
     padding: 1rem;
@@ -2003,7 +2002,7 @@ select {
   }
 
   .tester-pod-avatar {
-    border-radius: 15px;
+    border-radius: 12px;
   }
 
   .tester-pod-controls {
@@ -2039,12 +2038,11 @@ select {
     grid-template-columns: 38px minmax(0, 1fr);
     gap: 0.7rem;
     padding: 0.82rem;
-    border-radius: 16px;
   }
 
   .tester-pod-row-icon {
-    width: 38px;
-    height: 38px;
+    width: 34px;
+    height: 34px;
   }
 
   .tester-pod-row-label {
@@ -2055,10 +2053,14 @@ select {
     font-size: 0.82rem;
   }
 
-  .tester-pod-platform-chip,
-  .tester-pod-swatch-item {
+  .tester-pod-platform-chip {
     min-height: 30px;
     font-size: 0.76rem;
+  }
+
+  .tester-pod-swatch-item {
+    width: 30px;
+    height: 30px;
   }
 }
 

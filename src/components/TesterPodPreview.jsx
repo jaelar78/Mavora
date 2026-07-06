@@ -1,5 +1,6 @@
 import {
   Bot,
+  Crown,
   MapPin,
   Palette,
   Share2,
@@ -58,13 +59,6 @@ const DASHBOARD_ROWS = [
 function TesterPodContent() {
   return (
     <div className="tester-pod-content-shell">
-      <div className="tester-pod-content-head">
-        <div>
-          <span className="tester-pod-kicker">AI Brain</span>
-          <h4>Brand intelligence summary</h4>
-        </div>
-        <span className="tester-pod-panel-chip">Preview mode</span>
-      </div>
       <div className="tester-pod-dashboard-list">
         {DASHBOARD_ROWS.map((row) => {
           const RowIcon = row.icon;
@@ -82,13 +76,12 @@ function TesterPodContent() {
                 {row.swatches && (
                   <span className="tester-pod-swatches" aria-label="Brand colour swatches">
                     {row.swatches.map((swatch) => (
-                      <span key={swatch.label} className="tester-pod-swatch-item">
+                      <span key={swatch.label} className="tester-pod-swatch-item" title={swatch.label}>
                         <span
                           className="tester-pod-swatch"
                           style={{ background: swatch.color }}
-                          aria-hidden="true"
+                          aria-label={swatch.label}
                         />
-                        {swatch.label}
                       </span>
                     ))}
                   </span>
@@ -127,7 +120,7 @@ function TesterPodHeader() {
     <div className="tester-pod-header">
       <div className="tester-pod-header-main">
         <span className="tester-pod-avatar" aria-hidden="true">
-          HM
+          <Crown size={24} strokeWidth={1.85} />
         </span>
         <div>
           <p className="tester-pod-title">House of Magnum</p>
@@ -145,11 +138,6 @@ function TesterPodHeader() {
 function TesterPodChrome({ children }) {
   return (
     <div className="tester-pod-card panel">
-      <div className="tester-pod-window-bar" aria-hidden="true">
-        <span />
-        <span />
-        <span />
-      </div>
       {children}
     </div>
   );
