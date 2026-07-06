@@ -42,12 +42,10 @@ export default function WaitlistPage() {
       <section className="hero-block panel">
         <p className="eyebrow">Early Access</p>
         <h1>
-          Join the <span className="hero-emphasis">Dovroyn</span> waitlist.
+          Your first AI marketing pod is almost ready.
         </h1>
         <p className="lede">
-          Be among the first to access AI-powered marketing pods. Free to join. Early users receive
-          launch updates, first access, and founder pricing.
-        </p>
+          Dovroyn gives every brand its own AI pod to analyse the website, understand the audience, shape campaign direction, and prepare content before anything goes live.
       </section>
 
       <section className="waitlist-section panel" id="waitlist">
@@ -62,7 +60,7 @@ export default function WaitlistPage() {
         ) : (
           <>
             <p className="eyebrow">Coming Soon</p>
-            <h2 className="waitlist-heading">Marketing pods built for brands ready to move.</h2>
+            <h2 Marketing pods that understand your brand before they create.</h2>
             <p className="lede">
               Enter your email to get early access. Free to join. Early users get launch updates,
               first access, and founder pricing.
