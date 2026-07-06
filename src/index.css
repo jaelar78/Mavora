@@ -1572,40 +1572,49 @@ select {
 
 /* Tester Pod Preview Section */
 .tester-pod-section {
+  position: relative;
   display: grid;
-  gap: clamp(1.2rem, 2vw, 1.6rem);
+  gap: clamp(1.35rem, 2.4vw, 1.9rem);
   text-align: center;
   max-width: 100%;
   min-width: 0;
+  padding: clamp(1.2rem, 3vw, 2rem);
+  border-radius: 30px;
+  background:
+    radial-gradient(ellipse 70% 58% at 50% 0%, rgba(216, 184, 103, 0.16), transparent 72%),
+    linear-gradient(180deg, rgba(255, 253, 248, 0.42), rgba(243, 233, 216, 0.34));
+  border: 1px solid rgba(184, 138, 50, 0.16);
 }
 
 .tester-pod-card {
   text-align: left;
   width: 100%;
-  max-width: 860px;
+  max-width: 940px;
   margin: 0 auto;
   padding: 0;
   display: grid;
   gap: 0;
   overflow: hidden;
   box-sizing: border-box;
-  border-radius: 22px;
+  border-radius: 28px;
+  border-color: rgba(184, 138, 50, 0.28);
+  box-shadow: 0 28px 70px rgba(7, 22, 45, 0.14);
   background:
-    radial-gradient(ellipse 60% 45% at 100% 0%, rgba(216, 184, 103, 0.1), transparent 65%),
-    linear-gradient(170deg, var(--panel) 60%, var(--background) 160%);
+    radial-gradient(ellipse 64% 54% at 100% 0%, rgba(216, 184, 103, 0.13), transparent 68%),
+    linear-gradient(180deg, #ffffff 0%, var(--panel) 68%, rgba(247, 242, 232, 0.8) 145%);
 }
 
 .tester-pod-window-bar {
   display: flex;
   gap: 0.35rem;
-  padding: 0.55rem 0.75rem;
+  padding: 0.72rem clamp(1rem, 2.3vw, 1.35rem);
   border-bottom: 1px solid rgba(184, 138, 50, 0.2);
-  background: rgba(255, 253, 248, 0.8);
+  background: rgba(255, 255, 255, 0.76);
 }
 
 .tester-pod-window-bar span {
-  width: 0.5rem;
-  height: 0.5rem;
+  width: 0.58rem;
+  height: 0.58rem;
   border-radius: 999px;
   background: rgba(184, 138, 50, 0.35);
 }
@@ -1614,8 +1623,8 @@ select {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 0.8rem;
-  padding: 14px 16px;
+  gap: clamp(0.9rem, 2vw, 1.4rem);
+  padding: clamp(1rem, 2.4vw, 1.45rem) clamp(1rem, 2.6vw, 1.65rem);
   border-bottom: 1px solid rgba(184, 138, 50, 0.2);
 }
 
@@ -1623,28 +1632,58 @@ select {
   display: inline-flex;
   align-items: center;
   justify-content: flex-end;
-  gap: 0.45rem;
+  gap: 0.55rem;
+  flex-wrap: wrap;
   flex-shrink: 0;
-  color: var(--muted);
-  font-size: 0.72rem;
-  font-weight: 700;
+}
+
+.tester-pod-status,
+.tester-pod-style-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.38rem;
+  min-height: 36px;
+  border-radius: 999px;
+  padding: 0.42rem 0.82rem;
+  font-size: 0.76rem;
+  font-weight: 800;
   letter-spacing: 0.04em;
-  text-transform: uppercase;
+  line-height: 1;
   white-space: nowrap;
 }
 
-.tester-pod-controls > span:not(.status-chip-gold) {
-  border-radius: 999px;
-  border: 1px solid rgba(184, 138, 50, 0.2);
-  background: var(--card);
-  padding: 0.24rem 0.56rem;
+.tester-pod-status {
+  color: var(--gold);
+  border: 1px solid rgba(184, 138, 50, 0.28);
+  background: rgba(216, 184, 103, 0.12);
+  text-transform: uppercase;
+}
+
+.tester-pod-status svg {
+  flex-shrink: 0;
+}
+
+.tester-pod-style-button {
+  border: 1px solid rgba(184, 138, 50, 0.44);
+  background: linear-gradient(135deg, var(--navy-soft), var(--navy));
+  color: var(--panel);
+  box-shadow: 0 10px 20px rgba(7, 22, 45, 0.12);
+  cursor: pointer;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+}
+
+.tester-pod-style-button:hover {
+  transform: translateY(-1px);
+  border-color: rgba(216, 184, 103, 0.78);
+  box-shadow: 0 14px 24px rgba(7, 22, 45, 0.16);
 }
 
 .tester-pod-header-main {
   display: flex;
   align-items: center;
   min-width: 0;
-  gap: 0.7rem;
+  gap: 0.85rem;
 }
 
 .tester-pod-header-main > div {
@@ -1653,23 +1692,28 @@ select {
 
 .tester-pod-avatar {
   flex-shrink: 0;
-  width: 42px;
-  height: 42px;
-  border-radius: 10px;
+  width: 54px;
+  height: 54px;
+  border-radius: 16px;
   display: inline-grid;
   place-items: center;
   color: var(--navy);
-  background: var(--card);
-  border: 1px solid var(--gold-border);
+  background:
+    radial-gradient(circle at 30% 22%, rgba(255, 253, 248, 0.96), rgba(216, 184, 103, 0.72) 72%),
+    var(--gold-soft);
+  border: 1px solid rgba(184, 138, 50, 0.5);
+  box-shadow: 0 12px 24px rgba(7, 22, 45, 0.12);
   font-family: 'Playfair Display', 'Times New Roman', serif;
-  font-weight: 700;
+  font-size: 1rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
 }
 
 .tester-pod-title {
   font-family: 'Playfair Display', 'Times New Roman', serif;
-  font-size: clamp(1.25rem, 2.5vw, 1.38rem);
+  font-size: clamp(1.35rem, 3vw, 1.78rem);
   color: var(--navy);
-  font-weight: 700;
+  font-weight: 800;
   margin: 0;
   line-height: 1.2;
   overflow-wrap: break-word;
@@ -1677,40 +1721,51 @@ select {
 
 .tester-pod-subtitle {
   color: var(--muted);
-  font-size: clamp(0.81rem, 1.5vw, 0.88rem);
-  margin: 0.12rem 0 0;
+  font-size: clamp(0.88rem, 1.6vw, 0.96rem);
+  margin: 0.18rem 0 0;
   line-height: 1.35;
   overflow-wrap: break-word;
 }
 
 .tester-pod-tabs {
   display: flex;
-  gap: 0;
-  overflow: hidden;
+  gap: 0.35rem;
+  overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior-x: contain;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
   max-width: 100%;
-  min-height: 38px;
-  padding: 0 0.5rem;
+  min-height: 54px;
+  padding: 0.58rem clamp(0.75rem, 2vw, 1.1rem);
   border-bottom: 1px solid rgba(184, 138, 50, 0.2);
-  background: rgba(255, 253, 248, 0.8);
+  background: rgba(247, 242, 232, 0.5);
+}
+
+.tester-pod-tabs::-webkit-scrollbar {
+  display: none;
 }
 
 .tester-pod-tab {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   min-height: 38px;
-  padding: 0 12px;
-  font-size: 0.76rem;
-  font-weight: 600;
-  border-bottom: 2px solid transparent;
+  padding: 0 0.9rem;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  font-size: 0.82rem;
+  font-weight: 800;
   color: var(--muted);
   white-space: nowrap;
   flex-shrink: 0;
 }
 
 .tester-pod-tab.active {
-  background: transparent;
+  background: #ffffff;
   color: var(--navy);
-  border-color: var(--gold-border);
+  border-color: rgba(184, 138, 50, 0.32);
+  box-shadow: 0 8px 16px rgba(7, 22, 45, 0.06);
 }
 
 .tester-pod-content-panel {
@@ -1726,11 +1781,11 @@ select {
 
 .tester-pod-content-shell {
   display: grid;
-  gap: 0;
+  gap: 1rem;
   width: 100%;
   max-width: 100%;
   min-width: 0;
-  padding: clamp(0.72rem, 1.6vw, 0.9rem);
+  padding: clamp(1rem, 2.6vw, 1.45rem);
   box-sizing: border-box;
 }
 
@@ -1738,14 +1793,34 @@ select {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 0.6rem;
-  padding-bottom: 0.55rem;
-  border-bottom: 1px solid rgba(184, 138, 50, 0.18);
+  gap: 0.9rem;
+  padding: clamp(0.85rem, 2vw, 1rem);
+  border: 1px solid rgba(184, 138, 50, 0.18);
+  border-radius: 20px;
+  background:
+    radial-gradient(ellipse 80% 80% at 100% 0%, rgba(216, 184, 103, 0.12), transparent 70%),
+    #ffffff;
+  box-shadow: 0 10px 24px rgba(7, 22, 45, 0.05);
+}
+
+.tester-pod-content-kicker {
+  margin: 0 0 0.18rem;
+  color: var(--gold);
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.tester-pod-content-head > div {
+  min-width: 0;
 }
 
 .tester-pod-content-head h4 {
   margin: 0;
-  font-size: clamp(1.08rem, 2vw, 1.2rem);
+  font-family: 'Playfair Display', 'Times New Roman', serif;
+  font-size: clamp(1.2rem, 2.4vw, 1.45rem);
   color: var(--navy);
   line-height: 1.15;
 }
@@ -1753,73 +1828,77 @@ select {
 .tester-pod-panel-chip,
 .tester-pod-row-action {
   border-radius: 999px;
-  border: 1px solid var(--gold-border);
-  background: var(--card);
-  color: var(--muted);
-  font-size: 0.66rem;
-  font-weight: 700;
+  border: 1px solid rgba(184, 138, 50, 0.28);
+  color: var(--navy);
+  font-size: 0.72rem;
+  font-weight: 800;
   letter-spacing: 0.04em;
-  text-transform: uppercase;
+  line-height: 1;
+  white-space: nowrap;
 }
 
 .tester-pod-panel-chip {
-  padding: 0.18rem 0.45rem;
+  flex-shrink: 0;
+  padding: 0.46rem 0.72rem;
+  background: rgba(216, 184, 103, 0.14);
+  color: var(--gold);
+  text-transform: uppercase;
 }
 
 .tester-pod-dashboard-list {
   display: grid;
+  gap: 0.72rem;
   max-width: 100%;
   min-width: 0;
 }
 
 .tester-pod-dashboard-row {
   display: grid;
-  grid-template-columns: auto minmax(0, 1.2fr) minmax(0, 0.8fr) auto;
+  grid-template-columns: auto minmax(0, 1.05fr) minmax(220px, 0.85fr) auto;
   grid-template-areas: "icon main detail action";
-  gap: 0.48rem;
+  gap: clamp(0.72rem, 1.7vw, 1rem);
   align-items: center;
-  padding: 9px 11px;
-  border-bottom: 1px solid rgba(184, 138, 50, 0.16);
+  padding: clamp(0.86rem, 2vw, 1.05rem);
+  border: 1px solid rgba(184, 138, 50, 0.18);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.74);
+  box-shadow: 0 10px 24px rgba(7, 22, 45, 0.045);
   max-width: 100%;
   min-width: 0;
 }
 
-.tester-pod-dashboard-row:last-child {
-  border-bottom: 0;
-}
-
 .tester-pod-row-icon {
   grid-area: icon;
-  width: 28px;
-  height: 28px;
-  border-radius: 8px;
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
   display: inline-grid;
   place-items: center;
-  color: var(--navy);
-  background: var(--card);
-  border: 1px solid rgba(184, 138, 50, 0.2);
+  color: var(--gold);
+  background: rgba(216, 184, 103, 0.12);
+  border: 1px solid rgba(184, 138, 50, 0.24);
 }
 
 .tester-pod-row-main {
   grid-area: main;
   display: grid;
-  gap: 0.18rem;
+  gap: 0.42rem;
   max-width: 100%;
   min-width: 0;
 }
 
 .tester-pod-row-label {
-  color: var(--muted);
-  font-size: 0.68rem;
-  font-weight: 700;
-  letter-spacing: 0.05em;
+  color: var(--navy);
+  font-size: 0.78rem;
+  font-weight: 900;
+  letter-spacing: 0.07em;
   text-transform: uppercase;
 }
 
 .tester-pod-row-value {
   color: var(--navy);
-  font-size: 0.86rem;
-  font-weight: 700;
+  font-size: 0.96rem;
+  font-weight: 800;
   line-height: 1.35;
   overflow-wrap: break-word;
 }
@@ -1828,8 +1907,8 @@ select {
   grid-area: detail;
   margin: 0;
   color: var(--muted);
-  font-size: 0.8rem;
-  line-height: 1.35;
+  font-size: 0.88rem;
+  line-height: 1.5;
   min-width: 0;
   overflow-wrap: break-word;
 }
@@ -1838,45 +1917,69 @@ select {
   grid-area: action;
   align-self: center;
   justify-self: end;
-  padding: 5px 8px;
-  line-height: 1;
+  min-height: 34px;
+  padding: 0.45rem 0.72rem;
+  background: #ffffff;
+  cursor: pointer;
+  transition: color 0.18s ease, border-color 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
 }
 
-.tester-pod-platforms {
+.tester-pod-row-action:hover {
+  color: var(--gold);
+  border-color: rgba(184, 138, 50, 0.58);
+  transform: translateY(-1px);
+  box-shadow: 0 8px 16px rgba(7, 22, 45, 0.07);
+}
+
+.tester-pod-platforms,
+.tester-pod-value-chips,
+.tester-pod-swatches {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.25rem;
+  gap: 0.38rem;
   max-width: 100%;
   min-width: 0;
 }
 
-.tester-pod-platform-chip {
+.tester-pod-platform-chip,
+.tester-pod-value-chip,
+.tester-pod-swatch-chip {
   display: inline-flex;
   align-items: center;
-  gap: 0.25rem;
-  min-height: 24px;
+  gap: 0.35rem;
+  min-height: 30px;
   border-radius: 999px;
   border: 1px solid rgba(184, 138, 50, 0.22);
-  background: var(--background);
+  background: rgba(247, 242, 232, 0.62);
   color: var(--navy);
-  font-size: 0.72rem;
-  font-weight: 700;
-  padding: 0.16rem 0.42rem;
+  font-size: 0.78rem;
+  font-weight: 800;
+  padding: 0.22rem 0.58rem;
   line-height: 1.2;
   max-width: 100%;
 }
 
 .tester-pod-platform-chip svg {
   flex-shrink: 0;
-  width: 0.78rem;
-  height: 0.78rem;
+  width: 0.86rem;
+  height: 0.86rem;
+  color: var(--gold);
+}
+
+.tester-pod-swatch {
+  flex-shrink: 0;
+  width: 0.82rem;
+  height: 0.82rem;
+  border-radius: 999px;
+  border: 1px solid rgba(7, 22, 45, 0.16);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.32);
 }
 
 .tester-pod-cta {
   display: grid;
   gap: 0.75rem;
   place-items: center;
-  margin-top: 0.5rem;
+  margin-top: 0.1rem;
 }
 
 .tester-pod-note {
@@ -1888,142 +1991,127 @@ select {
   margin: 0;
 }
 
-@media (max-width: 640px) {
+@media (max-width: 760px) {
+  .tester-pod-section {
+    padding: 0.85rem;
+    border-radius: 24px;
+  }
+
   .tester-pod-card {
-    width: 100%;
-    max-width: 100%;
+    border-radius: 22px;
   }
 
   .tester-pod-header {
-    flex-wrap: nowrap;
-    align-items: center;
-    padding: 10px 9px;
-    gap: 0.4rem;
+    align-items: flex-start;
+    flex-direction: column;
   }
 
-  .tester-pod-header-main {
-    gap: 0.45rem;
+  .tester-pod-controls {
+    justify-content: flex-start;
+    width: 100%;
+  }
+
+  .tester-pod-tabs {
+    min-height: 52px;
+    padding: 0.55rem 0.75rem;
+  }
+
+  .tester-pod-tab {
+    min-height: 36px;
+    padding: 0 0.78rem;
+    font-size: 0.8rem;
+  }
+
+  .tester-pod-content-head {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .tester-pod-dashboard-row {
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-areas:
+      "icon main"
+      "detail detail"
+      "action action";
+    align-items: start;
+  }
+
+  .tester-pod-row-action {
+    justify-self: start;
+  }
+}
+
+@media (max-width: 440px) {
+  .tester-pod-section {
+    padding: 0.6rem;
+    margin-inline: -0.1rem;
+  }
+
+  .tester-pod-window-bar {
+    padding-inline: 0.85rem;
+  }
+
+  .tester-pod-header {
+    padding: 0.95rem;
   }
 
   .tester-pod-avatar {
-    width: 32px;
-    height: 32px;
-    border-radius: 8px;
+    width: 46px;
+    height: 46px;
+    border-radius: 14px;
     font-size: 0.9rem;
   }
 
   .tester-pod-title {
-    font-size: 1rem;
+    font-size: 1.22rem;
   }
 
   .tester-pod-subtitle {
-    font-size: 0.66rem;
-    line-height: 1.2;
+    font-size: 0.86rem;
   }
 
-  .tester-pod-controls {
-    gap: 0.24rem;
-    font-size: 0.52rem;
-    letter-spacing: 0.02em;
-  }
-
-  .tester-pod-controls > span:not(.status-chip-gold) {
-    padding: 0.14rem 0.28rem;
-  }
-
-  .tester-pod-header .status-chip-gold {
-    flex-shrink: 0;
-    padding: 0.14rem 0.28rem;
-    font-size: 0.52rem;
-  }
-
-  .tester-pod-tabs {
-    min-height: 28px;
-    padding: 0 0.2rem;
-  }
-
-  .tester-pod-tab {
-    min-height: 28px;
-    padding: 0 0.32rem;
-    font-size: clamp(0.5rem, 1.75vw, 0.66rem);
+  .tester-pod-status,
+  .tester-pod-style-button {
+    min-height: 34px;
+    padding: 0.4rem 0.68rem;
+    font-size: 0.7rem;
   }
 
   .tester-pod-content-shell {
-    min-width: 0;
-    padding: 7px;
+    padding: 0.75rem;
   }
 
   .tester-pod-content-head {
-    align-items: center;
-    flex-wrap: nowrap;
-    padding-bottom: 0.34rem;
-    gap: 0.35rem;
-  }
-
-  .tester-pod-content-head h4 {
-    font-size: 0.86rem;
-    min-width: 0;
-  }
-
-  .tester-pod-panel-chip,
-  .tester-pod-row-action {
-    font-size: 0.48rem;
-  }
-
-  .tester-pod-panel-chip {
-    padding: 0.12rem 0.28rem;
+    border-radius: 16px;
+    padding: 0.8rem;
   }
 
   .tester-pod-dashboard-row {
-    grid-template-columns: 22px minmax(0, 1fr) minmax(0, 0.85fr) minmax(38px, auto);
-    grid-template-areas: "icon main detail action";
-    gap: 4px;
-    align-items: center;
-    padding: 6px 5px;
+    gap: 0.64rem;
+    border-radius: 16px;
+    padding: 0.78rem;
   }
 
   .tester-pod-row-icon {
-    grid-area: icon;
-    width: 22px;
-    height: 22px;
-    border-radius: 7px;
-  }
-
-  .tester-pod-row-action {
-    grid-area: action;
-    justify-self: end;
-    padding: 4px 5px;
+    width: 34px;
+    height: 34px;
+    border-radius: 11px;
   }
 
   .tester-pod-row-label {
-    font-size: 0.5rem;
-    letter-spacing: 0.03em;
+    font-size: 0.72rem;
   }
 
-  .tester-pod-row-value {
-    font-size: 0.58rem;
-    line-height: 1.22;
-  }
-
+  .tester-pod-row-value,
   .tester-pod-row-detail {
-    font-size: 0.55rem;
-    line-height: 1.2;
+    font-size: 0.86rem;
   }
 
-  .tester-pod-platforms {
-    gap: 0.14rem;
-  }
-
-  .tester-pod-platform-chip {
-    gap: 0.12rem;
-    min-height: 17px;
-    padding: 0.08rem 0.18rem;
-    font-size: 0.48rem;
-  }
-
-  .tester-pod-platform-chip svg {
-    width: 0.52rem;
-    height: 0.52rem;
+  .tester-pod-platform-chip,
+  .tester-pod-value-chip,
+  .tester-pod-swatch-chip {
+    min-height: 29px;
+    font-size: 0.74rem;
   }
 }
 
