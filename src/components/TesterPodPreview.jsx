@@ -1,97 +1,131 @@
-import {
-  Bot,
-  MapPin,
-  Megaphone,
-  Palette,
-  Share2,
-  Users,
-} from 'lucide-react';
-import { FaFacebookF, FaInstagram, FaLinkedinIn, FaPinterestP, FaTiktok } from 'react-icons/fa6';
+import { Globe2, Palette, Share2, Sparkles, Users } from 'lucide-react';
+import { FaInstagram, FaLinkedinIn, FaTiktok, FaYoutube } from 'react-icons/fa6';
 
 const DASHBOARD_NAV_ITEMS = ['AI Brain', 'Content Calendar', 'Platforms', 'Files', 'Ad Performance', 'Budget'];
-const DASHBOARD_HEADING = 'AI Brain analysis';
-
-const PLATFORM_CHIPS = [
-  { label: 'LinkedIn', Icon: FaLinkedinIn },
-  { label: 'Instagram', Icon: FaInstagram },
-  { label: 'Facebook', Icon: FaFacebookF },
-  { label: 'TikTok', Icon: FaTiktok },
-  { label: 'Pinterest', Icon: FaPinterestP },
-];
 
 const DASHBOARD_ROWS = [
   {
     icon: Palette,
-    label: 'Brand colours',
-    value: 'Warm neutrals · brass accents · deep navy',
-    detail: 'Palette inferred from Gidgee & Co launch styling.',
+    label: 'Brand Colours',
+    detail: 'Core palette locked across landing pages, paid creative, and packaging moments.',
+    type: 'swatches',
+    items: [
+      { label: 'Gold', color: '#B88A32', textColor: '#FFFDF8' },
+      { label: 'Black', color: '#07162D', textColor: '#FFFDF8' },
+      { label: 'Ivory', color: '#F7F2E8', textColor: '#07162D' },
+    ],
   },
   {
-    icon: Bot,
-    label: 'Brand tone',
-    value: 'Earthy · premium · Australian · bold',
-    detail: 'Voice locked for captions, ads, and creative briefs.',
+    icon: Sparkles,
+    label: 'Brand Tone',
+    detail: 'Prompt guidance keeps every caption, script, and ad variation elevated.',
+    type: 'chips',
+    items: ['Luxury', 'Refined', 'Aspirational'],
   },
   {
     icon: Users,
-    label: 'Target audience',
-    value: 'Country, western, rodeo, festival, outdoor style buyers',
-    detail: 'Primary buyers mapped around authentic lifestyle intent.',
+    label: 'Target Audience',
+    detail: 'High-value buyer segments are prioritised for messaging, offers, and spend.',
+    type: 'chips',
+    items: ['Men 25–55', 'Professionals', 'High intent buyers'],
   },
   {
-    icon: MapPin,
+    icon: Globe2,
     label: 'Geography',
-    value: 'Australia',
-    detail: 'Launch focus weighted to local country and event moments.',
+    detail: 'Creative and offer recommendations stay broad enough for international demand.',
+    type: 'chips',
+    items: ['Worldwide'],
   },
   {
     icon: Share2,
-    label: 'Recommended platforms',
-    platforms: PLATFORM_CHIPS,
-    detail: 'Channel mix for launch content and product discovery.',
-  },
-  {
-    icon: Megaphone,
-    label: 'Campaign direction',
-    value: 'Brand story → styling reel → launch drop → retarget',
-    detail: 'Campaign path moves from identity into product demand.',
+    label: 'Recommended Platforms',
+    detail: 'Channel mix selected for executive audiences, visual storytelling, and watch intent.',
+    type: 'platforms',
+    items: [
+      { label: 'LinkedIn', Icon: FaLinkedinIn },
+      { label: 'Instagram', Icon: FaInstagram },
+      { label: 'YouTube', Icon: FaYoutube },
+      { label: 'TikTok', Icon: FaTiktok },
+    ],
   },
 ];
+
+function RowValues({ row }) {
+  if (row.type === 'swatches') {
+    return (
+      <div className="tester-pod-row-values" aria-label={`${row.label} values`}>
+        {row.items.map((item) => (
+          <span key={item.label} className="tester-pod-swatch-chip">
+            <span
+              className="tester-pod-swatch-dot"
+              style={{ backgroundColor: item.color, color: item.textColor }}
+              aria-hidden="true"
+            />
+            {item.label}
+          </span>
+        ))}
+      </div>
+    );
+  }
+
+  if (row.type === 'platforms') {
+    return (
+      <div className="tester-pod-row-values tester-pod-platforms" aria-label={`${row.label} values`}>
+        {row.items.map(({ label, Icon }) => (
+          <span key={label} className="tester-pod-platform-chip">
+            <Icon aria-hidden="true" />
+            {label}
+          </span>
+        ))}
+      </div>
+    );
+  }
+
+  return (
+    <div className="tester-pod-row-values" aria-label={`${row.label} values`}>
+      {row.items.map((item) => (
+        <span key={item} className="tester-pod-value-chip">
+          {item}
+        </span>
+      ))}
+    </div>
+  );
+}
 
 function TesterPodContent() {
   return (
     <div className="tester-pod-content-shell">
       <div className="tester-pod-content-head">
-        <h4>{DASHBOARD_HEADING}</h4>
-        <span className="tester-pod-panel-chip">Static preview</span>
+        <div>
+          <p className="tester-pod-panel-label">AI Brain snapshot</p>
+          <h4>Brand foundations are aligned and ready for execution.</h4>
+        </div>
+        <span className="tester-pod-panel-chip">Premium pod preview</span>
       </div>
+
       <div className="tester-pod-dashboard-list">
         {DASHBOARD_ROWS.map((row) => {
           const RowIcon = row.icon;
 
           return (
-            <div key={row.label} className="tester-pod-dashboard-row">
-              <span className="tester-pod-row-icon" aria-hidden="true">
-                <RowIcon size={14} strokeWidth={1.9} />
-              </span>
-              <div className="tester-pod-row-main">
-                <span className="tester-pod-row-label">{row.label}</span>
-                {row.platforms ? (
-                  <span className="tester-pod-platforms" aria-label="Recommended platforms">
-                    {row.platforms.map(({ label, Icon }) => (
-                      <span key={label} className="tester-pod-platform-chip">
-                        <Icon aria-hidden="true" />
-                        {label}
-                      </span>
-                    ))}
+            <article key={row.label} className="tester-pod-dashboard-row">
+              <div className="tester-pod-row-top">
+                <div className="tester-pod-row-head">
+                  <span className="tester-pod-row-icon" aria-hidden="true">
+                    <RowIcon size={18} strokeWidth={1.9} />
                   </span>
-                ) : (
-                  <span className="tester-pod-row-value">{row.value}</span>
-                )}
+                  <div className="tester-pod-row-copy">
+                    <span className="tester-pod-row-label">{row.label}</span>
+                    <p className="tester-pod-row-detail">{row.detail}</p>
+                  </div>
+                </div>
+                <button type="button" className="tester-pod-row-action">
+                  Override
+                </button>
               </div>
-              <p className="tester-pod-row-detail">{row.detail}</p>
-              <span className="tester-pod-row-action">Override</span>
-            </div>
+
+              <RowValues row={row} />
+            </article>
           );
         })}
       </div>
@@ -104,37 +138,35 @@ function TesterPodHeader() {
     <div className="tester-pod-header">
       <div className="tester-pod-header-main">
         <span className="tester-pod-avatar" aria-hidden="true">
-          G
+          <span className="tester-pod-avatar-mark">HM</span>
         </span>
-        <div>
-          <p className="tester-pod-title">Gidgee &amp; Co Launch</p>
-          <p className="tester-pod-subtitle">Example AI marketing pod using www.gidgeeco.au</p>
+        <div className="tester-pod-brand-copy">
+          <p className="tester-pod-overline">Dovroyn AI pod</p>
+          <p className="tester-pod-title">House of Magnum</p>
+          <p className="tester-pod-subtitle">Luxury Watches</p>
         </div>
       </div>
+
       <div className="tester-pod-controls" aria-label="Preview controls">
-        <span>Project Actions</span>
-        <span className="status-chip-gold">Preview</span>
+        <span className="tester-pod-status-pill">
+          <span aria-hidden="true" />
+          AI Brain Active
+        </span>
+        <button type="button" className="tester-pod-style-button">
+          Ready to be styled <span aria-hidden="true">✦</span>
+        </button>
       </div>
     </div>
   );
 }
 
 function TesterPodChrome({ children }) {
-  return (
-    <div className="tester-pod-card panel">
-      <div className="tester-pod-window-bar" aria-hidden="true">
-        <span />
-        <span />
-        <span />
-      </div>
-      {children}
-    </div>
-  );
+  return <div className="tester-pod-card">{children}</div>;
 }
 
 function TesterPodTabs() {
   return (
-    <div className="tester-pod-tabs" aria-label="Gidgee pod sections">
+    <div className="tester-pod-tabs" aria-label="House of Magnum pod sections">
       {DASHBOARD_NAV_ITEMS.map((item, index) => (
         <span key={item} className={`tester-pod-tab ${index === 0 ? 'active' : ''}`}>
           {item}
@@ -165,9 +197,10 @@ function TesterPodDashboard() {
 export default function TesterPodPreview({ onJoinEarlyAccess }) {
   return (
     <section className="tester-pod-section">
-      <h2 className="section-title">See one of Dovroyn's AI pods.</h2>
+      <h2 className="section-title">Preview one Dovroyn AI pod.</h2>
       <p className="lede">
-        This preview shows one dedicated Dovroyn AI pod after it has analysed a brand. Each pod has its own AI brain, brand memory, content calendar, platform strategy, ad view, files, and budget tracker.
+        This is a single-brand preview of how one Dovroyn pod captures brand memory, audience direction,
+        platform priorities, files, performance views, and budget controls in one polished workspace.
       </p>
 
       <TesterPodDashboard />
