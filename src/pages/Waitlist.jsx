@@ -60,10 +60,10 @@ export default function WaitlistPage() {
         ) : (
           <>
             <p className="eyebrow">Coming Soon</p>
-            <h2 Dedicated AI pods for every brand you manage.</h2>
-            <p className="lede">
-              Enter your email to get early access. Free to join. Early users get launch updates,
-              first access, and founder pricing.
+<h2 className="waitlist-heading">See one of Dovroyn's AI pods.</h2>
+<p className="lede">
+  This preview shows one dedicated Dovroyn AI pod after it has analysed a brand. Each pod has its own AI brain, brand memory, content calendar, platform strategy, ad view, files, and budget tracker.
+</p>
             </p>
             <form className="waitlist-form" onSubmit={handleSubmit}>
               <input
