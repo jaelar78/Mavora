@@ -42,10 +42,10 @@ export default function WaitlistPage() {
       <section className="hero-block panel">
         <p className="eyebrow">Early Access</p>
         <h1>
-          Your first AI marketing pod is almost ready.
+          Your AI marketing pods are almost ready.
         </h1>
         <p className="lede">
-          Dovroyn gives every brand its own AI pod to analyse the website, understand the audience, shape campaign direction, and prepare content before anything goes live.
+         Dovroyn lets you create 1–12 dedicated AI pods, each built for a specific brand, offer, campaign, or business. Every pod analyses its source, understands the audience, shapes the strategy, and prepares content before anything goes live.
       </section>
 
       <section className="waitlist-section panel" id="waitlist">
@@ -60,7 +60,7 @@ export default function WaitlistPage() {
         ) : (
           <>
             <p className="eyebrow">Coming Soon</p>
-            <h2 Marketing pods that understand your brand before they create.</h2>
+            <h2 Dedicated AI pods for every brand you manage.</h2>
             <p className="lede">
               Enter your email to get early access. Free to join. Early users get launch updates,
               first access, and founder pricing.
