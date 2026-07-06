@@ -165,10 +165,9 @@ function TesterPodDashboard() {
 export default function TesterPodPreview({ onJoinEarlyAccess }) {
   return (
     <section className="tester-pod-section">
-      <h2 className="section-title">See what a Dovroyn pod gives you.</h2>
+      <h2 className="section-title">See one of Dovroyn's AI pods.</h2>
       <p className="lede">
-        Every website, offer, launch, or campaign gets its own AI marketing pod. Here is a static
-        preview of what that workspace could look like.
+        This preview shows one dedicated Dovroyn AI pod after it has analysed a brand. Each pod has its own AI brain, brand memory, content calendar, platform strategy, ad view, files, and budget tracker.
       </p>
 
       <TesterPodDashboard />
