@@ -27,7 +27,7 @@ const ASSISTANT_QA = [
 const INTRO_MESSAGE = {
   id: 'intro',
   sender: 'assistant',
-  text: 'Hey! I’m Dovroyn — your AI social media manager. Tell me about your brand or ask me anything about content strategy, and I’ll show you what I can do.',
+  text: 'Hey! I’m Dovroyn — your AI marketing pod assistant. Tell me about your brand or ask me anything about campaign strategy, and I’ll show you what a pod can do.',
 };
 
 const TYPED_RESPONSE =
@@ -77,7 +77,7 @@ export default function AiPodAssistant() {
   return (
     <section className="ai-assistant-section">
       <p className="eyebrow">AI Assistant Preview</p>
-      <h2 className="section-title">Chat with your AI social media manager.</h2>
+      <h2 className="section-title">Chat with your AI marketing pod.</h2>
       <p className="lede ai-assistant-lede">
         Try a live-feeling preview of how Dovroyn answers content, platform, and growth questions.
       </p>
@@ -143,14 +143,14 @@ export default function AiPodAssistant() {
 
         <form className="ai-assistant-input-bar" onSubmit={handleSubmit}>
           <label className="sr-only" htmlFor="ai-assistant-input">
-            Ask Dovroyn anything about social media
+            Ask Dovroyn anything about your marketing pod
           </label>
           <input
             id="ai-assistant-input"
             type="text"
             value={draft}
             onChange={(event) => setDraft(event.target.value)}
-            placeholder="Ask Dovroyn anything about social media..."
+            placeholder="Ask Dovroyn anything about your marketing pod..."
             disabled={thinking}
           />
           <button type="submit" aria-label="Send message" disabled={thinking || !draft.trim()}>
