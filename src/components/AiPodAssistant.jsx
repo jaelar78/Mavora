@@ -5,33 +5,33 @@ const ASSISTANT_QA = [
   {
     question: 'I run a skincare brand — what platforms should I focus on?',
     answer:
-      'Start with Instagram for education and trust, TikTok for discovery, and Pinterest for evergreen product searches. Use email to convert warm interest into repeat buyers.',
+      'Focus on Instagram for visual proof and social trust, TikTok for discovery and education, Pinterest for evergreen search, and email for retention. A Dovroyn pod would turn your website into a platform plan, content pillars, hooks, calendar, and ad angles built around your audience and hero products.',
   },
   {
     question: 'Give me 3 Instagram caption ideas for a café',
     answer:
-      'Try: “Your 8am ritual, made golden.” “POV: the croissant cabinet called your name.” “Small table, strong coffee, perfect pause.” Pair each with a warm lifestyle photo.',
+      'Aim at locals deciding where to meet, work, or treat themselves. Try: “Your 8am ritual, poured properly.” “POV: the pastry cabinet won.” “Bring the friend who says they only want a coffee.” Pair each with a warm table shot, tag the neighbourhood, and let a Dovroyn pod build weekly angles around menu moments, foot traffic, and repeat visits.',
   },
   {
     question: 'What makes a good TikTok hook?',
     answer:
-      'A strong hook creates instant curiosity in the first two seconds. Lead with a problem, surprising result, bold claim, or “watch this before you…” angle.',
+      'A good TikTok hook makes the right viewer stop in two seconds: name the audience, show the payoff, then create tension. Use angles like “If you’re buying X, watch this first,” “3 mistakes keeping you from Y,” or “We tested this so you don’t have to.” Next action: film one hook as a talking-head, one as a demo, and one as text-on-screen; a Dovroyn pod would score which hook fits the platform and campaign goal.',
   },
   {
     question: 'How do I grow on LinkedIn as a consultant?',
     answer:
-      'Post practical insights twice a week, share client-style lessons without naming clients, and comment daily on your ideal buyers’ posts. Make your profile clearly say who you help.',
+      'Pick one buyer, one expensive problem, and one proof-led point of view. Post 3x weekly: a sharp lesson, a client-style teardown, and a practical framework your audience can save. Comment daily where decision-makers already gather, then send warm follow-ups tied to the topic. A Dovroyn pod would turn your offer into content pillars, hooks, proof points, and a weekly authority calendar.',
   },
 ];
 
 const INTRO_MESSAGE = {
   id: 'intro',
   sender: 'assistant',
-  text: 'Hey! I’m Dovroyn — your AI marketing pod assistant. Tell me about your brand or ask me anything about campaign strategy, and I’ll show you what a pod can do.',
+  text: 'Hey, I’m Dovroyn — your AI marketing pod. Ask about platforms, content, hooks, or growth and I’ll give you a focused next move.',
 };
 
 const TYPED_RESPONSE =
-  'Great question. In a live Dovroyn pod, I’d analyse your brand, audience, offer, platforms, and campaign goal before giving you a tailored content plan.';
+  'Strong starting point: define the audience, choose the platform where they already trust or discover brands, then build one clear content angle and next action. In a live Dovroyn pod, I’d use your website, offer, and campaign goal to create the exact channel mix, hooks, calendar, and ad angles.';
 
 export default function AiPodAssistant() {
   const [messages, setMessages] = useState([INTRO_MESSAGE]);
