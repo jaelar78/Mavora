@@ -1639,18 +1639,20 @@ select {
   }
 
   .landing-sections {
-    gap: 1.15rem;
+    gap: 1rem;
     max-width: 32rem;
   }
 
   .landing-section-item {
-    gap: 0.42rem;
+    gap: 0.38rem;
+    padding: 0 0.25rem;
   }
 
   .landing-section-number {
-    font-size: 0.78rem;
     gap: 0.45rem;
-    letter-spacing: 0.12em;
+    font-size: 0.78rem;
+    letter-spacing: 0.11em;
+    line-height: 1;
   }
 
   .landing-section-number::before,
@@ -1659,15 +1661,15 @@ select {
   }
 
   .landing-section-item h2 {
-    font-size: clamp(1.05rem, 5vw, 1.24rem);
-    line-height: 1.14;
-    max-width: 19rem;
+    max-width: 18rem;
+    font-size: clamp(1.04rem, 4.8vw, 1.22rem);
+    line-height: 1.12;
   }
 
   .landing-section-item p {
-    font-size: 0.82rem;
-    line-height: 1.48;
     max-width: 34ch;
+    font-size: 0.82rem;
+    line-height: 1.45;
   }
 
   .platforms-section {
@@ -1676,7 +1678,7 @@ select {
 
   .platforms-section .section-title {
     font-size: clamp(1.16rem, 5vw, 1.36rem);
-    line-height: 1.15;
+    line-height: 1.12;
   }
 
   .platforms-section .lede {
@@ -1688,6 +1690,7 @@ select {
   .platforms-legend {
     gap: 0.32rem 0.75rem;
     font-size: 0.62rem;
+    letter-spacing: 0.035em;
   }
 
   .platforms-grid {
@@ -1710,14 +1713,14 @@ select {
   }
 
   .platform-name {
-    font-size: 0.66rem;
+    font-size: 0.64rem;
     line-height: 1.15;
   }
 
   .platform-focus {
-    gap: 0.22rem;
+    gap: 0.2rem;
     font-size: 0.55rem;
-    line-height: 1.1;
+    line-height: 1.05;
   }
 
   .platform-tile .platform-dot {
