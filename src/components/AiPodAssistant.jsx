@@ -5,22 +5,22 @@ const ASSISTANT_QA = [
   {
     question: 'I run a skincare brand — what platforms should I focus on?',
     answer:
-      'Start with Instagram for education and trust, TikTok for discovery, and Pinterest for evergreen product searches. Use email to convert warm interest into repeat buyers.',
+      'Focus Instagram for visual proof and social trust, TikTok for discovery and education, Pinterest for evergreen search, and email for retention. Next: a Dovroyn pod would build your platform plan, content pillars, hooks, calendar, and ad angles from your brand website.',
   },
   {
     question: 'Give me 3 Instagram caption ideas for a café',
     answer:
-      'Try: “Your 8am ritual, made golden.” “POV: the croissant cabinet called your name.” “Small table, strong coffee, perfect pause.” Pair each with a warm lifestyle photo.',
+      'For locals and weekend browsers, sell the cafe moment: 1) "Your 8am reset: espresso, flaky layers, zero rush." 2) "POV: you found the table everyone asks about." 3) "Today\'s special: a quiet corner, a warm cup, and something buttery." Pair with a close-up plus a human moment; a Dovroyn pod would turn this into weekly pillars and Reels hooks.',
   },
   {
     question: 'What makes a good TikTok hook?',
     answer:
-      'A strong hook creates instant curiosity in the first two seconds. Lead with a problem, surprising result, bold claim, or “watch this before you…” angle.',
+      'A strong TikTok hook names the audience, teases a payoff, and earns the next 3 seconds. Use: "If you buy [product], watch this first," "3 mistakes costing [audience] [result]," or "We tested [claim] so you do not have to." Next: a Dovroyn pod maps hooks to your offer, proof points, and posting calendar.',
   },
   {
     question: 'How do I grow on LinkedIn as a consultant?',
     answer:
-      'Post practical insights twice a week, share client-style lessons without naming clients, and comment daily on your ideal buyers’ posts. Make your profile clearly say who you help.',
+      'Choose one buyer and one painful problem; LinkedIn rewards sharp positioning. Post diagnosis posts, teardown/proof posts, and founder POV, then comment on your buyers\' conversations before you publish. Next action: rewrite your headline around the outcome you create. A Dovroyn pod would turn your expertise into a weekly authority plan.',
   },
 ];
 
@@ -31,7 +31,7 @@ const INTRO_MESSAGE = {
 };
 
 const TYPED_RESPONSE =
-  'Great question. In a live Dovroyn pod, I’d analyse your brand, audience, offer, platforms, and campaign goal before giving you a tailored content plan.';
+  'Strong move: start with the audience, the platform where they already look for proof, one clear content angle, and the next conversion step. In a live Dovroyn pod, I would analyse your brand, offer, website, and campaign goal, then turn that into hooks, content pillars, platform priorities, and next actions.';
 
 export default function AiPodAssistant() {
   const [messages, setMessages] = useState([INTRO_MESSAGE]);
