@@ -1429,6 +1429,13 @@ select {
   }
 }
 
+/* Tablet: drop pod grid to 2 columns on narrower tablets */
+@media (max-width: 768px) {
+  .multipod-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
 @media (max-width: 900px) {
   .app-layout {
     grid-template-columns: 1fr;
@@ -1453,7 +1460,7 @@ select {
 
 @media (max-width: 640px) {
   .landing-shell {
-    width: min(1240px, calc(100% - 1.5rem));
+    width: min(1240px, calc(100% - 2rem));   /* 16px side margins */
     padding: 1.2rem 0 3.5rem;
     gap: 2.75rem;
   }
@@ -1490,37 +1497,80 @@ select {
     grid-template-columns: 1fr;
   }
 
+  /* ── Pod Ecosystem / Marketing Command Screen – mobile compact grid ── */
+  .multipod-preview {
+    min-width: 0;
+    overflow: hidden;
+  }
+
   .multipod-dashboard-frame {
-    border-radius: 20px;
+    border-radius: 16px;
+    width: 100%;
+  }
+
+  .multipod-dashboard-topbar {
+    padding: 0.65rem 0.75rem;
+  }
+
+  .multipod-dashboard-topbar strong {
+    font-size: 0.9rem;
   }
 
   .multipod-dashboard-body {
     grid-template-columns: 1fr;
-    padding: 0.65rem;
+    padding: 0.75rem;
+    min-width: 0;
+  }
+
+  .multipod-dashboard-footer {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.72rem;
   }
 
   .multipod-rail {
     display: none;
   }
 
+  /* 2-equal-column grid, always, on mobile */
   .multipod-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 0.5rem;
+    gap: 0.625rem;   /* 10px */
+    min-width: 0;
   }
 
   .multipod-card {
-    min-height: 136px;
-    padding: 0.62rem;
+    min-height: 0;
+    padding: 0.75rem;   /* 12px */
     border-radius: 14px;
+    gap: 0.38rem;
+  }
+
+  .multipod-name {
+    font-size: clamp(0.8rem, 4vw, 1rem);
+  }
+
+  .multipod-stage {
+    font-size: 0.73rem;
+  }
+
+  .multipod-pod-type {
+    font-size: 0.68rem;
+    padding: 0.14rem 0.38rem;
+  }
+
+  .multipod-platform-dot {
+    width: 1.7rem;
+    height: 1.7rem;
   }
 
   .multipod-indicators {
-    gap: 0.25rem;
+    gap: 0.22rem;
+    padding-top: 0.1rem;
   }
 
   .multipod-indicators span {
-    padding: 0.16rem 0.32rem;
-    font-size: 0.58rem;
+    padding: 0.15rem 0.3rem;
+    font-size: 0.68rem;
   }
 
   .dashboard-preview {
