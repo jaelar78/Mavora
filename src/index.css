@@ -487,7 +487,6 @@ h1 {
 }
 
 .multipod-window-dots,
-.multipod-menu-dots,
 .multipod-rail {
   display: flex;
   align-items: center;
@@ -498,7 +497,6 @@ h1 {
 }
 
 .multipod-window-dots span,
-.multipod-menu-dots i,
 .multipod-rail span {
   display: inline-block;
   border-radius: 999px;
@@ -515,7 +513,9 @@ h1 {
   grid-template-columns: 3rem minmax(0, 1fr);
   gap: clamp(0.7rem, 1.8vw, 1rem);
   padding: clamp(0.8rem, 2.2vw, 1.25rem);
-  background: linear-gradient(135deg, var(--panel), var(--card));
+  background:
+    radial-gradient(circle at 18% 8%, rgba(216, 184, 103, 0.13), transparent 26%),
+    linear-gradient(135deg, #fffdf9 0%, #ffffff 58%, #fffaf1 100%);
 }
 
 .multipod-rail {
@@ -524,7 +524,8 @@ h1 {
   padding: 0.75rem 0;
   border: 1px solid var(--gold-border);
   border-radius: 18px;
-  background: var(--panel-soft);
+  background: rgba(255, 255, 255, 0.82);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9);
 }
 
 .multipod-rail span {
@@ -545,16 +546,18 @@ h1 {
 .multipod-card {
   position: relative;
   display: grid;
-  gap: 0.48rem;
+  gap: 0.38rem;
   align-content: start;
   text-align: left;
   min-width: 0;
-  min-height: 148px;
-  padding: 0.78rem;
-  background: var(--panel);
-  border: 1px solid var(--gold-border);
-  border-radius: 16px;
-  box-shadow: 0 8px 18px var(--shadow-soft);
+  min-height: 168px;
+  padding: 0.72rem;
+  background: #ffffff;
+  border: 1px solid rgba(184, 138, 50, 0.32);
+  border-radius: 17px;
+  box-shadow:
+    0 16px 30px rgba(7, 22, 45, 0.12),
+    0 1px 0 rgba(255, 255, 255, 0.92) inset;
   overflow: hidden;
   transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
 }
@@ -565,40 +568,83 @@ h1 {
   top: 0;
   left: 0;
   right: 0;
-  height: 3px;
-  background: linear-gradient(90deg, var(--gold), var(--gold-soft));
-  opacity: 0.7;
+  height: 2px;
+  background: linear-gradient(90deg, rgba(184, 138, 50, 0.95), rgba(216, 184, 103, 0.62), transparent);
+  opacity: 0.9;
 }
 
 .multipod-card:hover {
   transform: translateY(-2px);
   border-color: var(--gold);
-  box-shadow: 0 12px 26px var(--shadow-soft);
+  box-shadow:
+    0 20px 36px rgba(7, 22, 45, 0.15),
+    0 1px 0 rgba(255, 255, 255, 0.95) inset;
 }
 
-.multipod-card-top {
+.multipod-card-chrome {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 0.6rem;
+  gap: 0.45rem;
+  min-width: 0;
+  justify-self: stretch;
+  margin: -0.72rem -0.72rem 0;
+  padding: 0.38rem 0.56rem 0.34rem;
+  background: linear-gradient(180deg, #fffdfa, #fff7ea);
+  border-bottom: 1px solid rgba(184, 138, 50, 0.18);
 }
 
-.multipod-orb {
-  width: 0.62rem;
-  height: 0.62rem;
+.multipod-card-dots {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.17rem;
+  flex: 0 0 auto;
+}
+
+.multipod-card-dots i {
+  width: 0.28rem;
+  height: 0.28rem;
   border-radius: 999px;
-  background: var(--gold);
-  box-shadow: 0 0 0 4px rgba(216, 184, 103, 0.22);
+  background: rgba(184, 138, 50, 0.44);
 }
 
-.multipod-menu-dots {
-  gap: 0.18rem;
+.multipod-card-dots i:nth-child(2) {
+  background: rgba(216, 184, 103, 0.62);
 }
 
-.multipod-menu-dots i {
-  width: 0.24rem;
-  height: 0.24rem;
-  opacity: 0.75;
+.multipod-card-dots i:nth-child(3) {
+  background: rgba(46, 125, 79, 0.52);
+}
+
+.multipod-card-url {
+  min-width: 0;
+  color: rgba(7, 22, 45, 0.46);
+  font-size: 0.5rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.multipod-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.55rem;
+  min-width: 0;
+  padding-top: 0.08rem;
+}
+
+.multipod-window-label {
+  display: block;
+  color: var(--gold);
+  font-size: 0.54rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  line-height: 1.2;
+  text-transform: uppercase;
 }
 
 .multipod-name {
@@ -606,6 +652,71 @@ h1 {
   font-size: clamp(0.9rem, 1.8vw, 1.02rem);
   color: var(--navy);
   line-height: 1.15;
+  min-width: 0;
+}
+
+.multipod-avatar {
+  display: inline-grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: 2rem;
+  height: 2rem;
+  border: 2px solid #ffffff;
+  border-radius: 999px;
+  color: #ffffff;
+  font-size: 0.58rem;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  box-shadow:
+    0 8px 16px rgba(7, 22, 45, 0.16),
+    0 0 0 1px rgba(184, 138, 50, 0.26);
+}
+
+.multipod-avatar-outback {
+  background: linear-gradient(135deg, #915c28, #d8b867 52%, #5f381d);
+}
+
+.multipod-avatar-magnum {
+  background: linear-gradient(135deg, #111827, #b88a32 54%, #41172c);
+}
+
+.multipod-avatar-luxara {
+  background: linear-gradient(135deg, #f6d4df, #b88a32 50%, #7d4156);
+}
+
+.multipod-avatar-cheeky {
+  background: linear-gradient(135deg, #f97316, #ef476f 50%, #7c2d12);
+}
+
+.multipod-avatar-cleaning {
+  background: linear-gradient(135deg, #0f766e, #7dd3fc 50%, #164e63);
+}
+
+.multipod-card-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.28rem;
+  width: fit-content;
+  max-width: 100%;
+  color: rgba(7, 22, 45, 0.74);
+  background: rgba(46, 125, 79, 0.08);
+  border: 1px solid rgba(46, 125, 79, 0.18);
+  border-radius: 999px;
+  padding: 0.2rem 0.45rem;
+  font-size: 0.62rem;
+  font-weight: 750;
+  line-height: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.multipod-card-status span {
+  width: 0.34rem;
+  height: 0.34rem;
+  border-radius: 999px;
+  background: var(--success);
+  box-shadow: 0 0 0 3px rgba(46, 125, 79, 0.14);
 }
 
 .multipod-pod-type {
@@ -631,9 +742,23 @@ h1 {
   line-height: 1.35;
 }
 
+.multipod-connected-row {
+  display: grid;
+  gap: 0.22rem;
+}
+
+.multipod-connected-row > span {
+  color: rgba(7, 22, 45, 0.48);
+  font-size: 0.52rem;
+  font-weight: 800;
+  letter-spacing: 0.09em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
 .multipod-platforms {
   display: flex;
-  gap: 0.25rem;
+  gap: 0.22rem;
   flex-wrap: wrap;
 }
 
@@ -641,12 +766,53 @@ h1 {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 1.35rem;
-  height: 1.35rem;
+  width: 1.32rem;
+  height: 1.32rem;
   border-radius: 999px;
-  background: var(--card);
-  border: 1px solid var(--gold-border);
+  background: #ffffff;
+  border: 1px solid rgba(184, 138, 50, 0.2);
   color: var(--gold);
+  box-shadow: 0 4px 9px rgba(7, 22, 45, 0.08);
+}
+
+.multipod-platform-instagram {
+  color: #e4405f;
+}
+
+.multipod-platform-tiktok {
+  color: #111827;
+}
+
+.multipod-platform-pinterest {
+  color: #bd081c;
+}
+
+.multipod-platform-youtube {
+  color: #ff0000;
+}
+
+.multipod-platform-linkedin {
+  color: #0a66c2;
+}
+
+.multipod-platform-google {
+  color: #4285f4;
+}
+
+.multipod-platform-email {
+  color: #b88a32;
+}
+
+.multipod-platform-x {
+  color: #111827;
+}
+
+.multipod-platform-facebook {
+  color: #1877f2;
+}
+
+.multipod-platform-search {
+  color: #2e7d4f;
 }
 
 .multipod-indicators {
@@ -661,12 +827,13 @@ h1 {
   display: inline-flex;
   align-items: center;
   gap: 0.22rem;
-  color: var(--navy-65);
-  background: var(--card);
-  border: 1px solid var(--gold-border);
+  color: rgba(7, 22, 45, 0.68);
+  background: #fffaf1;
+  border: 1px solid rgba(184, 138, 50, 0.2);
   border-radius: 999px;
   padding: 0.18rem 0.42rem;
   font-size: 0.64rem;
+  font-weight: 700;
   line-height: 1;
   white-space: nowrap;
 }
@@ -691,14 +858,20 @@ h1 {
 
 .multipod-card-new {
   justify-items: center;
-  align-content: center;
+  align-content: start;
   text-align: center;
   gap: 0.42rem;
-  background: var(--panel-soft);
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.96), rgba(255, 250, 241, 0.92)),
+    #ffffff;
   border-style: dashed;
   cursor: pointer;
   font: inherit;
   color: inherit;
+}
+
+.multipod-card-new .multipod-card-chrome {
+  margin-bottom: 0.18rem;
 }
 
 .multipod-card-new::before {
@@ -712,9 +885,10 @@ h1 {
   width: 2.1rem;
   height: 2.1rem;
   border-radius: 999px;
-  background: var(--card);
+  background: #ffffff;
   border: 1px solid var(--gold-border);
   color: var(--gold);
+  box-shadow: 0 8px 16px rgba(7, 22, 45, 0.08);
 }
 
 /* Landing Sections */
@@ -1512,6 +1686,47 @@ select {
     min-height: 136px;
     padding: 0.62rem;
     border-radius: 14px;
+  }
+
+  .multipod-card-chrome {
+    margin: -0.62rem -0.62rem 0;
+    padding: 0.32rem 0.42rem 0.28rem;
+  }
+
+  .multipod-card-url {
+    font-size: 0.46rem;
+  }
+
+  .multipod-card-header {
+    gap: 0.35rem;
+  }
+
+  .multipod-window-label,
+  .multipod-connected-row > span {
+    font-size: 0.47rem;
+  }
+
+  .multipod-avatar {
+    width: 1.68rem;
+    height: 1.68rem;
+    font-size: 0.5rem;
+    border-width: 1.5px;
+  }
+
+  .multipod-card-status {
+    max-width: 100%;
+    padding: 0.18rem 0.34rem;
+    font-size: 0.54rem;
+  }
+
+  .multipod-platform-dot {
+    width: 1.16rem;
+    height: 1.16rem;
+  }
+
+  .multipod-pod-type {
+    padding: 0.16rem 0.36rem;
+    font-size: 0.54rem;
   }
 
   .multipod-indicators {
