@@ -109,23 +109,32 @@ const MULTI_POD_CARDS = [
   {
     name: 'Gidgee & Co',
     type: 'Brand Pod',
-    description: 'Outback goods story',
+    status: 'AI Brain Active',
+    statusColor: 'green',
+    avatar: 'G',
+    avatarBg: '#2E7D4F',
     contentCount: '18 ideas',
     calendarCount: '12 posts',
-    platforms: [FaInstagram, FaTiktok, FaYoutube],
+    platforms: [FaInstagram, FaTiktok, FaPinterestP, FaYoutube],
   },
   {
     name: 'House of MGNM',
     type: 'Campaign Pod',
-    description: 'Luxury drop campaign',
+    status: 'Launch Campaign Ready',
+    statusColor: 'gold',
+    avatar: 'M',
+    avatarBg: '#8B5E3C',
     contentCount: '9 angles',
     calendarCount: '6 dates',
     platforms: [FaInstagram, FaPinterestP, FaLinkedinIn],
   },
   {
     name: 'Luxara',
-    type: 'Launch Pod',
-    description: 'Skincare launch sequence',
+    type: 'Jewellery Pod',
+    status: 'Collection Plan Ready',
+    statusColor: 'gold',
+    avatar: 'L',
+    avatarBg: '#B88A32',
     contentCount: '14 assets',
     calendarCount: '7 days',
     platforms: [FaInstagram, SiGoogleads, Mail],
@@ -133,15 +142,21 @@ const MULTI_POD_CARDS = [
   {
     name: 'Cheeky Drawers',
     type: 'Social Pod',
-    description: 'Playful social engine',
+    status: 'Social Hooks Ready',
+    statusColor: 'green',
+    avatar: 'C',
+    avatarBg: '#A14235',
     contentCount: '21 hooks',
     calendarCount: '15 posts',
     platforms: [FaTiktok, FaInstagram, FaXTwitter],
   },
   {
     name: 'The Cleaning Hub',
-    type: 'Product Pod',
-    description: 'Local offer growth',
+    type: 'Business Pod',
+    status: 'Local Growth Ready',
+    statusColor: 'blue',
+    avatar: 'T',
+    avatarBg: '#1B4372',
     contentCount: '11 ideas',
     calendarCount: '8 slots',
     platforms: [FaFacebookF, SiGoogleads, SiNextdoor],
@@ -886,27 +901,29 @@ function LandingPage({ session }) {
             <div className="multipod-grid">
               {MULTI_POD_CARDS.map((pod) => (
                 <article key={pod.name} className="multipod-card">
-                  <div className="multipod-card-top">
-                    <span className="multipod-orb" aria-hidden="true" />
-                    <span className="multipod-menu-dots" aria-hidden="true">
-                      <i />
-                      <i />
-                      <i />
+                  <div className="multipod-card-topbar">
+                    <h3 className="multipod-name">{pod.name}</h3>
+                    <span
+                      className="multipod-card-avatar"
+                      style={{ background: pod.avatarBg }}
+                      aria-hidden="true"
+                    >
+                      {pod.avatar}
                     </span>
                   </div>
-                  <div>
-                    <h3 className="multipod-name">{pod.name}</h3>
-                    <p className="multipod-stage">{pod.description}</p>
+                  <div className="multipod-status">
+                    <span className={`multipod-status-dot multipod-status-dot--${pod.statusColor}`} aria-hidden="true" />
+                    {pod.status}
                   </div>
-                  <div className="multipod-pod-type">{pod.type}</div>
-                  <div className="multipod-platforms" aria-hidden="true">
+                  <div className="multipod-platforms" aria-label={`${pod.name} connected platforms`}>
                     {pod.platforms.map((PodIcon) => (
-                      <span key={PodIcon.displayName || PodIcon.name} className="multipod-platform-dot"><PodIcon size={11} strokeWidth={1.75} /></span>
+                      <span key={PodIcon.displayName || PodIcon.name} className="multipod-platform-dot"><PodIcon size={10} /></span>
                     ))}
                   </div>
-                  <div className="multipod-indicators" aria-label={`${pod.name} content and calendar indicators`}>
-                    <span><PenTool size={12} strokeWidth={1.75} />{pod.contentCount}</span>
-                    <span><Calendar size={12} strokeWidth={1.75} />{pod.calendarCount}</span>
+                  <div className="multipod-pod-type">{pod.type}</div>
+                  <div className="multipod-indicators" aria-label={`${pod.name} stats`}>
+                    <span><PenTool size={11} strokeWidth={1.75} />{pod.contentCount}</span>
+                    <span><Calendar size={11} strokeWidth={1.75} />{pod.calendarCount}</span>
                   </div>
                 </article>
               ))}
