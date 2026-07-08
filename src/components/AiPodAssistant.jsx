@@ -5,22 +5,22 @@ const ASSISTANT_QA = [
   {
     question: 'I run a skincare brand — what platforms should I focus on?',
     answer:
-      'Start with Instagram for education and trust, TikTok for discovery, and Pinterest for evergreen product searches. Use email to convert warm interest into repeat buyers.',
+      'For skincare, four channels do the heavy lifting. Instagram is your proof engine — before/afters, texture shots, and reviews build social trust. TikTok drives discovery: ingredient education and routine content reach buyers who’ve never heard of you. Pinterest captures evergreen search like “routine for oily skin,” so pins keep converting for months. Email is your retention layer — replenishment reminders and routine tips turn one order into a habit. Your next move: pick one hero product and build a two-week content sprint around it. A Dovroyn pod would do this from your website alone — full platform plan, content pillars, hooks, posting calendar, and ad angles, ready to run.',
   },
   {
     question: 'Give me 3 Instagram caption ideas for a café',
     answer:
-      'Try: “Your 8am ritual, made golden.” “POV: the croissant cabinet called your name.” “Small table, strong coffee, perfect pause.” Pair each with a warm lifestyle photo.',
+      'Café captions work when they sell the ritual, not the menu. Three angles: 1) Identity — “You’re not late. You’re exactly one flat white away from ready.” 2) Sensory POV — “POV: the croissant cabinet made eye contact first.” 3) Local belonging — “The corner table knows your order. So do we.” Post the identity one first with a warm morning-rush shot — those pull the strongest saves and shares for local spots. A Dovroyn pod would generate a month of these in your café’s voice, matched to photo prompts and best posting times.',
   },
   {
     question: 'What makes a good TikTok hook?',
     answer:
-      'A strong hook creates instant curiosity in the first two seconds. Lead with a problem, surprising result, bold claim, or “watch this before you…” angle.',
+      'A good hook earns the next two seconds by opening a loop the viewer needs closed. Four formats that consistently hold attention: call out the audience (“If you run a service business, stop scrolling”), challenge a belief (“You’re posting at the wrong time — here’s proof”), tease the payoff (“This one change doubled our replies”), and stakes-first (“I spent $500 testing this so you don’t have to”). Say it in the first line of speech AND the on-screen text — most viewers watch muted. Next step: write five hooks per video idea and film the best two. A Dovroyn pod writes hooks in your brand voice for every script it plans, so you never start from a blank page.',
   },
   {
     question: 'How do I grow on LinkedIn as a consultant?',
     answer:
-      'Post practical insights twice a week, share client-style lessons without naming clients, and comment daily on your ideal buyers’ posts. Make your profile clearly say who you help.',
+      'LinkedIn rewards consultants who post like practitioners, not marketers. Three moves: fix your headline to name who you help and the outcome (“I help B2B SaaS teams cut churn” beats “Consultant”), post twice a week alternating a client-style lesson with a contrarian take on your industry’s default advice, and spend 15 minutes a day leaving substantive comments on posts your ideal buyers already read — that’s where the warm leads start. Your next action: draft one “here’s what a client got wrong and how we fixed it” post today. A Dovroyn pod would map your positioning, build the content cadence, and draft posts in your voice — so the pipeline compounds while you deliver client work.',
   },
 ];
 
@@ -31,7 +31,7 @@ const INTRO_MESSAGE = {
 };
 
 const TYPED_RESPONSE =
-  'Great question. In a live Dovroyn pod, I’d analyse your brand, audience, offer, platforms, and campaign goal before giving you a tailored content plan.';
+  'Good question — and the honest answer starts with your audience, not the tactic. The playbook: define exactly who you’re for, pick the one or two platforms where they already spend attention, choose a content angle you can own (proof, education, or point of view), and commit to a consistent cadence before you spend a dollar on ads. In a live pod, Dovroyn reads your website and builds that for you — audience profile, platform plan, content pillars, hooks, calendar, and ad angles — in minutes, not weeks. This preview can’t analyse your brand yet, but that’s exactly what the full pod does.';
 
 export default function AiPodAssistant() {
   const [messages, setMessages] = useState([INTRO_MESSAGE]);
