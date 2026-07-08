@@ -108,8 +108,8 @@ const DASHBOARD_PREVIEW_CARDS = [
 
 const MULTI_POD_CARDS = [
   {
-    name: 'Gidgee & Co',
-    slug: 'gidgee-and-co',
+    name: 'Summit Trail Co',
+    slug: 'summit-trail-co',
     type: 'Brand Pod',
     status: 'AI Brain Active',
     contentCount: '18 ideas',
@@ -795,6 +795,9 @@ function App() {
         <Route path="/signup" element={<AuthPage session={session} defaultMode="signup" />} />
         <Route path="/auth" element={<AuthPage session={session} defaultMode="login" />} />
         <Route path="/pricing" element={<PricingPage />} />
+        <Route path="/privacy" element={<PrivacyPage />} />
+        <Route path="/terms" element={<TermsPage />} />
+        <Route path="/contact" element={<ContactPage />} />
         <Route path="/waitlist" element={<WaitlistPage />} />
         <Route path="/demo-pod" element={<DemoPodPage />} />
 
@@ -1295,6 +1298,139 @@ function PricingPage() {
 
       <Footer variant="full" />
     </main>
+  );
+}
+
+function LegalPageShell({ eyebrow, title, description, children }) {
+  return (
+    <main className="landing-shell">
+      <Header />
+      <section className="hero-block panel">
+        <p className="eyebrow">{eyebrow}</p>
+        <h1>{title}</h1>
+        <p className="lede">{description}</p>
+      </section>
+      <section className="waitlist-section panel">
+        {children}
+      </section>
+      <Footer variant="full" />
+    </main>
+  );
+}
+
+function PrivacyPage() {
+  return (
+    <LegalPageShell
+      eyebrow="Privacy"
+      title="Privacy policy"
+      description="How Dovroyn handles information submitted through the website and product."
+    >
+      <article className="stack" style={{ gap: '0.9rem' }}>
+        <h2 className="waitlist-heading" style={{ marginBottom: '0.4rem' }}>What we collect</h2>
+        <p className="subtle">We collect the details you voluntarily provide (such as email addresses submitted through waitlist or contact forms) and essential usage data needed to operate the site.</p>
+        <h3>How we use it</h3>
+        <p className="subtle">Information is used to provide support, respond to enquiries, improve the product, and share product updates when requested.</p>
+        <h3>Contact about privacy</h3>
+        <p className="subtle">For privacy enquiries, email <a href="mailto:support@dovroyn.com">support@dovroyn.com</a>.</p>
+      </article>
+    </LegalPageShell>
+  );
+}
+
+function TermsPage() {
+  return (
+    <LegalPageShell
+      eyebrow="Terms"
+      title="Terms of use"
+      description="Website and product access is provided subject to these baseline terms."
+    >
+      <article className="stack" style={{ gap: '0.9rem' }}>
+        <h2 className="waitlist-heading" style={{ marginBottom: '0.4rem' }}>Use of service</h2>
+        <p className="subtle">You agree to use Dovroyn lawfully and to provide accurate details when creating an account or submitting forms.</p>
+        <h3>Accounts and billing</h3>
+        <p className="subtle">Paid plans are processed by Stripe checkout links. Subscription and renewal terms shown at checkout apply.</p>
+        <h3>Support</h3>
+        <p className="subtle">Questions about these terms can be sent to <a href="mailto:support@dovroyn.com">support@dovroyn.com</a>.</p>
+      </article>
+    </LegalPageShell>
+  );
+}
+
+function ContactPage() {
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [message, setMessage] = useState('');
+  const [status, setStatus] = useState('idle');
+  const [errorMsg, setErrorMsg] = useState('');
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    if (!email.trim()) return;
+    setStatus('loading');
+    setErrorMsg('');
+
+    try {
+      if (supabaseConfigured && supabase) {
+        const sourceMeta = `contact-page:${name.trim().slice(0, 40) || 'anonymous'}:${message.trim().slice(0, 120)}`;
+        const { error } = await supabase.from('waitlist').insert({ email: email.trim(), source: sourceMeta });
+        if (error) throw new Error(error.message);
+      }
+      setStatus('success');
+      setName('');
+      setEmail('');
+      setMessage('');
+    } catch (error) {
+      setStatus('error');
+      setErrorMsg(error.message || 'Unable to send your enquiry right now. Please try again.');
+    }
+  };
+
+  return (
+    <LegalPageShell
+      eyebrow="Contact"
+      title="Talk to the Dovroyn team"
+      description="Send your enquiry and we will follow up at your email address."
+    >
+      {status === 'success' ? (
+        <div className="waitlist-confirmation">
+          <h2 className="waitlist-heading">Thanks, we received your enquiry.</h2>
+          <p className="lede">Our team will respond to <strong>{email || 'your email address'}</strong> as soon as possible.</p>
+        </div>
+      ) : (
+        <>
+          <form className="waitlist-form" onSubmit={handleSubmit}>
+            <input
+              type="text"
+              placeholder="Your name"
+              value={name}
+              onChange={(event) => setName(event.target.value)}
+              required
+              disabled={status === 'loading'}
+            />
+            <input
+              type="email"
+              placeholder="Your email"
+              value={email}
+              onChange={(event) => setEmail(event.target.value)}
+              required
+              disabled={status === 'loading'}
+            />
+            <input
+              type="text"
+              placeholder="How can we help?"
+              value={message}
+              onChange={(event) => setMessage(event.target.value)}
+              required
+              disabled={status === 'loading'}
+            />
+            <button className="button button-primary" type="submit" disabled={status === 'loading'}>
+              {status === 'loading' ? 'Sending...' : 'Send Enquiry'}
+            </button>
+          </form>
+          {status === 'error' && <p className="form-error">{errorMsg}</p>}
+        </>
+      )}
+    </LegalPageShell>
   );
 }
 

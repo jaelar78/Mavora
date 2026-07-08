@@ -124,7 +124,7 @@ function TesterPodHeader() {
           <Leaf size={24} strokeWidth={1.85} />
         </span>
         <div>
-          <p className="tester-pod-title">Gidgee &amp; Co</p>
+          <p className="tester-pod-title">Summit Trail Co</p>
           <p className="tester-pod-subtitle">Australian Outdoor Lifestyle</p>
         </div>
       </div>
@@ -146,7 +146,7 @@ function TesterPodChrome({ children }) {
 
 function TesterPodTabs() {
   return (
-    <div className="tester-pod-tabs" aria-label="Gidgee & Co pod sections">
+    <div className="tester-pod-tabs" aria-label="Summit Trail Co pod sections">
       {DASHBOARD_NAV_ITEMS.map((item, index) => (
         <span key={item} className={`tester-pod-tab ${index === 0 ? 'active' : ''}`}>
           {item}
@@ -207,14 +207,14 @@ function TesterPodMobileValues({ row }) {
 
 function TesterPodMobileDashboard() {
   return (
-    <div className="tester-pod-mobile-card" aria-label="Gidgee & Co compact mobile pod preview">
+    <div className="tester-pod-mobile-card" aria-label="Summit Trail Co compact mobile pod preview">
       <div className="tester-pod-mobile-header">
         <div className="tester-pod-mobile-brand">
           <span className="tester-pod-mobile-avatar" aria-hidden="true">
             <Leaf size={22} strokeWidth={1.85} />
           </span>
           <div>
-            <p className="tester-pod-mobile-title">Gidgee &amp; Co</p>
+            <p className="tester-pod-mobile-title">Summit Trail Co</p>
             <p className="tester-pod-mobile-subtitle">Australian Outdoor Lifestyle</p>
           </div>
         </div>
@@ -224,7 +224,7 @@ function TesterPodMobileDashboard() {
         </div>
       </div>
 
-      <div className="tester-pod-mobile-tabs" aria-label="Gidgee & Co pod sections">
+      <div className="tester-pod-mobile-tabs" aria-label="Summit Trail Co pod sections">
         {DASHBOARD_NAV_ITEMS.map((item, index) => (
           <span key={item} className={`tester-pod-mobile-tab ${index === 0 ? 'active' : ''}`}>
             {item}
