@@ -1730,7 +1730,6 @@ select {
     line-height: 1.35;
     max-width: 34ch;
   }
-
   .sidebar nav {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
