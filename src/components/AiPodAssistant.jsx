@@ -5,33 +5,49 @@ const ASSISTANT_QA = [
   {
     question: 'I run a skincare brand — what platforms should I focus on?',
     answer:
-      'Start with Instagram for education and trust, TikTok for discovery, and Pinterest for evergreen product searches. Use email to convert warm interest into repeat buyers.',
+      'For skincare buyers who need proof, routine guidance, and ingredient trust, prioritize Instagram for visual proof and social trust, TikTok for discovery and education, Pinterest for evergreen search, and email for retention. Lead with texture shots, before-and-afters, routine breakdowns, and myth-busting content. A Dovroyn pod would turn your website into the platform plan, content pillars, hooks, calendar, and ad angles.',
+    matchers: ['skincare', 'platform', 'platforms', 'pinterest', 'email'],
   },
   {
     question: 'Give me 3 Instagram caption ideas for a café',
     answer:
-      'Try: “Your 8am ritual, made golden.” “POV: the croissant cabinet called your name.” “Small table, strong coffee, perfect pause.” Pair each with a warm lifestyle photo.',
+      'Try: 1) "Your 8am reset starts here." 2) "Flaky croissant, serious coffee, no bad mornings." 3) "Meet me where the espresso hits and the corner table feels earned." These work best for locals, commuters, and work-from-cafe regulars, paired with steam shots, pastry pulls, or a cozy table scene. A Dovroyn pod would turn your menu and audience into weekly caption banks, promos, and repeatable content angles.',
+    matchers: ['caption', 'captions', 'cafe', 'café', 'coffee'],
   },
   {
     question: 'What makes a good TikTok hook?',
     answer:
-      'A strong hook creates instant curiosity in the first two seconds. Lead with a problem, surprising result, bold claim, or “watch this before you…” angle.',
+      'A good TikTok hook stops the scroll in two seconds and promises a payoff your audience cares about. Start with one of these angles: "3 mistakes brands make with...", "I tested this so you do not have to", "Before you buy this, watch this", or "How we got this result without...". Pick one buyer problem, write 10 hook variations around it, and let a Dovroyn pod turn the winners into a repeatable content system.',
+    matchers: ['tiktok', 'hook', 'hooks'],
   },
   {
     question: 'How do I grow on LinkedIn as a consultant?',
     answer:
-      'Post practical insights twice a week, share client-style lessons without naming clients, and comment daily on your ideal buyers’ posts. Make your profile clearly say who you help.',
+      'On LinkedIn, consultants grow by owning one buyer problem, not by posting generic motivation. Pick one audience like founders, CMOs, or ops leads, post three times a week using teardown, opinion, and mini case-study formats, and spend 20 minutes a day commenting where those buyers already pay attention. A Dovroyn pod would sharpen your positioning, post angles, hooks, and monthly content plan.',
+    matchers: ['linkedin', 'consultant'],
   },
 ];
 
 const INTRO_MESSAGE = {
   id: 'intro',
   sender: 'assistant',
-  text: 'Hey! I’m Dovroyn — your AI marketing pod assistant. Tell me about your brand or ask me anything about campaign strategy, and I’ll show you what a pod can do.',
+  text: 'Hey! I’m Dovroyn — your AI marketing pod preview. Ask about channels, content, hooks, or growth and I’ll give you a direct answer plus what a pod would build next.',
 };
 
 const TYPED_RESPONSE =
-  'Great question. In a live Dovroyn pod, I’d analyse your brand, audience, offer, platforms, and campaign goal before giving you a tailored content plan.';
+  'Give me your brand, audience, offer, and growth goal. I’ll point to the right channels, the content angle that fits, and the next move to make. A live Dovroyn pod then turns that into a tailored platform plan, hooks, calendar, and campaign assets from your site.';
+
+const normalizePreviewText = (value) => value.toLowerCase().normalize('NFD').replace(/\p{Diacritic}/gu, '');
+
+const resolvePreviewAnswer = (question) => {
+  const normalizedQuestion = normalizePreviewText(question);
+
+  const matchedQa = ASSISTANT_QA.find((qa) =>
+    qa.matchers.some((matcher) => normalizedQuestion.includes(normalizePreviewText(matcher)))
+  );
+
+  return matchedQa?.answer ?? TYPED_RESPONSE;
+};
 
 export default function AiPodAssistant() {
   const [messages, setMessages] = useState([INTRO_MESSAGE]);
@@ -71,7 +87,7 @@ export default function AiPodAssistant() {
     const question = draft.trim();
     if (!question) return;
     setDraft('');
-    queuePreviewReply(question, TYPED_RESPONSE, null);
+    queuePreviewReply(question, resolvePreviewAnswer(question), null);
   };
 
   return (
