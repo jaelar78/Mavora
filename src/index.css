@@ -1453,7 +1453,7 @@ select {
 
 @media (max-width: 640px) {
   .landing-shell {
-    width: min(1240px, calc(100% - 1.5rem));
+    width: min(1240px, calc(100% - 2rem));
     padding: 1.2rem 0 3.5rem;
     gap: 2.75rem;
   }
@@ -1490,37 +1490,78 @@ select {
     grid-template-columns: 1fr;
   }
 
+  /* ── Pod Ecosystem: mobile (≤640 px) ── */
   .multipod-dashboard-frame {
-    border-radius: 20px;
+    border-radius: 16px;
+  }
+
+  .multipod-dashboard-topbar,
+  .multipod-dashboard-footer {
+    padding: 0.6rem 0.75rem;
+    gap: 0.5rem;
+  }
+
+  .multipod-dashboard-topbar strong {
+    font-size: 0.9rem;
   }
 
   .multipod-dashboard-body {
     grid-template-columns: 1fr;
-    padding: 0.65rem;
+    padding: 0.75rem;
+    gap: 0;
   }
 
   .multipod-rail {
     display: none;
   }
 
+  /* Always 2 equal columns — no horizontal overflow */
   .multipod-grid {
+    display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 0.5rem;
+    gap: 0.625rem; /* 10 px */
+    min-width: 0;
   }
 
   .multipod-card {
-    min-height: 136px;
-    padding: 0.62rem;
+    min-height: unset;
+    padding: 0.75rem;
     border-radius: 14px;
+    gap: 0.32rem;
+  }
+
+  .multipod-name {
+    font-size: 0.85rem;
+  }
+
+  .multipod-pod-type {
+    font-size: 0.7rem;
+    padding: 0.15rem 0.4rem;
+    letter-spacing: 0.06em;
+  }
+
+  .multipod-stage {
+    font-size: 0.72rem;
+  }
+
+  .multipod-platform-dot {
+    width: 1.65rem;
+    height: 1.65rem;
   }
 
   .multipod-indicators {
-    gap: 0.25rem;
+    gap: 0.22rem;
+    padding-top: 0.1rem;
   }
 
   .multipod-indicators span {
-    padding: 0.16rem 0.32rem;
-    font-size: 0.58rem;
+    padding: 0.15rem 0.35rem;
+    font-size: 0.68rem;
+  }
+
+  .multipod-new-icon {
+    width: 1.75rem;
+    height: 1.75rem;
   }
 
   .dashboard-preview {
