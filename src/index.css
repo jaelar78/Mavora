@@ -451,10 +451,10 @@ h1 {
   width: min(100%, 920px);
   margin: 0.9rem auto 0;
   text-align: left;
-  background: var(--panel);
+  background: #FFFFFF;
   border: 1px solid var(--gold-border);
   border-radius: 28px;
-  box-shadow: 0 20px 50px var(--shadow-soft);
+  box-shadow: 0 24px 58px rgba(7, 22, 45, 0.16);
   overflow: hidden;
 }
 
@@ -515,7 +515,9 @@ h1 {
   grid-template-columns: 3rem minmax(0, 1fr);
   gap: clamp(0.7rem, 1.8vw, 1rem);
   padding: clamp(0.8rem, 2.2vw, 1.25rem);
-  background: linear-gradient(135deg, var(--panel), var(--card));
+  background:
+    radial-gradient(ellipse 42% 34% at 96% 0%, rgba(216, 184, 103, 0.12), transparent 70%),
+    linear-gradient(180deg, #FFFFFF 0%, #FDFBF6 100%);
 }
 
 .multipod-rail {
@@ -545,16 +547,18 @@ h1 {
 .multipod-card {
   position: relative;
   display: grid;
-  gap: 0.48rem;
+  gap: 0.42rem;
   align-content: start;
   text-align: left;
   min-width: 0;
-  min-height: 148px;
-  padding: 0.78rem;
-  background: var(--panel);
-  border: 1px solid var(--gold-border);
+  min-height: 170px;
+  padding: 0.58rem 0.62rem 0.64rem;
+  background: #FFFFFF;
+  border: 1px solid rgba(184, 138, 50, 0.32);
   border-radius: 16px;
-  box-shadow: 0 8px 18px var(--shadow-soft);
+  box-shadow:
+    0 12px 24px rgba(7, 22, 45, 0.09),
+    0 1px 0 rgba(255, 255, 255, 0.9) inset;
   overflow: hidden;
   transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
 }
@@ -565,47 +569,70 @@ h1 {
   top: 0;
   left: 0;
   right: 0;
-  height: 3px;
+  height: 2px;
   background: linear-gradient(90deg, var(--gold), var(--gold-soft));
-  opacity: 0.7;
+  opacity: 0.62;
 }
 
 .multipod-card:hover {
   transform: translateY(-2px);
   border-color: var(--gold);
-  box-shadow: 0 12px 26px var(--shadow-soft);
+  box-shadow: 0 16px 28px rgba(7, 22, 45, 0.14);
+}
+
+.multipod-card-chrome {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+  width: fit-content;
+  padding: 0.08rem 0.14rem;
+  border-radius: 999px;
+  border: 1px solid rgba(184, 138, 50, 0.25);
+  background: #F9F6EF;
+}
+
+.multipod-card-chrome span {
+  width: 0.23rem;
+  height: 0.23rem;
+  border-radius: 999px;
+  background: rgba(184, 138, 50, 0.65);
 }
 
 .multipod-card-top {
   display: flex;
-  align-items: center;
+  align-items: start;
   justify-content: space-between;
-  gap: 0.6rem;
-}
-
-.multipod-orb {
-  width: 0.62rem;
-  height: 0.62rem;
-  border-radius: 999px;
-  background: var(--gold);
-  box-shadow: 0 0 0 4px rgba(216, 184, 103, 0.22);
-}
-
-.multipod-menu-dots {
-  gap: 0.18rem;
-}
-
-.multipod-menu-dots i {
-  width: 0.24rem;
-  height: 0.24rem;
-  opacity: 0.75;
+  gap: 0.5rem;
 }
 
 .multipod-name {
   font-family: 'Playfair Display', 'Times New Roman', serif;
-  font-size: clamp(0.9rem, 1.8vw, 1.02rem);
+  font-size: clamp(0.84rem, 1.65vw, 0.95rem);
   color: var(--navy);
-  line-height: 1.15;
+  line-height: 1.12;
+}
+
+.multipod-avatar {
+  width: 1.7rem;
+  height: 1.7rem;
+  flex-shrink: 0;
+  border-radius: 999px;
+  display: inline-grid;
+  place-items: center;
+  font-size: 0.58rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  color: #FFFFFF;
+  background: linear-gradient(160deg, #1C355A, #0A1A31);
+  border: 1px solid rgba(184, 138, 50, 0.45);
+  box-shadow: 0 5px 12px rgba(7, 22, 45, 0.14);
+}
+
+.multipod-status-line {
+  color: var(--navy-65);
+  font-size: 0.66rem;
+  line-height: 1.25;
+  margin-top: 0.16rem;
 }
 
 .multipod-pod-type {
@@ -615,8 +642,8 @@ h1 {
   background: rgba(216, 184, 103, 0.14);
   border: 1px solid var(--gold-border);
   border-radius: 999px;
-  padding: 0.18rem 0.48rem;
-  font-size: 0.62rem;
+  padding: 0.16rem 0.42rem;
+  font-size: 0.58rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -627,34 +654,56 @@ h1 {
 
 .multipod-stage {
   color: var(--navy-65);
-  font-size: 0.72rem;
+  font-size: 0.66rem;
   line-height: 1.35;
+}
+
+.multipod-connected-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.4rem;
+}
+
+.multipod-connected-label {
+  color: var(--muted);
+  font-size: 0.58rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 700;
 }
 
 .multipod-platforms {
   display: flex;
-  gap: 0.25rem;
+  gap: 0.18rem;
   flex-wrap: wrap;
+  justify-content: flex-end;
 }
 
 .multipod-platform-dot {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 1.35rem;
-  height: 1.35rem;
+  width: 1.2rem;
+  height: 1.2rem;
   border-radius: 999px;
-  background: var(--card);
+  background: #FFFFFF;
   border: 1px solid var(--gold-border);
-  color: var(--gold);
+  color: var(--navy);
+}
+
+.multipod-platform-list {
+  color: var(--muted);
+  font-size: 0.62rem;
+  line-height: 1.2;
 }
 
 .multipod-indicators {
   display: flex;
   align-items: center;
-  gap: 0.35rem;
+  gap: 0.3rem;
   flex-wrap: wrap;
-  padding-top: 0.2rem;
+  padding-top: 0.12rem;
 }
 
 .multipod-indicators span {
@@ -662,11 +711,11 @@ h1 {
   align-items: center;
   gap: 0.22rem;
   color: var(--navy-65);
-  background: var(--card);
+  background: #FAF8F3;
   border: 1px solid var(--gold-border);
   border-radius: 999px;
-  padding: 0.18rem 0.42rem;
-  font-size: 0.64rem;
+  padding: 0.16rem 0.4rem;
+  font-size: 0.62rem;
   line-height: 1;
   white-space: nowrap;
 }
@@ -676,11 +725,18 @@ h1 {
 }
 
 .multipod-create-line {
-  width: 70%;
+  width: 68%;
   height: 0.24rem;
   border-radius: 999px;
   background: var(--gold-soft);
-  opacity: 0.6;
+  opacity: 0.52;
+}
+
+.multipod-new-note {
+  font-size: 0.6rem;
+  color: var(--muted);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
 }
 
 .multipod-card-new .multipod-stage {
@@ -693,8 +749,8 @@ h1 {
   justify-items: center;
   align-content: center;
   text-align: center;
-  gap: 0.42rem;
-  background: var(--panel-soft);
+  gap: 0.38rem;
+  background: linear-gradient(180deg, #FFFFFF, #FBF9F4);
   border-style: dashed;
   cursor: pointer;
   font: inherit;
@@ -709,10 +765,10 @@ h1 {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 2.1rem;
-  height: 2.1rem;
+  width: 1.95rem;
+  height: 1.95rem;
   border-radius: 999px;
-  background: var(--card);
+  background: #FFFFFF;
   border: 1px solid var(--gold-border);
   color: var(--gold);
 }
@@ -1509,9 +1565,21 @@ select {
   }
 
   .multipod-card {
-    min-height: 136px;
-    padding: 0.62rem;
+    min-height: 158px;
+    padding: 0.54rem 0.52rem 0.58rem;
     border-radius: 14px;
+  }
+
+  .multipod-name {
+    font-size: 0.8rem;
+  }
+
+  .multipod-status-line {
+    font-size: 0.6rem;
+  }
+
+  .multipod-platform-list {
+    font-size: 0.58rem;
   }
 
   .multipod-indicators {
