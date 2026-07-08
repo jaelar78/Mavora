@@ -487,7 +487,6 @@ h1 {
 }
 
 .multipod-window-dots,
-.multipod-menu-dots,
 .multipod-rail {
   display: flex;
   align-items: center;
@@ -498,7 +497,6 @@ h1 {
 }
 
 .multipod-window-dots span,
-.multipod-menu-dots i,
 .multipod-rail span {
   display: inline-block;
   border-radius: 999px;
@@ -515,7 +513,7 @@ h1 {
   grid-template-columns: 3rem minmax(0, 1fr);
   gap: clamp(0.7rem, 1.8vw, 1rem);
   padding: clamp(0.8rem, 2.2vw, 1.25rem);
-  background: linear-gradient(135deg, var(--panel), var(--card));
+  background: linear-gradient(155deg, #FFFFFF 0%, #FCF9F2 55%, #F8F2E6 100%);
 }
 
 .multipod-rail {
@@ -544,17 +542,16 @@ h1 {
 
 .multipod-card {
   position: relative;
-  display: grid;
-  gap: 0.48rem;
-  align-content: start;
+  display: flex;
+  flex-direction: column;
   text-align: left;
   min-width: 0;
-  min-height: 148px;
-  padding: 0.78rem;
-  background: var(--panel);
+  background: #FFFFFF;
   border: 1px solid var(--gold-border);
-  border-radius: 16px;
-  box-shadow: 0 8px 18px var(--shadow-soft);
+  border-radius: 14px;
+  box-shadow:
+    0 1px 2px rgba(7, 22, 45, 0.05),
+    0 10px 24px rgba(7, 22, 45, 0.11);
   overflow: hidden;
   transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
 }
@@ -565,40 +562,155 @@ h1 {
   top: 0;
   left: 0;
   right: 0;
-  height: 3px;
+  height: 2px;
   background: linear-gradient(90deg, var(--gold), var(--gold-soft));
-  opacity: 0.7;
+  opacity: 0.85;
+  z-index: 1;
 }
 
 .multipod-card:hover {
   transform: translateY(-2px);
-  border-color: var(--gold);
-  box-shadow: 0 12px 26px var(--shadow-soft);
+  border-color: rgba(184, 138, 50, 0.6);
+  box-shadow:
+    0 2px 4px rgba(7, 22, 45, 0.06),
+    0 16px 34px rgba(7, 22, 45, 0.15);
 }
 
-.multipod-card-top {
+.multipod-card-chrome {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 0.6rem;
+  gap: 0.45rem;
+  padding: 0.36rem 0.58rem;
+  background: linear-gradient(180deg, #FDFBF6, #F7F2E7);
+  border-bottom: 1px solid rgba(184, 138, 50, 0.22);
 }
 
-.multipod-orb {
-  width: 0.62rem;
-  height: 0.62rem;
+.multipod-chrome-dots {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.22rem;
+  flex-shrink: 0;
+}
+
+.multipod-chrome-dots i {
+  display: inline-block;
+  width: 0.3rem;
+  height: 0.3rem;
   border-radius: 999px;
+  background: var(--gold-soft);
+}
+
+.multipod-chrome-dots i:nth-child(1) {
   background: var(--gold);
-  box-shadow: 0 0 0 4px rgba(216, 184, 103, 0.22);
 }
 
-.multipod-menu-dots {
-  gap: 0.18rem;
+.multipod-chrome-dots i:nth-child(3) {
+  opacity: 0.55;
 }
 
-.multipod-menu-dots i {
-  width: 0.24rem;
-  height: 0.24rem;
-  opacity: 0.75;
+.multipod-chrome-slug {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--muted);
+  font-size: 0.53rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+}
+
+.multipod-card-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.44rem;
+  padding: 0.58rem 0.66rem 0.66rem;
+}
+
+.multipod-card-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.multipod-card-heading {
+  display: grid;
+  gap: 0.28rem;
+  min-width: 0;
+}
+
+.multipod-avatar {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.72rem;
+  height: 1.72rem;
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--navy), #14304F);
+  color: var(--gold-soft);
+  font-size: 0.56rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  box-shadow:
+    0 0 0 2px #FFFFFF,
+    0 0 0 3px rgba(184, 138, 50, 0.45),
+    0 3px 7px rgba(7, 22, 45, 0.22);
+}
+
+.multipod-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.34rem;
+  width: fit-content;
+  max-width: 100%;
+  padding: 0.2rem 0.5rem;
+  border-radius: 999px;
+  font-size: 0.6rem;
+  font-weight: 600;
+  line-height: 1.15;
+  color: var(--success);
+  background: rgba(46, 125, 79, 0.08);
+  border: 1px solid rgba(46, 125, 79, 0.24);
+}
+
+.multipod-status-ready {
+  color: var(--gold);
+  background: rgba(184, 138, 50, 0.09);
+  border-color: rgba(184, 138, 50, 0.3);
+}
+
+.multipod-status-dot {
+  position: relative;
+  flex-shrink: 0;
+  width: 0.34rem;
+  height: 0.34rem;
+  border-radius: 999px;
+  background: currentColor;
+}
+
+.multipod-status-dot::after {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  border-radius: 999px;
+  border: 1px solid currentColor;
+  animation: multipod-ping 2.2s ease-out infinite;
+}
+
+@keyframes multipod-ping {
+  0% {
+    transform: scale(0.55);
+    opacity: 0.9;
+  }
+
+  70%,
+  100% {
+    transform: scale(1.35);
+    opacity: 0;
+  }
 }
 
 .multipod-name {
@@ -641,20 +753,21 @@ h1 {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 1.35rem;
-  height: 1.35rem;
+  width: 1.45rem;
+  height: 1.45rem;
   border-radius: 999px;
-  background: var(--card);
-  border: 1px solid var(--gold-border);
-  color: var(--gold);
+  background: #FFFFFF;
+  border: 1px solid rgba(7, 22, 45, 0.1);
+  box-shadow: 0 2px 5px rgba(7, 22, 45, 0.1);
 }
 
 .multipod-indicators {
   display: flex;
   align-items: center;
-  gap: 0.35rem;
+  gap: 0.3rem;
   flex-wrap: wrap;
-  padding-top: 0.2rem;
+  margin-top: auto;
+  padding-top: 0.1rem;
 }
 
 .multipod-indicators span {
@@ -662,25 +775,18 @@ h1 {
   align-items: center;
   gap: 0.22rem;
   color: var(--navy-65);
-  background: var(--card);
-  border: 1px solid var(--gold-border);
+  font-weight: 600;
+  background: #FBF8F1;
+  border: 1px solid rgba(184, 138, 50, 0.28);
   border-radius: 999px;
-  padding: 0.18rem 0.42rem;
-  font-size: 0.64rem;
+  padding: 0.2rem 0.44rem;
+  font-size: 0.62rem;
   line-height: 1;
   white-space: nowrap;
 }
 
 .multipod-indicators svg {
   color: var(--gold);
-}
-
-.multipod-create-line {
-  width: 70%;
-  height: 0.24rem;
-  border-radius: 999px;
-  background: var(--gold-soft);
-  opacity: 0.6;
 }
 
 .multipod-card-new .multipod-stage {
@@ -690,12 +796,9 @@ h1 {
 }
 
 .multipod-card-new {
-  justify-items: center;
-  align-content: center;
-  text-align: center;
-  gap: 0.42rem;
-  background: var(--panel-soft);
+  padding: 0;
   border-style: dashed;
+  border-color: rgba(184, 138, 50, 0.45);
   cursor: pointer;
   font: inherit;
   color: inherit;
@@ -705,6 +808,13 @@ h1 {
   opacity: 0.35;
 }
 
+.multipod-new-body {
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 0.4rem;
+}
+
 .multipod-new-icon {
   display: inline-flex;
   align-items: center;
@@ -712,9 +822,10 @@ h1 {
   width: 2.1rem;
   height: 2.1rem;
   border-radius: 999px;
-  background: var(--card);
+  background: #FFFFFF;
   border: 1px solid var(--gold-border);
   color: var(--gold);
+  box-shadow: 0 2px 6px rgba(7, 22, 45, 0.1);
 }
 
 /* Landing Sections */
@@ -1509,9 +1620,36 @@ select {
   }
 
   .multipod-card {
-    min-height: 136px;
-    padding: 0.62rem;
-    border-radius: 14px;
+    border-radius: 12px;
+  }
+
+  .multipod-card-chrome {
+    padding: 0.3rem 0.48rem;
+  }
+
+  .multipod-chrome-slug {
+    font-size: 0.48rem;
+  }
+
+  .multipod-card-body {
+    gap: 0.38rem;
+    padding: 0.5rem 0.54rem 0.58rem;
+  }
+
+  .multipod-avatar {
+    width: 1.5rem;
+    height: 1.5rem;
+    font-size: 0.5rem;
+  }
+
+  .multipod-status {
+    font-size: 0.55rem;
+    padding: 0.18rem 0.42rem;
+  }
+
+  .multipod-platform-dot {
+    width: 1.3rem;
+    height: 1.3rem;
   }
 
   .multipod-indicators {
@@ -1519,8 +1657,8 @@ select {
   }
 
   .multipod-indicators span {
-    padding: 0.16rem 0.32rem;
-    font-size: 0.58rem;
+    padding: 0.18rem 0.36rem;
+    font-size: 0.56rem;
   }
 
   .dashboard-preview {

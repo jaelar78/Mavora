@@ -32,6 +32,7 @@ import {
   StickyNote,
   Mail,
   Plus,
+  Search,
 } from 'lucide-react';
 import {
   FaFacebookF,
@@ -108,43 +109,89 @@ const DASHBOARD_PREVIEW_CARDS = [
 const MULTI_POD_CARDS = [
   {
     name: 'Gidgee & Co',
+    slug: 'gidgee-co',
     type: 'Brand Pod',
-    description: 'Outback goods story',
-    contentCount: '18 ideas',
-    calendarCount: '12 posts',
-    platforms: [FaInstagram, FaTiktok, FaYoutube],
+    initials: 'GC',
+    status: 'AI Brain Active',
+    statusTone: 'live',
+    platforms: [
+      { name: 'Instagram', icon: FaInstagram, color: '#E1306C' },
+      { name: 'TikTok', icon: FaTiktok, color: '#121212' },
+      { name: 'Pinterest', icon: FaPinterestP, color: '#BD081C' },
+      { name: 'YouTube', icon: FaYoutube, color: '#FF0000' },
+    ],
+    stats: [
+      { icon: Lightbulb, label: '18 ideas' },
+      { icon: PenTool, label: '12 posts' },
+    ],
   },
   {
     name: 'House of MGNM',
+    slug: 'house-of-mgnm',
     type: 'Campaign Pod',
-    description: 'Luxury drop campaign',
-    contentCount: '9 angles',
-    calendarCount: '6 dates',
-    platforms: [FaInstagram, FaPinterestP, FaLinkedinIn],
+    initials: 'HM',
+    status: 'Launch Campaign Ready',
+    statusTone: 'ready',
+    platforms: [
+      { name: 'Instagram', icon: FaInstagram, color: '#E1306C' },
+      { name: 'Pinterest', icon: FaPinterestP, color: '#BD081C' },
+      { name: 'LinkedIn', icon: FaLinkedinIn, color: '#0A66C2' },
+    ],
+    stats: [
+      { icon: Target, label: '9 angles' },
+      { icon: Calendar, label: '6 dates' },
+    ],
   },
   {
     name: 'Luxara',
-    type: 'Launch Pod',
-    description: 'Skincare launch sequence',
-    contentCount: '14 assets',
-    calendarCount: '7 days',
-    platforms: [FaInstagram, SiGoogleads, Mail],
+    slug: 'luxara',
+    type: 'Jewellery Pod',
+    initials: 'LX',
+    status: 'Collection Plan Ready',
+    statusTone: 'ready',
+    platforms: [
+      { name: 'Instagram', icon: FaInstagram, color: '#E1306C' },
+      { name: 'Google Ads', icon: SiGoogleads, color: '#4285F4' },
+      { name: 'Email', icon: Mail, color: '#B88A32' },
+    ],
+    stats: [
+      { icon: StickyNote, label: '14 assets' },
+      { icon: Calendar, label: '7 days' },
+    ],
   },
   {
     name: 'Cheeky Drawers',
+    slug: 'cheeky-drawers',
     type: 'Social Pod',
-    description: 'Playful social engine',
-    contentCount: '21 hooks',
-    calendarCount: '15 posts',
-    platforms: [FaTiktok, FaInstagram, FaXTwitter],
+    initials: 'CD',
+    status: 'Social Hooks Ready',
+    statusTone: 'ready',
+    platforms: [
+      { name: 'TikTok', icon: FaTiktok, color: '#121212' },
+      { name: 'Instagram', icon: FaInstagram, color: '#E1306C' },
+      { name: 'X', icon: FaXTwitter, color: '#0F1419' },
+    ],
+    stats: [
+      { icon: Sparkles, label: '21 hooks' },
+      { icon: PenTool, label: '15 posts' },
+    ],
   },
   {
     name: 'The Cleaning Hub',
-    type: 'Product Pod',
-    description: 'Local offer growth',
-    contentCount: '11 ideas',
-    calendarCount: '8 slots',
-    platforms: [FaFacebookF, SiGoogleads, SiNextdoor],
+    slug: 'the-cleaning-hub',
+    type: 'Business Pod',
+    initials: 'CH',
+    status: 'Local Growth Ready',
+    statusTone: 'ready',
+    platforms: [
+      { name: 'Facebook', icon: FaFacebookF, color: '#1877F2' },
+      { name: 'Google Ads', icon: SiGoogleads, color: '#4285F4' },
+      { name: 'Local search', icon: Search, color: '#2E7D4F' },
+    ],
+    stats: [
+      { icon: Lightbulb, label: '11 ideas' },
+      { icon: Calendar, label: '8 slots' },
+    ],
   },
 ];
 
@@ -886,35 +933,66 @@ function LandingPage({ session }) {
             <div className="multipod-grid">
               {MULTI_POD_CARDS.map((pod) => (
                 <article key={pod.name} className="multipod-card">
-                  <div className="multipod-card-top">
-                    <span className="multipod-orb" aria-hidden="true" />
-                    <span className="multipod-menu-dots" aria-hidden="true">
+                  <div className="multipod-card-chrome" aria-hidden="true">
+                    <span className="multipod-chrome-dots">
                       <i />
                       <i />
                       <i />
                     </span>
+                    <span className="multipod-chrome-slug">pods / {pod.slug}</span>
                   </div>
-                  <div>
-                    <h3 className="multipod-name">{pod.name}</h3>
-                    <p className="multipod-stage">{pod.description}</p>
-                  </div>
-                  <div className="multipod-pod-type">{pod.type}</div>
-                  <div className="multipod-platforms" aria-hidden="true">
-                    {pod.platforms.map((PodIcon) => (
-                      <span key={PodIcon.displayName || PodIcon.name} className="multipod-platform-dot"><PodIcon size={11} strokeWidth={1.75} /></span>
-                    ))}
-                  </div>
-                  <div className="multipod-indicators" aria-label={`${pod.name} content and calendar indicators`}>
-                    <span><PenTool size={12} strokeWidth={1.75} />{pod.contentCount}</span>
-                    <span><Calendar size={12} strokeWidth={1.75} />{pod.calendarCount}</span>
+                  <div className="multipod-card-body">
+                    <div className="multipod-card-head">
+                      <div className="multipod-card-heading">
+                        <h3 className="multipod-name">{pod.name}</h3>
+                        <span className="multipod-pod-type">{pod.type}</span>
+                      </div>
+                      <span className="multipod-avatar" aria-hidden="true">{pod.initials}</span>
+                    </div>
+                    <p className={`multipod-status multipod-status-${pod.statusTone}`}>
+                      <span className="multipod-status-dot" aria-hidden="true" />
+                      {pod.status}
+                    </p>
+                    <div className="multipod-platforms" aria-label={`${pod.name} connected platforms`}>
+                      {pod.platforms.map((platform) => {
+                        const PlatformIcon = platform.icon;
+                        return (
+                          <span
+                            key={platform.name}
+                            className="multipod-platform-dot"
+                            title={platform.name}
+                            style={{ color: platform.color }}
+                          >
+                            <PlatformIcon size={12} strokeWidth={1.9} />
+                          </span>
+                        );
+                      })}
+                    </div>
+                    <div className="multipod-indicators" aria-label={`${pod.name} activity stats`}>
+                      {pod.stats.map((stat) => {
+                        const StatIcon = stat.icon;
+                        return (
+                          <span key={stat.label}><StatIcon size={12} strokeWidth={1.75} />{stat.label}</span>
+                        );
+                      })}
+                    </div>
                   </div>
                 </article>
               ))}
               <button type="button" className="multipod-card multipod-card-new" onClick={() => setModalOpen(true)}>
-                <span className="multipod-new-icon" aria-hidden="true"><Plus size={18} strokeWidth={1.75} /></span>
-                <span className="multipod-name">Create New Pod</span>
-                <span className="multipod-stage">Website, offer, app, or campaign</span>
-                <span className="multipod-create-line" aria-hidden="true" />
+                <span className="multipod-card-chrome" aria-hidden="true">
+                  <span className="multipod-chrome-dots">
+                    <i />
+                    <i />
+                    <i />
+                  </span>
+                  <span className="multipod-chrome-slug">pods / new</span>
+                </span>
+                <span className="multipod-card-body multipod-new-body">
+                  <span className="multipod-new-icon" aria-hidden="true"><Plus size={18} strokeWidth={1.75} /></span>
+                  <span className="multipod-name">Create New Pod</span>
+                  <span className="multipod-stage">Website, offer, app, or campaign</span>
+                </span>
               </button>
             </div>
           </div>
