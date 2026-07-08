@@ -515,7 +515,9 @@ h1 {
   grid-template-columns: 3rem minmax(0, 1fr);
   gap: clamp(0.7rem, 1.8vw, 1rem);
   padding: clamp(0.8rem, 2.2vw, 1.25rem);
-  background: linear-gradient(135deg, var(--panel), var(--card));
+  background:
+    radial-gradient(circle at 12% 14%, rgba(216, 184, 103, 0.12), transparent 28%),
+    linear-gradient(135deg, #ffffff, #f8f4ea);
 }
 
 .multipod-rail {
@@ -545,16 +547,16 @@ h1 {
 .multipod-card {
   position: relative;
   display: grid;
-  gap: 0.48rem;
+  gap: 0.38rem;
   align-content: start;
   text-align: left;
   min-width: 0;
-  min-height: 148px;
-  padding: 0.78rem;
-  background: var(--panel);
-  border: 1px solid var(--gold-border);
-  border-radius: 16px;
-  box-shadow: 0 8px 18px var(--shadow-soft);
+  min-height: 174px;
+  padding: 0.52rem 0.68rem 0.72rem;
+  background: #ffffff;
+  border: 1px solid rgba(184, 138, 50, 0.28);
+  border-radius: 18px;
+  box-shadow: 0 14px 32px rgba(7, 22, 45, 0.13), 0 2px 0 rgba(255, 255, 255, 0.8) inset;
   overflow: hidden;
   transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
 }
@@ -565,58 +567,106 @@ h1 {
   top: 0;
   left: 0;
   right: 0;
-  height: 3px;
-  background: linear-gradient(90deg, var(--gold), var(--gold-soft));
-  opacity: 0.7;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--gold), var(--gold-soft), transparent);
+  opacity: 0.82;
+  z-index: 1;
 }
 
 .multipod-card:hover {
   transform: translateY(-2px);
   border-color: var(--gold);
-  box-shadow: 0 12px 26px var(--shadow-soft);
+  box-shadow: 0 18px 38px rgba(7, 22, 45, 0.16), 0 2px 0 rgba(255, 255, 255, 0.85) inset;
 }
 
-.multipod-card-top {
+.multipod-card-chrome {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 0.6rem;
-}
-
-.multipod-orb {
-  width: 0.62rem;
-  height: 0.62rem;
-  border-radius: 999px;
-  background: var(--gold);
-  box-shadow: 0 0 0 4px rgba(216, 184, 103, 0.22);
+  min-width: 0;
+  margin: -0.52rem -0.68rem 0.12rem;
+  padding: 0.38rem 0.58rem 0.32rem;
+  background: linear-gradient(180deg, #fffdf8, #f7f0df);
+  border-bottom: 1px solid rgba(184, 138, 50, 0.18);
 }
 
 .multipod-menu-dots {
   gap: 0.18rem;
+  flex: 0 0 auto;
 }
 
 .multipod-menu-dots i {
-  width: 0.24rem;
-  height: 0.24rem;
-  opacity: 0.75;
+  width: 0.28rem;
+  height: 0.28rem;
+  opacity: 0.86;
+}
+
+.multipod-menu-dots i:nth-child(1) {
+  background: #d98c57;
+}
+
+.multipod-menu-dots i:nth-child(2) {
+  background: var(--gold-soft);
+}
+
+.multipod-menu-dots i:nth-child(3) {
+  background: #8aa66a;
+}
+
+.multipod-chrome-path {
+  min-width: 0;
+  color: rgba(7, 22, 45, 0.42);
+  font-size: 0.56rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.multipod-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.55rem;
+  min-width: 0;
 }
 
 .multipod-name {
   font-family: 'Playfair Display', 'Times New Roman', serif;
-  font-size: clamp(0.9rem, 1.8vw, 1.02rem);
+  font-size: clamp(0.92rem, 1.8vw, 1.05rem);
   color: var(--navy);
   line-height: 1.15;
+}
+
+.multipod-avatar {
+  flex: 0 0 1.85rem;
+  width: 1.85rem;
+  height: 1.85rem;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  color: var(--navy);
+  background:
+    radial-gradient(circle at 30% 25%, rgba(255, 255, 255, 0.95), transparent 28%),
+    linear-gradient(135deg, rgba(216, 184, 103, 0.95), rgba(184, 138, 50, 0.72));
+  border: 2px solid #ffffff;
+  box-shadow: 0 7px 16px rgba(7, 22, 45, 0.14), 0 0 0 1px rgba(184, 138, 50, 0.28);
+  font-size: 0.58rem;
+  font-weight: 900;
+  letter-spacing: 0.06em;
 }
 
 .multipod-pod-type {
   width: fit-content;
   max-width: 100%;
-  color: var(--gold);
-  background: rgba(216, 184, 103, 0.14);
-  border: 1px solid var(--gold-border);
+  color: #815e1d;
+  background: rgba(216, 184, 103, 0.16);
+  border: 1px solid rgba(184, 138, 50, 0.28);
   border-radius: 999px;
-  padding: 0.18rem 0.48rem;
-  font-size: 0.62rem;
+  padding: 0.16rem 0.46rem;
+  font-size: 0.58rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -626,14 +676,29 @@ h1 {
 }
 
 .multipod-stage {
-  color: var(--navy-65);
-  font-size: 0.72rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.24rem;
+  color: rgba(7, 22, 45, 0.72);
+  font-size: 0.68rem;
+  font-weight: 700;
   line-height: 1.35;
+  margin-top: 0.12rem;
+}
+
+.multipod-stage::before {
+  content: '';
+  flex: 0 0 0.4rem;
+  width: 0.4rem;
+  height: 0.4rem;
+  border-radius: 999px;
+  background: var(--success);
+  box-shadow: 0 0 0 3px rgba(46, 125, 79, 0.12);
 }
 
 .multipod-platforms {
   display: flex;
-  gap: 0.25rem;
+  gap: 0.3rem;
   flex-wrap: wrap;
 }
 
@@ -641,32 +706,45 @@ h1 {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 1.35rem;
-  height: 1.35rem;
+  width: 1.52rem;
+  height: 1.52rem;
   border-radius: 999px;
-  background: var(--card);
-  border: 1px solid var(--gold-border);
-  color: var(--gold);
+  background: #ffffff;
+  border: 1px solid rgba(184, 138, 50, 0.24);
+  color: var(--navy);
+  box-shadow: 0 5px 12px rgba(7, 22, 45, 0.08);
+}
+
+.multipod-connected-line {
+  color: rgba(7, 22, 45, 0.5);
+  font-size: 0.58rem;
+  font-weight: 600;
+  line-height: 1.28;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
 }
 
 .multipod-indicators {
   display: flex;
   align-items: center;
-  gap: 0.35rem;
+  gap: 0.3rem;
   flex-wrap: wrap;
-  padding-top: 0.2rem;
+  padding-top: 0.05rem;
 }
 
 .multipod-indicators span {
   display: inline-flex;
   align-items: center;
   gap: 0.22rem;
-  color: var(--navy-65);
-  background: var(--card);
-  border: 1px solid var(--gold-border);
+  color: rgba(7, 22, 45, 0.72);
+  background: rgba(247, 242, 232, 0.6);
+  border: 1px solid rgba(184, 138, 50, 0.18);
   border-radius: 999px;
-  padding: 0.18rem 0.42rem;
-  font-size: 0.64rem;
+  padding: 0.17rem 0.4rem;
+  font-size: 0.6rem;
+  font-weight: 700;
   line-height: 1;
   white-space: nowrap;
 }
@@ -687,14 +765,21 @@ h1 {
   display: block;
   max-width: 10rem;
   color: var(--navy-65);
+  font-weight: 600;
+}
+
+.multipod-card-new .multipod-stage::before {
+  content: none;
 }
 
 .multipod-card-new {
   justify-items: center;
-  align-content: center;
+  align-content: start;
   text-align: center;
   gap: 0.42rem;
-  background: var(--panel-soft);
+  background:
+    linear-gradient(180deg, rgba(255, 253, 248, 0.85), rgba(255, 255, 255, 0.94)),
+    #ffffff;
   border-style: dashed;
   cursor: pointer;
   font: inherit;
@@ -712,9 +797,11 @@ h1 {
   width: 2.1rem;
   height: 2.1rem;
   border-radius: 999px;
-  background: var(--card);
+  margin-top: 0.36rem;
+  background: #ffffff;
   border: 1px solid var(--gold-border);
   color: var(--gold);
+  box-shadow: 0 8px 18px rgba(7, 22, 45, 0.1);
 }
 
 /* Landing Sections */
