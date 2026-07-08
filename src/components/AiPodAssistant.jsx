@@ -5,22 +5,22 @@ const ASSISTANT_QA = [
   {
     question: 'I run a skincare brand — what platforms should I focus on?',
     answer:
-      'Start with Instagram for education and trust, TikTok for discovery, and Pinterest for evergreen product searches. Use email to convert warm interest into repeat buyers.',
+      'Prioritise Instagram for visual proof, routine education, and creator trust with women 24-40; TikTok for discovery and fast skin-education hooks; Pinterest for evergreen searches around routines and concerns; email for retention, replenishment, and launches. A Dovroyn pod would pull your website, map the audience, then build the platform plan, content pillars, hooks, calendar, and ad angles from the offer.',
   },
   {
     question: 'Give me 3 Instagram caption ideas for a café',
     answer:
-      'Try: “Your 8am ritual, made golden.” “POV: the croissant cabinet called your name.” “Small table, strong coffee, perfect pause.” Pair each with a warm lifestyle photo.',
+      'Try: “Your 8am reset, poured fresh.” “POV: the corner table found you first.” “Come for the flat white, stay for the croissant proof.” Aim these at locals and weekend browsers on Instagram; pair each with warm interior or product shots, tag neighbourhood intent, and let a Dovroyn pod turn the cafe menu and vibe into a weekly caption and Reels calendar.',
   },
   {
     question: 'What makes a good TikTok hook?',
     answer:
-      'A strong hook creates instant curiosity in the first two seconds. Lead with a problem, surprising result, bold claim, or “watch this before you…” angle.',
+      'A strong TikTok hook names the audience and payoff in the first second: “Cafe owners, stop posting empty latte art.” “3 skincare mistakes making your routine look less premium.” “I audited this consultant’s LinkedIn in 30 seconds.” Use problem, proof, contrarian take, or quick teardown angles, then test five hooks per content pillar. A Dovroyn pod can generate hook banks from your offer, audience pains, and platform fit.',
   },
   {
     question: 'How do I grow on LinkedIn as a consultant?',
     answer:
-      'Post practical insights twice a week, share client-style lessons without naming clients, and comment daily on your ideal buyers’ posts. Make your profile clearly say who you help.',
+      'Treat LinkedIn like trust-building, not broadcasting. Pick one buyer, such as funded SaaS founders or service CEOs; post painful lessons, teardown-style advice, and proof-backed opinions; comment on prospects’ posts before pitching. Next action: rewrite your headline around outcome plus audience, then run a 30-day content rhythm. A Dovroyn pod can turn your positioning, offers, and case studies into posts, hooks, and outreach angles.',
   },
 ];
 
@@ -31,7 +31,7 @@ const INTRO_MESSAGE = {
 };
 
 const TYPED_RESPONSE =
-  'Great question. In a live Dovroyn pod, I’d analyse your brand, audience, offer, platforms, and campaign goal before giving you a tailored content plan.';
+  'Give me your audience, offer, platform, and goal. I’ll return the strongest channel, content angle, hook direction, and what to publish first. In a live Dovroyn pod, that becomes a platform plan, content calendar, and campaign angles built from your brand site and data.';
 
 export default function AiPodAssistant() {
   const [messages, setMessages] = useState([INTRO_MESSAGE]);
