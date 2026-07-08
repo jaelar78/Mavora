@@ -5,33 +5,33 @@ const ASSISTANT_QA = [
   {
     question: 'I run a skincare brand — what platforms should I focus on?',
     answer:
-      'Start with Instagram for education and trust, TikTok for discovery, and Pinterest for evergreen product searches. Use email to convert warm interest into repeat buyers.',
+      'Instagram is your trust engine — ingredient education, before/afters, and UGC build social proof fast. TikTok is your discovery channel — tutorials, founder POVs, and "get ready with me" formats reach new audiences daily. Pinterest drives evergreen search traffic directly to your product pages. Email owns retention — post-purchase sequences and launch drops convert one-time buyers into loyal subscribers.\n\nA Dovroyn pod maps all four into one connected strategy: content pillars, a monthly calendar, hook angles, and paid ad briefs — all pulled from your brand website in minutes.',
   },
   {
     question: 'Give me 3 Instagram caption ideas for a café',
     answer:
-      'Try: “Your 8am ritual, made golden.” “POV: the croissant cabinet called your name.” “Small table, strong coffee, perfect pause.” Pair each with a warm lifestyle photo.',
+      'Three that stop the scroll: "Your 8am ritual, made better. [location]" — steam rising, flat white front and centre. "The table by the window is always free at 7:30." — sells the experience, not the menu. "We don\'t do rushed. Neither should you." — identity-driven, builds community.\n\nStrong café content runs on atmosphere and ritual. A Dovroyn pod builds your full caption library, story prompts, and a weekly content calendar built around your busiest hours and seasonal menu.',
   },
   {
     question: 'What makes a good TikTok hook?',
     answer:
-      'A strong hook creates instant curiosity in the first two seconds. Lead with a problem, surprising result, bold claim, or “watch this before you…” angle.',
+      'The first two seconds decide everything. Top-performing structures: "I tried [X] for 30 days — here\'s what nobody tells you." / "Stop doing this if you want [outcome]." / "POV: you finally figured out [relatable struggle]." / "The [industry] secret that took me three years to learn."\n\nThe pattern: open a gap between what they know and what they\'re about to find out. A Dovroyn pod generates 30+ hook angles per month, matched to your brand voice, audience pain points, and trending formats.',
   },
   {
     question: 'How do I grow on LinkedIn as a consultant?',
     answer:
-      'Post practical insights twice a week, share client-style lessons without naming clients, and comment daily on your ideal buyers’ posts. Make your profile clearly say who you help.',
+      'Post twice a week: one tactical insight (a framework, a common mistake, a lesson from client work) and one story post (a decision, a result, a turning point). Comment on your ideal buyers\' posts with a real point of view — not "great post." Your headline should name who you help and the outcome you create, not your job title.\n\nMost consultants blend in because they post about their process, not their clients\' problems. A Dovroyn pod builds your content strategy around the exact language your buyers use, so every post speaks directly to them.',
   },
 ];
 
 const INTRO_MESSAGE = {
   id: 'intro',
   sender: 'assistant',
-  text: 'Hey! I’m Dovroyn — your AI marketing pod assistant. Tell me about your brand or ask me anything about campaign strategy, and I’ll show you what a pod can do.',
+  text: "I'm Dovroyn — your AI marketing pod. Built for founders who want sharp strategy without the agency overhead. Ask me about platforms, content, hooks, or campaigns — or tell me about your brand and I'll show you exactly what a pod can do.",
 };
 
 const TYPED_RESPONSE =
-  'Great question. In a live Dovroyn pod, I’d analyse your brand, audience, offer, platforms, and campaign goal before giving you a tailored content plan.';
+  "Good question. A live Dovroyn pod starts by reading your brand website and building your audience profile, platform fit, and content pillars — then gives you specific recommendations grounded in your actual brand, not a generic template. The demo pod shows you exactly what that looks like.";
 
 export default function AiPodAssistant() {
   const [messages, setMessages] = useState([INTRO_MESSAGE]);
@@ -106,9 +106,11 @@ export default function AiPodAssistant() {
                   <Sparkles size={12} strokeWidth={1.8} />
                 </span>
               )}
-              <p className={`ai-assistant-bubble ai-assistant-bubble-${message.sender}`}>
-                {message.text}
-              </p>
+              <div className={`ai-assistant-bubble ai-assistant-bubble-${message.sender}`}>
+                {message.text.split('\n\n').map((para, i) => (
+                  <p key={i} style={{ margin: i > 0 ? '0.5em 0 0' : '0' }}>{para}</p>
+                ))}
+              </div>
             </div>
           ))}
           {thinking && (
