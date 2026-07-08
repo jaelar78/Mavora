@@ -5,22 +5,22 @@ const ASSISTANT_QA = [
   {
     question: 'I run a skincare brand — what platforms should I focus on?',
     answer:
-      'Start with Instagram for education and trust, TikTok for discovery, and Pinterest for evergreen product searches. Use email to convert warm interest into repeat buyers.',
+      'For skincare, run a 4-channel stack: Instagram for visual proof and trust (before/after, UGC, routines), TikTok for discovery and education (ingredient myths, quick demos), Pinterest for evergreen search traffic (skin concerns and routines), and email for retention/repeat purchase (flows + launch drops). Next action: map one message per channel for the next 30 days. A Dovroyn pod can turn your website into the platform plan, content pillars, hooks, calendar, and ad angles automatically.',
   },
   {
     question: 'Give me 3 Instagram caption ideas for a café',
     answer:
-      'Try: “Your 8am ritual, made golden.” “POV: the croissant cabinet called your name.” “Small table, strong coffee, perfect pause.” Pair each with a warm lifestyle photo.',
+      'Use caption angles that match café intent: morning ritual, product craving, and local belonging. Try: “Your 8:07 reset: flat white, warm croissant, zero chaos.” “If your coffee needs a personality, start with this pour.” “Your neighborhood table is ready — tag your coffee person.” Platform fit: pair with Reels of steam/pour close-ups and geotags for local reach. Next action: test one angle per day this week and keep the top-saves format. A Dovroyn pod can generate weekly caption banks tied to your menu, offers, and peak hours.',
   },
   {
     question: 'What makes a good TikTok hook?',
     answer:
-      'A strong hook creates instant curiosity in the first two seconds. Lead with a problem, surprising result, bold claim, or “watch this before you…” angle.',
+      'A winning TikTok hook earns the first 2 seconds with a specific promise for a specific audience. Best formats: “Stop scrolling if you’re [audience]…”, “3 mistakes killing your [result]…”, “I tested this for 7 days — here’s what changed.” Platform fit: open with outcome first, then proof, then CTA. Next action: script 10 hooks, film 3 variants each, and keep only hooks with strong 3-second hold. A Dovroyn pod can build your hook bank by offer, audience pain point, and funnel stage.',
   },
   {
     question: 'How do I grow on LinkedIn as a consultant?',
     answer:
-      'Post practical insights twice a week, share client-style lessons without naming clients, and comment daily on your ideal buyers’ posts. Make your profile clearly say who you help.',
+      'Grow on LinkedIn with authority + consistency: publish 3 posts/week (one POV, one framework, one client lesson), comment daily where your buyers already engage, and make your headline outcome-led (“I help X achieve Y”). Audience fit: speak to buyer pain in plain language, not theory. Content angle: teach from real work using before/after thinking. Next action: build a 4-week topic map around your core offer. A Dovroyn pod can generate your LinkedIn pillars, post hooks, and weekly publishing cadence from your consulting niche.',
   },
 ];
 
@@ -31,7 +31,7 @@ const INTRO_MESSAGE = {
 };
 
 const TYPED_RESPONSE =
-  'Great question. In a live Dovroyn pod, I’d analyse your brand, audience, offer, platforms, and campaign goal before giving you a tailored content plan.';
+  'Strong question. Start by locking four things: audience segment, platform priority, content angle, and one measurable next action for this week. In a live setup, your Dovroyn pod would analyze your brand source and return a focused plan with channel mix, hooks, calendar, and ad angles — not generic advice.';
 
 export default function AiPodAssistant() {
   const [messages, setMessages] = useState([INTRO_MESSAGE]);
