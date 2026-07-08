@@ -1,58 +1,59 @@
 import {
   Bot,
-  Crown,
+  Leaf,
   MapPin,
   Palette,
   Share2,
   Users,
 } from 'lucide-react';
-import { FaInstagram, FaLinkedinIn, FaTiktok, FaYoutube } from 'react-icons/fa6';
+import { FaFacebookF, FaInstagram, FaPinterestP, FaTiktok } from 'react-icons/fa6';
 
 const DASHBOARD_NAV_ITEMS = ['AI Brain', 'Content Calendar', 'Platforms', 'Files', 'Ad Performance', 'Budget'];
 
 const PLATFORM_CHIPS = [
-  { label: 'LinkedIn', Icon: FaLinkedinIn },
   { label: 'Instagram', Icon: FaInstagram },
-  { label: 'YouTube', Icon: FaYoutube },
+  { label: 'Pinterest', Icon: FaPinterestP },
+  { label: 'Facebook', Icon: FaFacebookF },
   { label: 'TikTok', Icon: FaTiktok },
 ];
 
 const BRAND_SWATCHES = [
-  { label: 'Gold', color: '#B88A32' },
-  { label: 'Black', color: '#090909' },
-  { label: 'Ivory', color: '#FFF8E8' },
+  { label: 'Sand', color: '#C8A97E' },
+  { label: 'Eucalyptus Green', color: '#4A6B57' },
+  { label: 'Terracotta', color: '#B35C3E' },
+  { label: 'Charcoal', color: '#2E2E2E' },
 ];
 
 const DASHBOARD_ROWS = [
   {
     icon: Palette,
     label: 'Brand Colours',
-    detail: 'Core palette for creative direction, ads, and campaign assets.',
+    detail: 'Core palette inspired by Australian landscapes for hats, totes, and accessories.',
     swatches: BRAND_SWATCHES,
   },
   {
     icon: Bot,
     label: 'Brand Tone',
-    detail: 'Voice guidance for product storytelling and executive-grade copy.',
-    chips: ['Luxury', 'Refined', 'Aspirational'],
+    detail: 'Voice guidance for handcrafted premium product storytelling across campaigns.',
+    chips: ['Authentic', 'Handcrafted', 'Australian', 'Timeless'],
   },
   {
     icon: Users,
     label: 'Target Audience',
-    detail: 'High-value watch buyers with purchase intent and brand affinity.',
-    chips: ['Men 25-55', 'Professionals', 'High intent buyers'],
+    detail: 'Audience segments most likely to buy premium outdoor lifestyle products.',
+    chips: ['Outdoor enthusiasts', 'Travellers', 'Gift buyers', 'Australian lifestyle lovers'],
   },
   {
     icon: MapPin,
     label: 'Geography',
-    detail: 'Campaign recommendations are calibrated for global luxury reach.',
-    chips: ['Worldwide'],
+    detail: 'Campaign recommendations prioritise markets with strong outdoor lifestyle demand.',
+    chips: ['Australia', 'New Zealand', 'USA'],
   },
   {
     icon: Share2,
     label: 'Recommended Platforms',
     platforms: PLATFORM_CHIPS,
-    detail: 'Best-fit mix for authority, discovery, education, and short-form reach.',
+    detail: 'Best-fit mix for visual product discovery, storytelling, and short-form reach.',
   },
 ];
 
@@ -120,11 +121,11 @@ function TesterPodHeader() {
     <div className="tester-pod-header">
       <div className="tester-pod-header-main">
         <span className="tester-pod-avatar" aria-hidden="true">
-          <Crown size={24} strokeWidth={1.85} />
+          <Leaf size={24} strokeWidth={1.85} />
         </span>
         <div>
-          <p className="tester-pod-title">House of Magnum</p>
-          <p className="tester-pod-subtitle">Luxury Watches</p>
+          <p className="tester-pod-title">Gidgee &amp; Co</p>
+          <p className="tester-pod-subtitle">Australian Outdoor Lifestyle</p>
         </div>
       </div>
       <div className="tester-pod-controls" aria-label="Preview controls">
@@ -145,7 +146,7 @@ function TesterPodChrome({ children }) {
 
 function TesterPodTabs() {
   return (
-    <div className="tester-pod-tabs" aria-label="House of Magnum pod sections">
+    <div className="tester-pod-tabs" aria-label="Gidgee & Co pod sections">
       {DASHBOARD_NAV_ITEMS.map((item, index) => (
         <span key={item} className={`tester-pod-tab ${index === 0 ? 'active' : ''}`}>
           {item}
@@ -206,15 +207,15 @@ function TesterPodMobileValues({ row }) {
 
 function TesterPodMobileDashboard() {
   return (
-    <div className="tester-pod-mobile-card" aria-label="House of Magnum compact mobile pod preview">
+    <div className="tester-pod-mobile-card" aria-label="Gidgee & Co compact mobile pod preview">
       <div className="tester-pod-mobile-header">
         <div className="tester-pod-mobile-brand">
           <span className="tester-pod-mobile-avatar" aria-hidden="true">
-            <Crown size={22} strokeWidth={1.85} />
+            <Leaf size={22} strokeWidth={1.85} />
           </span>
           <div>
-            <p className="tester-pod-mobile-title">House of Magnum</p>
-            <p className="tester-pod-mobile-subtitle">Luxury Watches</p>
+            <p className="tester-pod-mobile-title">Gidgee &amp; Co</p>
+            <p className="tester-pod-mobile-subtitle">Australian Outdoor Lifestyle</p>
           </div>
         </div>
         <div className="tester-pod-mobile-actions" aria-label="Mobile preview controls">
@@ -223,7 +224,7 @@ function TesterPodMobileDashboard() {
         </div>
       </div>
 
-      <div className="tester-pod-mobile-tabs" aria-label="House of Magnum pod sections">
+      <div className="tester-pod-mobile-tabs" aria-label="Gidgee & Co pod sections">
         {DASHBOARD_NAV_ITEMS.map((item, index) => (
           <span key={item} className={`tester-pod-mobile-tab ${index === 0 ? 'active' : ''}`}>
             {item}
