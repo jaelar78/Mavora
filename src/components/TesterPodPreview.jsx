@@ -163,13 +163,113 @@ function TesterPodPanel() {
   );
 }
 
+function TesterPodMobileValues({ row }) {
+  if (row.swatches) {
+    return (
+      <span className="tester-pod-mobile-swatches" aria-label="Brand colour swatches">
+        {row.swatches.map((swatch) => (
+          <span key={swatch.label} className="tester-pod-mobile-swatch-shell" title={swatch.label}>
+            <span
+              className="tester-pod-mobile-swatch"
+              style={{ background: swatch.color }}
+              aria-label={swatch.label}
+            />
+          </span>
+        ))}
+      </span>
+    );
+  }
+
+  if (row.chips) {
+    return (
+      <span className="tester-pod-mobile-chips" aria-label={`${row.label} values`}>
+        {row.chips.map((chip) => (
+          <span key={chip} className="tester-pod-mobile-chip">
+            {chip}
+          </span>
+        ))}
+      </span>
+    );
+  }
+
+  return (
+    <span className="tester-pod-mobile-chips" aria-label="Recommended platforms">
+      {row.platforms.map(({ label, Icon }) => (
+        <span key={label} className="tester-pod-mobile-chip tester-pod-mobile-platform-chip">
+          <Icon aria-hidden="true" />
+          {label}
+        </span>
+      ))}
+    </span>
+  );
+}
+
+function TesterPodMobileDashboard() {
+  return (
+    <div className="tester-pod-mobile-card" aria-label="House of Magnum compact mobile pod preview">
+      <div className="tester-pod-mobile-header">
+        <div className="tester-pod-mobile-brand">
+          <span className="tester-pod-mobile-avatar" aria-hidden="true">
+            <Crown size={22} strokeWidth={1.85} />
+          </span>
+          <div>
+            <p className="tester-pod-mobile-title">House of Magnum</p>
+            <p className="tester-pod-mobile-subtitle">Luxury Watches</p>
+          </div>
+        </div>
+        <div className="tester-pod-mobile-actions" aria-label="Mobile preview controls">
+          <span className="tester-pod-mobile-status">AI Brain Active</span>
+          <button type="button" className="tester-pod-mobile-ready">Ready to be styled ✦</button>
+        </div>
+      </div>
+
+      <div className="tester-pod-mobile-tabs" aria-label="House of Magnum pod sections">
+        {DASHBOARD_NAV_ITEMS.map((item, index) => (
+          <span key={item} className={`tester-pod-mobile-tab ${index === 0 ? 'active' : ''}`}>
+            {item}
+          </span>
+        ))}
+      </div>
+
+      <div className="tester-pod-mobile-rows">
+        {DASHBOARD_ROWS.map((row) => {
+          const RowIcon = row.icon;
+
+          return (
+            <div key={row.label} className="tester-pod-mobile-row">
+              <div className="tester-pod-mobile-row-label-cell">
+                <span className="tester-pod-mobile-row-icon" aria-hidden="true">
+                  <RowIcon size={13} strokeWidth={1.9} />
+                </span>
+                <span>
+                  <span className="tester-pod-mobile-row-label">{row.label}</span>
+                  <span className="tester-pod-mobile-row-detail">{row.detail}</span>
+                </span>
+              </div>
+              <div className="tester-pod-mobile-row-values">
+                <TesterPodMobileValues row={row} />
+              </div>
+              <button type="button" className="tester-pod-mobile-override">Override</button>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
 function TesterPodDashboard() {
   return (
-    <TesterPodChrome>
-      <TesterPodHeader />
-      <TesterPodTabs />
-      <TesterPodPanel />
-    </TesterPodChrome>
+    <>
+      <div className="tester-pod-desktop-preview">
+        <TesterPodChrome>
+          <TesterPodHeader />
+          <TesterPodTabs />
+          <TesterPodPanel />
+        </TesterPodChrome>
+      </div>
+      <TesterPodMobileDashboard />
+    </>
   );
 }
 
