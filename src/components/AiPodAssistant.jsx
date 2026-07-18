@@ -1,174 +1,141 @@
-import { useEffect, useRef, useState } from 'react';
-import { Send, Sparkles, Loader2 } from 'lucide-react';
-import { sendChatMessage } from '../lib/aiClient';
-import { supabase } from '../lib/supabaseClient';
+/******  AI POD ASSISTANT — Smart Suggestions & Voice Chat  ******/
+import React, { useState, useRef, useEffect } from 'react';
+import { Sparkles, Send, Mic, X, Bot, User, Loader2 } from 'lucide-react';
+import { askDovroynAI } from '../lib/aiClient';
+import { usePod } from '../pods/PodContext';
 
-const INTRO_MESSAGE = {
-  id: 'intro',
-  sender: 'assistant',
-  text: "Hey! I'm Dovroyn — your AI marketing pod assistant. Tell me about your brand or ask me anything about campaign strategy, content ideas, or platform recommendations.",
-};
-
-const SUGGESTED_QUESTIONS = [
-  'What platforms should I focus on for my brand?',
-  'Give me 3 Instagram caption ideas',
-  'What makes a good TikTok hook?',
-  'How do I grow on LinkedIn?',
+const QUICK_PROMPTS = [
+  'Write a caption for my next post',
+  'What should I post today?',
+  'Analyze my latest content performance',
+  'Generate hashtag suggestions',
+  'Help me plan this week\'s content',
 ];
 
-export default function AiPodAssistant({ podId, userId }) {
-  const [messages, setMessages] = useState([INTRO_MESSAGE]);
-  const [draft, setDraft] = useState('');
-  const [thinking, setThinking] = useState(false);
-  const [error, setError] = useState(null);
-  const chatEndRef = useRef(null);
-  const timerRef = useRef(null);
+export default function AiPodAssistant({ collapsed = false }) {
+  const { currentPod } = usePod();
+  const [open, setOpen] = useState(false);
+  const [messages, setMessages] = useState([
+    { role: 'assistant', text: `Hey! I'm your Dovroyn AI for **${currentPod?.name || 'this pod'}**. Ask me anything about content, strategy, or growth.` },
+  ]);
+  const [input, setInput] = useState('');
+  const [typing, setTyping] = useState(false);
+  const scrollRef = useRef(null);
 
   useEffect(() => {
-    chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages]);
+    if (scrollRef.current) scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+  }, [messages, typing]);
 
-  useEffect(() => () => clearTimeout(timerRef.current), []);
-
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    const question = draft.trim();
-    if (!question || thinking) return;
-
-    setDraft('');
-    setError(null);
-    setThinking(true);
-
-    // Add user message immediately
-    setMessages((prev) => [
-      ...prev,
-      { id: `user-${Date.now()}`, sender: 'user', text: question },
-    ]);
-
+  const send = async (text) => {
+    if (!text.trim()) return;
+    const userMsg = { role: 'user', text };
+    setMessages((m) => [...m, userMsg]);
+    setInput('');
+    setTyping(true);
     try {
-      const session = await supabase.auth.getSession();
-      const token = session.data.session?.access_token;
-
-      if (!token) {
-        throw new Error('Not authenticated. Please sign in.');
-      }
-
-      const result = await sendChatMessage({
-        message: question,
-        pod_id: podId || 'preview',
-        user_id: userId || session.data.session.user.id,
-        token,
-      });
-
-      setMessages((prev) => [
-        ...prev,
-        { id: `assistant-${Date.now()}`, sender: 'assistant', text: result.response },
-      ]);
-    } catch (err) {
-      console.error('AI chat error:', err);
-      setError(err.message || 'AI service unavailable. Please try again.');
-      setMessages((prev) => [
-        ...prev,
-        { id: `error-${Date.now()}`, sender: 'assistant', text: `Sorry, I ran into an issue: ${err.message}` },
-      ]);
+      const reply = await askDovroynAI(text, { podId: currentPod?.id });
+      setMessages((m) => [...m, { role: 'assistant', text: reply }]);
+    } catch {
+      setMessages((m) => [...m, { role: 'assistant', text: 'Sorry, I had trouble connecting. Try again?' }]);
     } finally {
-      setThinking(false);
+      setTyping(false);
     }
   };
 
-  const handleSuggestedAsk = (question) => {
-    setDraft(question);
-    // Auto-submit after a brief delay so user sees it
-    setTimeout(() => {
-      const fakeEvent = { preventDefault: () => {} };
-      handleSubmit(fakeEvent);
-    }, 100);
-  };
+  if (collapsed) {
+    return (
+      <button
+        onClick={() => setOpen(true)}
+        className="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full bg-gradient-to-br from-purple-600 to-pink-500 text-white shadow-2xl shadow-purple-600/30 flex items-center justify-center hover:scale-110 transition-transform"
+        title="AI Assistant"
+      >
+        <Sparkles size={22} />
+      </button>
+    );
+  }
+
+  if (!open) {
+    return (
+      <button
+        onClick={() => setOpen(true)}
+        className="fixed bottom-6 right-6 z-50 flex items-center gap-2 px-5 py-3 rounded-full bg-gradient-to-r from-purple-600 to-pink-500 text-white font-medium shadow-2xl shadow-purple-600/30 hover:shadow-purple-600/50 hover:scale-105 transition-all"
+      >
+        <Sparkles size={18} />
+        <span>Ask AI</span>
+      </button>
+    );
+  }
 
   return (
-    <section className="ai-assistant-section">
-      <p className="eyebrow">AI Assistant</p>
-      <h2 className="section-title">Chat with your AI marketing pod.</h2>
-      <p className="lede ai-assistant-lede">
-        Ask Dovroyn anything about your brand, campaign strategy, content ideas, or platform recommendations.
-      </p>
+    <div className="fixed bottom-6 right-6 z-50 w-[380px] max-h-[520px] bg-[#0E0E16] border border-purple-500/20 rounded-2xl shadow-2xl shadow-black/50 flex flex-col overflow-hidden animate-in fade-in slide-in-from-bottom-4 duration-300">
+      {/* Header */}
+      <div className="flex items-center justify-between px-4 py-3 bg-gradient-to-r from-purple-600/20 to-pink-500/10 border-b border-purple-500/10">
+        <div className="flex items-center gap-2">
+          <Bot size={18} className="text-purple-400" />
+          <span className="font-semibold text-white text-sm">Dovroyn AI</span>
+          <span className="px-1.5 py-0.5 text-[10px] bg-purple-500/20 text-purple-300 rounded-full">BETA</span>
+        </div>
+        <button onClick={() => setOpen(false)} className="text-gray-400 hover:text-white transition-colors">
+          <X size={18} />
+        </button>
+      </div>
 
-      <div className="panel ai-assistant-card" aria-label="Dovroyn AI chat">
-        <div className="ai-assistant-header">
-          <span className="ai-assistant-orb" aria-hidden="true">
-            <span className="ai-assistant-orb-ring" />
-            <Sparkles size={16} strokeWidth={1.75} />
-          </span>
-          <div>
-            <p className="ai-assistant-name">Dovroyn</p>
-            <p className="ai-assistant-subtitle">AI Marketing Pod</p>
-            <p className="ai-assistant-status"><span aria-hidden="true" />Online</p>
+      {/* Messages */}
+      <div ref={scrollRef} className="flex-1 overflow-y-auto p-4 space-y-4 min-h-[250px]">
+        {messages.map((msg, i) => (
+          <div key={i} className={`flex gap-2 ${msg.role === 'user' ? 'flex-row-reverse' : ''}`}>
+            <div className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 ${msg.role === 'assistant' ? 'bg-purple-500/20 text-purple-400' : 'bg-gray-700 text-gray-300'}`}>
+              {msg.role === 'assistant' ? <Bot size={14} /> : <User size={14} />}
+            </div>
+            <div className={`max-w-[80%] px-3 py-2 rounded-xl text-sm leading-relaxed ${msg.role === 'assistant' ? 'bg-purple-500/10 text-gray-200 border border-purple-500/10' : 'bg-gray-700 text-white'}`}>
+              <div dangerouslySetInnerHTML={{ __html: msg.text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') }} />
+            </div>
+          </div>
+        ))}
+        {typing && (
+          <div className="flex gap-2">
+            <div className="w-7 h-7 rounded-full bg-purple-500/20 text-purple-400 flex items-center justify-center shrink-0">
+              <Bot size={14} />
+            </div>
+            <div className="bg-purple-500/10 border border-purple-500/10 px-3 py-2 rounded-xl">
+              <Loader2 size={16} className="text-purple-400 animate-spin" />
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Quick Prompts */}
+      {messages.length <= 2 && (
+        <div className="px-4 pb-2">
+          <p className="text-xs text-gray-500 mb-2">Quick prompts</p>
+          <div className="flex flex-wrap gap-1.5">
+            {QUICK_PROMPTS.map((p) => (
+              <button key={p} onClick={() => send(p)} className="px-2 py-1 text-xs bg-white/5 text-gray-400 rounded-lg hover:bg-purple-500/10 hover:text-purple-300 transition-all border border-gray-800">
+                {p}
+              </button>
+            ))}
           </div>
         </div>
+      )}
 
-        <div className="ai-assistant-chat" aria-live="polite">
-          {messages.map((message) => (
-            <div
-              key={message.id}
-              className={`ai-assistant-message-row ai-assistant-message-row-${message.sender}`}
-            >
-              {message.sender === 'assistant' && (
-                <span className="ai-assistant-mini-avatar" aria-hidden="true">
-                  <Sparkles size={12} strokeWidth={1.8} />
-                </span>
-              )}
-              <p className={`ai-assistant-bubble ai-assistant-bubble-${message.sender}`}>
-                {message.text}
-              </p>
-            </div>
-          ))}
-          {thinking && (
-            <div className="ai-assistant-message-row ai-assistant-message-row-assistant">
-              <span className="ai-assistant-mini-avatar" aria-hidden="true">
-                <Sparkles size={12} strokeWidth={1.8} />
-              </span>
-              <div className="ai-assistant-bubble ai-assistant-bubble-assistant ai-assistant-thinking" role="status">
-                <Loader2 size={14} className="animate-spin" />
-                <span className="ai-assistant-thinking-label">Dovroyn is thinking...</span>
-              </div>
-            </div>
-          )}
-          <div ref={chatEndRef} />
-        </div>
-
-        <div className="ai-assistant-questions" role="group" aria-label="Suggested questions">
-          {SUGGESTED_QUESTIONS.map((q) => (
-            <button
-              key={q}
-              type="button"
-              className="ai-assistant-question"
-              onClick={() => handleSuggestedAsk(q)}
-              disabled={thinking}
-            >
-              {q}
-            </button>
-          ))}
-        </div>
-
-        <form className="ai-assistant-input-bar" onSubmit={handleSubmit}>
-          <label className="sr-only" htmlFor="ai-assistant-input">
-            Ask Dovroyn anything about your marketing pod
-          </label>
+      {/* Input */}
+      <div className="p-3 border-t border-gray-800">
+        <form
+          onSubmit={(e) => { e.preventDefault(); send(input); }}
+          className="flex items-center gap-2 bg-[#1a1a24] border border-gray-700 rounded-xl px-3 py-2 focus-within:border-purple-500/50 transition-colors"
+        >
+          <Mic size={16} className="text-gray-500 cursor-pointer hover:text-purple-400 transition-colors" />
           <input
-            id="ai-assistant-input"
-            type="text"
-            value={draft}
-            onChange={(event) => setDraft(event.target.value)}
-            placeholder="Ask Dovroyn anything about your marketing pod..."
-            disabled={thinking}
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            placeholder="Ask anything..."
+            className="flex-1 bg-transparent text-sm text-white placeholder-gray-500 outline-none"
           />
-          <button type="submit" aria-label="Send message" disabled={thinking || !draft.trim()}>
-            {thinking ? <Loader2 size={16} className="animate-spin" /> : <Send size={16} strokeWidth={1.9} />}
+          <button type="submit" disabled={!input.trim() || typing} className="text-purple-400 hover:text-purple-300 disabled:text-gray-600 transition-colors">
+            <Send size={16} />
           </button>
         </form>
-
-        {error && <p className="form-error" style={{ marginTop: '0.5rem' }}>{error}</p>}
       </div>
-    </section>
+    </div>
   );
 }

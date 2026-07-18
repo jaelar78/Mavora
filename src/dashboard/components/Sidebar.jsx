@@ -1,104 +1,55 @@
-import { useState } from 'react';
-import { NavLink, useLocation } from 'react-router-dom';
+/******  DASHBOARD SIDEBAR  ******/
+import React from 'react';
+import { NavLink } from 'react-router-dom';
 import {
-  LayoutDashboard,
-  Globe,
-  PenTool,
-  Image,
-  TrendingUp,
-  Megaphone,
-  Users,
-  Settings,
-  ChevronLeft,
-  ChevronRight,
+  LayoutDashboard, Target, FileText, TrendingUp, Image, Users, Globe, Settings, Sparkles, ChevronLeft
 } from 'lucide-react';
 
-const NAV_ITEMS = [
-  { icon: LayoutDashboard, label: 'Dashboard', path: '/' },
-  { icon: Globe, label: 'Websites', path: '/websites' },
-  { icon: PenTool, label: 'Content Engine', path: '/content' },
-  { icon: Image, label: 'Media Library', path: '/media' },
-  { icon: TrendingUp, label: 'Growth Advice', path: '/advice' },
-  { icon: Megaphone, label: 'Campaigns', path: '/campaigns' },
-  { icon: Users, label: 'Artists', path: '/artists' },
-  { icon: Settings, label: 'Settings', path: '/settings' },
+const NAV = [
+  { to: '/dashboard',             label: 'Dashboard',          icon: LayoutDashboard },
+  { to: '/dashboard/campaigns',   label: 'Campaigns',          icon: Target },
+  { to: '/dashboard/content-engine', label: 'Content Engine',  icon: FileText },
+  { to: '/dashboard/growth-advice',  label: 'Growth Advice',   icon: TrendingUp },
+  { to: '/dashboard/media-library',  label: 'Media Library',   icon: Image },
+  { to: '/dashboard/artist-submissions', label: 'Submissions', icon: Users },
+  { to: '/dashboard/websites',    label: 'Websites',           icon: Globe },
+  { to: '/dashboard/settings',    label: 'Settings',           icon: Settings },
 ];
 
-export default function Sidebar() {
-  const [collapsed, setCollapsed] = useState(false);
-  const location = useLocation();
-
+export default function DashboardSidebar() {
   return (
-    <aside
-      className={`fixed left-0 top-0 h-screen bg-[#3D3632] text-[#E8E2D9] z-50 transition-all duration-300 ${
-        collapsed ? 'w-16' : 'w-72'
-      } hidden lg:flex flex-col`}
-    >
-      {/* Logo */}
-      <div className="flex items-center gap-3 px-4 h-16 border-b border-[#5A524C]">
-        <img
-          src="/dovroyn-icon.svg"
-          alt="Dovroyn"
-          className="w-8 h-8 flex-shrink-0"
-        />
-        {!collapsed && (
-          <div className="flex items-center gap-2">
-            <span className="text-lg font-semibold tracking-wide text-[#FAF9F7]">
-              Dovroyn
-            </span>
-            <span className="text-[10px] font-medium text-[#C9A96E] bg-[#C9A96E]/10 px-1.5 py-0.5 rounded">
-              BETA
-            </span>
-          </div>
-        )}
-      </div>
-
-      {/* Navigation */}
-      <nav className="flex-1 py-4 space-y-1 px-2">
-        {NAV_ITEMS.map((item) => {
+    <aside className="w-56 bg-[#111118] border-r border-gray-800/60 flex flex-col shrink-0">
+      <nav className="flex-1 p-3 space-y-1">
+        {NAV.map((item) => {
           const Icon = item.icon;
-          const isActive = location.pathname === item.path;
-
           return (
             <NavLink
-              key={item.path}
-              to={item.path}
-              className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all ${
-                collapsed ? 'justify-center' : ''
-              } ${
-                isActive
-                  ? 'bg-[#C9A96E]/15 text-[#C9A96E]'
-                  : 'text-[#9E9484] hover:bg-[#4A433E] hover:text-[#FAF9F7]'
-              }`}
-              title={collapsed ? item.label : undefined}
+              key={item.to}
+              to={item.to}
+              end={item.to === '/dashboard'}
+              className={({ isActive }) =>
+                `flex items-center gap-3 px-3 py-2 text-sm rounded-lg transition-all ${
+                  isActive
+                    ? 'bg-purple-500/10 text-purple-400 border-l-2 border-purple-500'
+                    : 'text-gray-400 hover:bg-white/5 hover:text-gray-200'
+                }`
+              }
             >
-              <Icon size={20} strokeWidth={isActive ? 2 : 1.5} />
-              {!collapsed && <span>{item.label}</span>}
+              <Icon size={16} />
+              <span>{item.label}</span>
             </NavLink>
           );
         })}
       </nav>
-
-      {/* Collapse toggle */}
-      <div className="p-2 border-t border-[#5A524C]">
-        <button
-          onClick={() => setCollapsed(!collapsed)}
-          className="flex items-center justify-center w-full py-2 rounded-lg text-[#9E9484] hover:bg-[#4A433E] hover:text-[#FAF9F7] transition-colors"
-          title={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+      <div className="p-3 border-t border-gray-800/60">
+        <NavLink
+          to="/pods"
+          className="flex items-center gap-2 px-3 py-2 text-sm text-gray-400 hover:text-gray-200 rounded-lg hover:bg-white/5 transition-all"
         >
-          {collapsed ? <ChevronRight size={18} /> : <ChevronLeft size={18} />}
-          {!collapsed && <span className="ml-2 text-sm">Collapse</span>}
-        </button>
+          <ChevronLeft size={16} />
+          <span>Back to Pods</span>
+        </NavLink>
       </div>
-
-      {/* Footer */}
-      {!collapsed && (
-        <div className="px-4 py-3 border-t border-[#5A524C]">
-          <p className="text-[10px] text-[#9E9484]/60 leading-relaxed">
-            A product of Anglow Digital PTY LTD
-          </p>
-        </div>
-      )}
     </aside>
   );
 }

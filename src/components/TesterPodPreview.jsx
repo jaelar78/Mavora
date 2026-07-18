@@ -1,297 +1,154 @@
+/******  TESTER POD PREVIEW — Full 14-page pod walkthrough  ******/
+import React, { useState } from 'react';
 import {
-  Bot,
-  Leaf,
-  MapPin,
-  Palette,
-  Share2,
-  Users,
+  LayoutDashboard, FileText, Calendar, Sparkles, Wand2, BarChart3, Wrench, BookOpen,
+  Plug, Settings, Users, Target, DollarSign, Globe, Rocket, Image, Link2, Megaphone,
+  ChevronRight, CheckCircle, Lock, Play
 } from 'lucide-react';
-import { FaFacebookF, FaInstagram, FaPinterestP, FaTiktok } from 'react-icons/fa6';
 
-const DASHBOARD_NAV_ITEMS = ['AI Brain', 'Content Calendar', 'Platforms', 'Files', 'Ad Performance', 'Budget'];
-
-const PLATFORM_CHIPS = [
-  { label: 'Instagram', Icon: FaInstagram },
-  { label: 'Pinterest', Icon: FaPinterestP },
-  { label: 'Facebook', Icon: FaFacebookF },
-  { label: 'TikTok', Icon: FaTiktok },
+const PAGES = [
+  { key: 'overview',     label: 'Overview',          icon: LayoutDashboard, desc: 'Pod dashboard with KPIs, recent activity, and quick actions', status: 'ready' },
+  { key: 'content',      label: 'Content Generator', icon: FileText,        desc: 'AI-powered caption, hashtag & content creation', status: 'ready' },
+  { key: 'calendar',     label: 'Content Calendar',  icon: Calendar,        desc: 'Weekly/monthly drag-drop calendar with best-time hints', status: 'ready' },
+  { key: 'ai',           label: 'AI Assistant',      icon: Sparkles,        desc: 'Chat-based AI assistant with pod context', status: 'ready' },
+  { key: 'optimizer',    label: 'AI Optimizer',      icon: Wand2,           desc: 'One-click content optimization suggestions', status: 'ready' },
+  { key: 'analytics',    label: 'Analytics',         icon: BarChart3,       desc: 'Growth charts, engagement metrics, audience demographics', status: 'ready' },
+  { key: 'tools',        label: 'Tools',             icon: Wrench,          desc: 'Collection of creator utilities and generators', status: 'ready' },
+  { key: 'playbooks',    label: 'Playbooks',         icon: BookOpen,        desc: 'Step-by-step strategy guides for different goals', status: 'ready' },
+  { key: 'integrations', label: 'Integrations',      icon: Plug,            desc: 'Connect Meta, TikTok, X, YouTube, Shopify, etc.', status: 'ready' },
+  { key: 'collaborations',label:'Collaborations',    icon: Users,           desc: 'Manage brand deals, influencer collabs, outreach', status: 'ready' },
+  { key: 'campaigns',    label: 'Ad Campaigns',      icon: Target,          desc: 'Create and track paid social campaigns', status: 'ready' },
+  { key: 'budget',       label: 'Budget Tracker',    icon: DollarSign,      desc: 'Track spend, revenue, and ROI per pod', status: 'ready' },
+  { key: 'website',      label: 'Website Analyzer',  icon: Globe,           desc: 'SEO audit, performance scan, improvement tips', status: 'ready' },
+  { key: 'coming-soon',  label: 'Coming Soon Builder',icon: Rocket,         desc: 'Build viral pre-launch waitlist pages', status: 'ready' },
+  { key: 'assets',       label: 'Asset Manager',     icon: Image,           desc: 'Organize images, videos, brand assets per pod', status: 'ready' },
+  { key: 'social',       label: 'Social Accounts',   icon: Link2,           desc: 'Connect and manage all social accounts', status: 'ready' },
+  { key: 'ads',          label: 'Ad Campaigns',      icon: Megaphone,       desc: 'Create, manage, and track paid ad campaigns', status: 'ready' },
+  { key: 'settings',     label: 'Settings',          icon: Settings,        desc: 'Pod configuration, team, billing, preferences', status: 'ready' },
 ];
 
-const BRAND_SWATCHES = [
-  { label: 'Sand', color: '#C8A97E' },
-  { label: 'Eucalyptus Green', color: '#4A6B57' },
-  { label: 'Terracotta', color: '#B35C3E' },
-  { label: 'Charcoal', color: '#2E2E2E' },
-];
+const STATUS_STYLES = {
+  ready:   { badge: 'bg-emerald-500/10 text-emerald-400', label: 'Ready',    icon: <CheckCircle size={12} /> },
+  beta:    { badge: 'bg-amber-500/10 text-amber-400',     label: 'Beta',     icon: <Sparkles size={12} /> },
+  soon:    { badge: 'bg-gray-500/10 text-gray-400',       label: 'Soon',     icon: <Lock size={12} /> },
+};
 
-const DASHBOARD_ROWS = [
-  {
-    icon: Palette,
-    label: 'Brand Colours',
-    detail: 'Core palette inspired by Australian landscapes for hats, totes, and accessories.',
-    swatches: BRAND_SWATCHES,
-  },
-  {
-    icon: Bot,
-    label: 'Brand Tone',
-    detail: 'Voice guidance for handcrafted premium product storytelling across campaigns.',
-    chips: ['Authentic', 'Handcrafted', 'Australian', 'Timeless'],
-  },
-  {
-    icon: Users,
-    label: 'Target Audience',
-    detail: 'Audience segments most likely to buy premium outdoor lifestyle products.',
-    chips: ['Outdoor enthusiasts', 'Travellers', 'Gift buyers', 'Australian lifestyle lovers'],
-  },
-  {
-    icon: MapPin,
-    label: 'Geography',
-    detail: 'Campaign recommendations prioritise markets with strong outdoor lifestyle demand.',
-    chips: ['Australia', 'New Zealand', 'USA'],
-  },
-  {
-    icon: Share2,
-    label: 'Recommended Platforms',
-    platforms: PLATFORM_CHIPS,
-    detail: 'Best-fit mix for visual product discovery, storytelling, and short-form reach.',
-  },
-];
+export default function TesterPodPreview() {
+  const [step, setStep] = useState(0); // 0 = intro, 1+ = pages
+  const totalReady = PAGES.filter((p) => p.status === 'ready').length;
 
-function TesterPodContent() {
-  return (
-    <div className="tester-pod-content-shell">
-      <div className="tester-pod-dashboard-list">
-        {DASHBOARD_ROWS.map((row) => {
-          const RowIcon = row.icon;
-
-          return (
-            <div key={row.label} className="tester-pod-dashboard-row">
-              <span className="tester-pod-row-icon" aria-hidden="true">
-                <RowIcon size={14} strokeWidth={1.9} />
-              </span>
-              <div className="tester-pod-row-main">
-                <span className="tester-pod-row-label">{row.label}</span>
-                <p className="tester-pod-row-detail">{row.detail}</p>
-              </div>
-              <div className="tester-pod-row-values">
-                {row.swatches && (
-                  <span className="tester-pod-swatches" aria-label="Brand colour swatches">
-                    {row.swatches.map((swatch) => (
-                      <span key={swatch.label} className="tester-pod-swatch-item" title={swatch.label}>
-                        <span
-                          className="tester-pod-swatch"
-                          style={{ background: swatch.color }}
-                          aria-label={swatch.label}
-                        />
-                      </span>
-                    ))}
-                  </span>
-                )}
-                {row.chips && (
-                  <span className="tester-pod-platforms" aria-label={`${row.label} values`}>
-                    {row.chips.map((chip) => (
-                      <span key={chip} className="tester-pod-platform-chip">
-                        {chip}
-                      </span>
-                    ))}
-                  </span>
-                )}
-                {row.platforms && (
-                  <span className="tester-pod-platforms" aria-label="Recommended platforms">
-                    {row.platforms.map(({ label, Icon }) => (
-                      <span key={label} className="tester-pod-platform-chip">
-                        <Icon aria-hidden="true" />
-                        {label}
-                      </span>
-                    ))}
-                  </span>
-                )}
-              </div>
-              <button type="button" className="tester-pod-row-action">Override</button>
-            </div>
-          );
-        })}
-      </div>
-    </div>
-  );
-}
-
-function TesterPodHeader() {
-  return (
-    <div className="tester-pod-header">
-      <div className="tester-pod-header-main">
-        <span className="tester-pod-avatar" aria-hidden="true">
-          <Leaf size={24} strokeWidth={1.85} />
-        </span>
-        <div>
-          <p className="tester-pod-title">Summit Trail Co</p>
-          <p className="tester-pod-subtitle">Australian Outdoor Lifestyle</p>
+  if (step === 0) {
+    return (
+      <div className="min-h-screen bg-[#0a0a0f] flex items-center justify-center px-4">
+        <div className="max-w-lg w-full text-center space-y-6">
+          <div className="w-20 h-20 mx-auto bg-gradient-to-br from-purple-600 to-pink-500 rounded-2xl flex items-center justify-center shadow-2xl shadow-purple-600/30">
+            <Play size={36} className="text-white ml-1" />
+          </div>
+          <div>
+            <h1 className="text-3xl font-bold text-white mb-2">Tester Pod</h1>
+            <p className="text-gray-400">Explore all {PAGES.length} pod pages in this interactive walkthrough</p>
+          </div>
+          <div className="flex justify-center gap-4 text-sm">
+            <span className="flex items-center gap-1 text-emerald-400"><CheckCircle size={14} /> {totalReady} Ready</span>
+            <span className="flex items-center gap-1 text-amber-400"><Sparkles size={14} /> {PAGES.filter((p) => p.status === 'beta').length} Beta</span>
+            <span className="flex items-center gap-1 text-gray-500"><Lock size={14} /> {PAGES.filter((p) => p.status === 'soon').length} Soon</span>
+          </div>
+          <button
+            onClick={() => setStep(1)}
+            className="px-8 py-3 bg-gradient-to-r from-purple-600 to-violet-500 text-white font-semibold rounded-xl hover:shadow-lg hover:shadow-purple-500/25 transition-all inline-flex items-center gap-2"
+          >
+            Start Walkthrough
+            <ChevronRight size={18} />
+          </button>
+          <p className="text-xs text-gray-600">Use arrow keys or click to navigate &middot; Press ESC to exit</p>
         </div>
       </div>
-      <div className="tester-pod-controls" aria-label="Preview controls">
-        <span className="tester-pod-status">AI Brain Active</span>
-        <button type="button" className="tester-pod-style-button">Ready to be styled ✦</button>
-      </div>
-    </div>
-  );
-}
-
-function TesterPodChrome({ children }) {
-  return (
-    <div className="tester-pod-card panel">
-      {children}
-    </div>
-  );
-}
-
-function TesterPodTabs() {
-  return (
-    <div className="tester-pod-tabs" aria-label="Summit Trail Co pod sections">
-      {DASHBOARD_NAV_ITEMS.map((item, index) => (
-        <span key={item} className={`tester-pod-tab ${index === 0 ? 'active' : ''}`}>
-          {item}
-        </span>
-      ))}
-    </div>
-  );
-}
-
-function TesterPodPanel() {
-  return (
-    <section className="tester-pod-content-panel">
-      <TesterPodContent />
-    </section>
-  );
-}
-
-function TesterPodMobileValues({ row }) {
-  if (row.swatches) {
-    return (
-      <span className="tester-pod-mobile-swatches" aria-label="Brand colour swatches">
-        {row.swatches.map((swatch) => (
-          <span key={swatch.label} className="tester-pod-mobile-swatch-shell" title={swatch.label}>
-            <span
-              className="tester-pod-mobile-swatch"
-              style={{ background: swatch.color }}
-              aria-label={swatch.label}
-            />
-          </span>
-        ))}
-      </span>
     );
   }
 
-  if (row.chips) {
-    return (
-      <span className="tester-pod-mobile-chips" aria-label={`${row.label} values`}>
-        {row.chips.map((chip) => (
-          <span key={chip} className="tester-pod-mobile-chip">
-            {chip}
-          </span>
-        ))}
-      </span>
-    );
-  }
+  const currentPage = PAGES[step - 1];
+  const status = STATUS_STYLES[currentPage.status];
+  const Icon = currentPage.icon;
 
   return (
-    <span className="tester-pod-mobile-chips" aria-label="Recommended platforms">
-      {row.platforms.map(({ label, Icon }) => (
-        <span key={label} className="tester-pod-mobile-chip tester-pod-mobile-platform-chip">
-          <Icon aria-hidden="true" />
-          {label}
-        </span>
-      ))}
-    </span>
-  );
-}
-
-function TesterPodMobileDashboard() {
-  return (
-    <div className="tester-pod-mobile-card" aria-label="Summit Trail Co compact mobile pod preview">
-      <div className="tester-pod-mobile-header">
-        <div className="tester-pod-mobile-brand">
-          <span className="tester-pod-mobile-avatar" aria-hidden="true">
-            <Leaf size={22} strokeWidth={1.85} />
-          </span>
-          <div>
-            <p className="tester-pod-mobile-title">Summit Trail Co</p>
-            <p className="tester-pod-mobile-subtitle">Australian Outdoor Lifestyle</p>
+    <div className="min-h-screen bg-[#0a0a0f] flex flex-col">
+      {/* Progress */}
+      <div className="sticky top-0 z-30 bg-[#0a0a0f]/95 backdrop-blur border-b border-gray-800/60 px-6 py-3">
+        <div className="max-w-4xl mx-auto">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-xs text-gray-500">Page {step} of {PAGES.length}</span>
+            <button onClick={() => setStep(0)} className="text-xs text-gray-500 hover:text-white transition-colors">Exit Preview</button>
+          </div>
+          <div className="w-full h-1.5 bg-gray-800 rounded-full overflow-hidden">
+            <div className="h-full bg-gradient-to-r from-purple-600 to-pink-500 rounded-full transition-all duration-500" style={{ width: `${(step / PAGES.length) * 100}%` }} />
           </div>
         </div>
-        <div className="tester-pod-mobile-actions" aria-label="Mobile preview controls">
-          <span className="tester-pod-mobile-status">AI Brain Active</span>
-          <button type="button" className="tester-pod-mobile-ready">Ready to be styled ✦</button>
+      </div>
+
+      {/* Page Preview */}
+      <div className="flex-1 flex items-center justify-center px-4 py-8">
+        <div className="max-w-2xl w-full text-center space-y-6">
+          <div className="w-16 h-16 mx-auto bg-purple-500/10 border border-purple-500/20 rounded-2xl flex items-center justify-center">
+            <Icon size={28} className="text-purple-400" />
+          </div>
+          <div>
+            <div className="flex items-center justify-center gap-2 mb-2">
+              <h2 className="text-2xl font-bold text-white">{currentPage.label}</h2>
+              <span className={`inline-flex items-center gap-1 px-2 py-0.5 text-xs font-medium rounded-full ${status.badge}`}>
+                {status.icon} {status.label}
+              </span>
+            </div>
+            <p className="text-gray-400">{currentPage.desc}</p>
+          </div>
+
+          {/* Mock UI Preview */}
+          <div className="bg-[#111118] border border-gray-800/60 rounded-xl p-6 text-left space-y-4">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-3 h-3 rounded-full bg-red-500/60" />
+              <div className="w-3 h-3 rounded-full bg-amber-500/60" />
+              <div className="w-3 h-3 rounded-full bg-green-500/60" />
+              <div className="flex-1 h-6 bg-gray-800/60 rounded-md ml-4" />
+            </div>
+            <div className="grid grid-cols-3 gap-3">
+              <div className="h-20 bg-purple-500/5 border border-purple-500/10 rounded-lg" />
+              <div className="h-20 bg-purple-500/5 border border-purple-500/10 rounded-lg" />
+              <div className="h-20 bg-purple-500/5 border border-purple-500/10 rounded-lg" />
+            </div>
+            <div className="h-32 bg-gray-800/30 rounded-lg" />
+            <div className="flex gap-2">
+              <div className="h-8 w-24 bg-purple-600/20 rounded-lg" />
+              <div className="h-8 w-24 bg-gray-800/40 rounded-lg" />
+            </div>
+          </div>
+
+          {/* Navigation */}
+          <div className="flex items-center justify-between pt-4">
+            <button
+              onClick={() => setStep(Math.max(1, step - 1))}
+              disabled={step === 1}
+              className="px-4 py-2 border border-gray-700 text-gray-300 rounded-lg hover:bg-white/5 transition-all disabled:opacity-30 disabled:cursor-not-allowed text-sm"
+            >
+              Previous
+            </button>
+            <div className="flex gap-1">
+              {PAGES.map((_, i) => (
+                <button
+                  key={i}
+                  onClick={() => setStep(i + 1)}
+                  className={`w-2 h-2 rounded-full transition-all ${step === i + 1 ? 'bg-purple-500 w-6' : 'bg-gray-700 hover:bg-gray-600'}`}
+                />
+              ))}
+            </div>
+            <button
+              onClick={() => setStep(Math.min(PAGES.length, step + 1))}
+              disabled={step === PAGES.length}
+              className="px-4 py-2 bg-gradient-to-r from-purple-600 to-violet-500 text-white rounded-lg hover:shadow-lg transition-all disabled:opacity-30 disabled:cursor-not-allowed text-sm"
+            >
+              {step === PAGES.length ? 'Finish' : 'Next'}
+            </button>
+          </div>
         </div>
       </div>
-
-      <div className="tester-pod-mobile-tabs" aria-label="Summit Trail Co pod sections">
-        {DASHBOARD_NAV_ITEMS.map((item, index) => (
-          <span key={item} className={`tester-pod-mobile-tab ${index === 0 ? 'active' : ''}`}>
-            {item}
-          </span>
-        ))}
-      </div>
-
-      <div className="tester-pod-mobile-rows">
-        {DASHBOARD_ROWS.map((row) => {
-          const RowIcon = row.icon;
-
-          return (
-            <div key={row.label} className="tester-pod-mobile-row">
-              <div className="tester-pod-mobile-row-label-cell">
-                <span className="tester-pod-mobile-row-icon" aria-hidden="true">
-                  <RowIcon size={13} strokeWidth={1.9} />
-                </span>
-                <span>
-                  <span className="tester-pod-mobile-row-label">{row.label}</span>
-                  <span className="tester-pod-mobile-row-detail">{row.detail}</span>
-                </span>
-              </div>
-              <div className="tester-pod-mobile-row-values">
-                <TesterPodMobileValues row={row} />
-              </div>
-              <button type="button" className="tester-pod-mobile-override">Override</button>
-            </div>
-          );
-        })}
-      </div>
     </div>
-  );
-}
-
-function TesterPodDashboard() {
-  return (
-    <>
-      <div className="tester-pod-desktop-preview">
-        <TesterPodChrome>
-          <TesterPodHeader />
-          <TesterPodTabs />
-          <TesterPodPanel />
-        </TesterPodChrome>
-      </div>
-      <TesterPodMobileDashboard />
-    </>
-  );
-}
-
-export default function TesterPodPreview({ onJoinEarlyAccess }) {
-  return (
-    <section className="tester-pod-section">
-      <h2 className="section-title">See one of Dovroyn's AI pods.</h2>
-      <p className="lede">
-        This preview shows one dedicated Dovroyn AI pod after it has analysed a brand. Each pod has its own AI brain, brand memory, content calendar, platform strategy, ad view, files, and budget tracker.
-      </p>
-
-      <TesterPodDashboard />
-
-      <div className="tester-pod-cta">
-        <button className="button button-primary" onClick={onJoinEarlyAccess}>
-          Join Early Access
-        </button>
-        <p className="tester-pod-note">
-          This is a preview. Live posting and ad actions require connected accounts and user approval.
-        </p>
-      </div>
-    </section>
   );
 }

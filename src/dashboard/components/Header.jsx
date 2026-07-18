@@ -1,53 +1,40 @@
-import { useState } from 'react';
+/******  DASHBOARD HEADER  ******/
+import React from 'react';
 import { Link } from 'react-router-dom';
-import { Bell, Search, Menu } from 'lucide-react';
+import { Bell, Search } from 'lucide-react';
+import { usePod } from '../../pods/PodContext';
 
-export default function Header() {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+export default function DashboardHeader() {
+  const { currentPod } = usePod();
 
   return (
-    <header className="h-16 bg-[#FAF9F7]/80 backdrop-blur-md border-b border-[#E8E2D9] sticky top-0 z-40 px-4 lg:px-8 flex items-center justify-between">
-      {/* Search */}
-      <div className="flex items-center gap-4 flex-1">
-        <div className="relative max-w-md w-full hidden sm:block">
-          <Search
-            size={16}
-            className="absolute left-3 top-1/2 -translate-y-1/2 text-[#9E9484]"
-          />
-          <input
-            type="text"
-            placeholder="Search..."
-            className="w-full pl-9 pr-4 py-2 bg-white border border-[#E8E2D9] rounded-lg text-sm text-[#3D3632] placeholder:text-[#9E9484] focus:outline-none focus:ring-2 focus:ring-[#C9A96E]/30 focus:border-[#C9A96E]"
-          />
-        </div>
-      </div>
-
-      {/* Right section */}
-      <div className="flex items-center gap-3">
-        <button className="relative p-2 rounded-lg hover:bg-[#E8E2D9]/50 transition-colors">
-          <Bell size={18} className="text-[#6B6560]" />
-          <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-[#C9A96E] rounded-full" />
-        </button>
-
-        <Link
-          to="/settings"
-          className="flex items-center gap-2 pl-2 pr-3 py-1.5 rounded-lg hover:bg-[#E8E2D9]/50 transition-colors"
-        >
-          <div className="w-7 h-7 rounded-full bg-gradient-to-br from-[#C9A96E] to-[#9E9484] flex items-center justify-center text-white text-xs font-medium">
-            U
+    <header className="h-14 bg-[#111118] border-b border-gray-800/60 flex items-center justify-between px-4 shrink-0">
+      <div className="flex items-center gap-4">
+        <Link to="/" className="flex items-center gap-2">
+          <div className="w-7 h-7 bg-gradient-to-br from-purple-600 to-pink-500 rounded-lg flex items-center justify-center">
+            <span className="text-white font-bold text-xs">D</span>
           </div>
-          <span className="text-sm font-medium text-[#3D3632] hidden sm:block">
-            Account
-          </span>
+          <span className="text-white font-semibold text-sm hidden md:block">Dovroyn</span>
         </Link>
-
-        {/* Mobile menu toggle */}
-        <button
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          className="lg:hidden p-2 rounded-lg hover:bg-[#E8E2D9]/50"
-        >
-          <Menu size={20} className="text-[#6B6560]" />
+        {currentPod && (
+          <>
+            <span className="text-gray-600">/</span>
+            <span className="text-sm text-purple-400 font-medium">{currentPod.name}</span>
+          </>
+        )}
+      </div>
+      <div className="flex items-center gap-3">
+        <div className="hidden md:flex items-center bg-[#1a1a24] border border-gray-800 rounded-lg px-3 py-1.5">
+          <Search size={14} className="text-gray-500 mr-2" />
+          <input placeholder="Search..." className="bg-transparent text-sm text-white placeholder-gray-500 outline-none w-40" />
+        </div>
+        <button className="relative p-2 text-gray-400 hover:text-white transition-colors">
+          <Bell size={18} />
+          <span className="absolute top-1 right-1 w-2 h-2 bg-purple-500 rounded-full" />
         </button>
+        <div className="w-8 h-8 bg-gradient-to-br from-purple-600 to-pink-500 rounded-full flex items-center justify-center text-white font-bold text-xs">
+          U
+        </div>
       </div>
     </header>
   );
