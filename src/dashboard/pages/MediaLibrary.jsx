@@ -1,210 +1,158 @@
-import { useState, useRef } from 'react';
+/******  MEDIA LIBRARY — Asset Organization  ******/
+import React, { useState } from 'react';
 import {
-  Image,
-  Upload,
-  Search,
-  Grid3X3,
-  List,
-  Trash2,
-  Download,
-  FileImage,
-  FileVideo,
-  FileAudio,
+  Image, Video, FileText, Music, Search, Grid, List, Upload,
+  Folder, Tag, Filter, Download, Trash2, Copy, Star, Clock
 } from 'lucide-react';
 
-/* ─── Mock data ─── */
-const INITIAL_MEDIA = [
-  { id: 1, name: 'hero-beach-sunset.jpg', type: 'image', size: '2.4 MB', date: '2025-06-15', url: null },
-  { id: 2, name: 'product-serum-lifestyle.jpg', type: 'image', size: '1.8 MB', date: '2025-06-14', url: null },
-  { id: 3, name: 'brand-reel-summer.mp4', type: 'video', size: '12.6 MB', date: '2025-06-13', url: null },
-  { id: 4, name: 'podcast-intro.mp3', type: 'audio', size: '3.2 MB', date: '2025-06-12', url: null },
-  { id: 5, name: 'instagram-carousel-1.jpg', type: 'image', size: '1.1 MB', date: '2025-06-11', url: null },
-  { id: 6, name: 'logo-white-transparent.png', type: 'image', size: '0.4 MB', date: '2025-06-10', url: null },
+const SAMPLE_ASSETS = [
+  { id: 1, name: 'Summer Collection Hero', type: 'image', size: '2.4 MB', dimensions: '1080x1080', tags: ['fashion', 'summer', 'hero'], favorite: true, date: '2026-01-15', pod: 'Fashion Forward' },
+  { id: 2, name: 'Workout Tutorial Reel', type: 'video', size: '45.2 MB', duration: '0:45', tags: ['fitness', 'tutorial', 'reel'], favorite: false, date: '2026-01-14', pod: 'Fitness Daily' },
+  { id: 3, name: 'Brand Guidelines 2026', type: 'document', size: '5.1 MB', pages: 12, tags: ['brand', 'guidelines'], favorite: true, date: '2026-01-13', pod: 'Fashion Forward' },
+  { id: 4, name: 'Morning Routine BTS', type: 'video', size: '32.8 MB', duration: '1:23', tags: ['lifestyle', 'bts', 'morning'], favorite: false, date: '2026-01-12', pod: 'Fitness Daily' },
+  { id: 5, name: 'Product Lineup', type: 'image', size: '3.7 MB', dimensions: '1920x1080', tags: ['product', 'lineup', 'ecommerce'], favorite: false, date: '2026-01-11', pod: 'Fashion Forward' },
+  { id: 6, name: 'Podcast Intro', type: 'audio', size: '8.2 MB', duration: '0:15', tags: ['audio', 'podcast', 'intro'], favorite: false, date: '2026-01-10', pod: 'Art Studio' },
+  { id: 7, name: 'Instagram Story Set', type: 'image', size: '1.8 MB', dimensions: '1080x1920', tags: ['story', 'instagram', 'set'], favorite: true, date: '2026-01-09', pod: 'Fashion Forward' },
+  { id: 8, name: 'Testimonial Compilation', type: 'video', size: '28.5 MB', duration: '2:15', tags: ['testimonial', 'social-proof'], favorite: false, date: '2026-01-08', pod: 'Fitness Daily' },
 ];
 
-const TYPE_ICONS = {
-  image: FileImage,
-  video: FileVideo,
-  audio: FileAudio,
-};
-
-const TYPE_COLORS = {
-  image: 'bg-[#C9A96E]/10 text-[#C9A96E]',
-  video: 'bg-[#9E9484]/10 text-[#9E9484]',
-  audio: 'bg-[#6B6560]/10 text-[#6B6560]',
-};
+const TYPE_ICONS = { image: <Image size={16} />, video: <Video size={16} />, document: <FileText size={16} />, audio: <Music size={16} /> };
+const TYPE_COLORS = { image: 'text-purple-400', video: 'text-pink-400', document: 'text-blue-400', audio: 'text-amber-400' };
 
 export default function MediaLibrary() {
-  const [media, setMedia] = useState(INITIAL_MEDIA);
-  const [viewMode, setViewMode] = useState('grid');
+  const [assets, setAssets] = useState(SAMPLE_ASSETS);
+  const [view, setView] = useState('grid');
   const [search, setSearch] = useState('');
-  const [filter, setFilter] = useState('all');
-  const fileInputRef = useRef(null);
+  const [typeFilter, setTypeFilter] = useState('all');
+  const [podFilter, setPodFilter] = useState('all');
 
-  const filtered = media.filter((m) => {
-    const matchesSearch = m.name.toLowerCase().includes(search.toLowerCase());
-    const matchesFilter = filter === 'all' || m.type === filter;
-    return matchesSearch && matchesFilter;
+  const filtered = assets.filter((a) => {
+    if (search && !a.name.toLowerCase().includes(search.toLowerCase())) return false;
+    if (typeFilter !== 'all' && a.type !== typeFilter) return false;
+    if (podFilter !== 'all' && a.pod !== podFilter) return false;
+    return true;
   });
 
-  const handleUpload = () => fileInputRef.current?.click();
+  const pods = [...new Set(assets.map((a) => a.pod))];
 
-  const handleFileChange = (e) => {
-    const files = Array.from(e.target.files);
-    const newItems = files.map((file) => ({
-      id: Date.now() + Math.random(),
-      name: file.name,
-      type: file.type.startsWith('image/') ? 'image' : file.type.startsWith('video/') ? 'video' : 'audio',
-      size: `${(file.size / 1024 / 1024).toFixed(1)} MB`,
-      date: new Date().toISOString().split('T')[0],
-      url: null,
-    }));
-    setMedia([...newItems, ...media]);
+  const toggleFavorite = (id) => {
+    setAssets((prev) => prev.map((a) => a.id === id ? { ...a, favorite: !a.favorite } : a));
   };
 
-  const handleDelete = (id) => setMedia(media.filter((m) => m.id !== id));
-
   return (
-    <div className="space-y-6 animate-fade-in-up">
-      {/* Header */}
+    <div className="p-6 space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-semibold text-[#3D3632] font-serif">Media Library</h1>
-          <p className="text-sm text-[#9E9484] mt-0.5">Manage images, videos, and audio files.</p>
+          <h1 className="text-2xl font-bold text-white">Media Library</h1>
+          <p className="text-sm text-gray-400 mt-1">Organize and manage all your creative assets</p>
         </div>
-        <button
-          onClick={handleUpload}
-          className="flex items-center gap-2 px-4 py-2 bg-[#3D3632] text-[#FAF9F7] rounded-lg text-sm font-medium hover:bg-[#4A433E] transition-colors"
-        >
-          <Upload size={16} />
-          Upload
+        <button className="btn-primary flex items-center gap-2">
+          <Upload size={16} /> Upload
         </button>
-        <input
-          ref={fileInputRef}
-          type="file"
-          multiple
-          accept="image/*,video/*,audio/*"
-          onChange={handleFileChange}
-          className="hidden"
-        />
       </div>
 
-      {/* Toolbar */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-        <div className="relative w-full sm:w-72">
-          <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#9E9484]" />
-          <input
-            type="text"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="Search media..."
-            className="w-full pl-9 pr-4 py-2 border border-[#E8E2D9] rounded-lg text-sm text-[#3D3632] placeholder:text-[#9E9484] bg-white focus:outline-none focus:ring-2 focus:ring-[#C9A96E]/30 focus:border-[#C9A96E]"
-          />
+      {/* Filters */}
+      <div className="flex items-center gap-3 flex-wrap">
+        <div className="flex items-center flex-1 min-w-[200px] bg-[#1a1a24] border border-gray-800 rounded-lg px-3 py-2">
+          <Search size={16} className="text-gray-500 mr-2" />
+          <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search assets..." className="bg-transparent text-sm text-white placeholder-gray-500 outline-none flex-1" />
         </div>
-        <div className="flex items-center gap-2">
-          {['all', 'image', 'video', 'audio'].map((f) => (
-            <button
-              key={f}
-              onClick={() => setFilter(f)}
-              className={`px-3 py-1.5 rounded-lg text-xs font-medium capitalize transition-colors ${
-                filter === f
-                  ? 'bg-[#3D3632] text-[#FAF9F7]'
-                  : 'bg-white border border-[#E8E2D9] text-[#6B6560] hover:border-[#C9A96E]/30'
-              }`}
-            >
-              {f}
-            </button>
+        <select value={typeFilter} onChange={(e) => setTypeFilter(e.target.value)} className="input-field">
+          <option value="all">All Types</option>
+          <option value="image">Images</option>
+          <option value="video">Videos</option>
+          <option value="document">Documents</option>
+          <option value="audio">Audio</option>
+        </select>
+        <select value={podFilter} onChange={(e) => setPodFilter(e.target.value)} className="input-field">
+          <option value="all">All Pods</option>
+          {pods.map((p) => <option key={p} value={p}>{p}</option>)}
+        </select>
+        <div className="flex items-center bg-[#1a1a24] border border-gray-800 rounded-lg p-1">
+          <button onClick={() => setView('grid')} className={`p-1.5 rounded ${view === 'grid' ? 'bg-purple-500/20 text-purple-400' : 'text-gray-500'}`}><Grid size={14} /></button>
+          <button onClick={() => setView('list')} className={`p-1.5 rounded ${view === 'list' ? 'bg-purple-500/20 text-purple-400' : 'text-gray-500'}`}><List size={14} /></button>
+        </div>
+      </div>
+
+      {/* Stats */}
+      <div className="flex items-center gap-4 text-sm text-gray-400">
+        <span>{filtered.length} assets</span>
+        <span>{assets.filter((a) => a.favorite).length} favorites</span>
+        <span>{(assets.reduce((s, a) => s + parseFloat(a.size), 0)).toFixed(1)} MB total</span>
+      </div>
+
+      {/* Grid View */}
+      {view === 'grid' && (
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {filtered.map((asset) => (
+            <div key={asset.id} className="pod-card group cursor-pointer hover:border-purple-500/30 transition-all">
+              <div className="aspect-video bg-[#0a0a0f] rounded-lg mb-3 flex items-center justify-center">
+                <div className={TYPE_COLORS[asset.type]}>{TYPE_ICONS[asset.type]}</div>
+              </div>
+              <div className="flex items-start justify-between">
+                <div className="min-w-0">
+                  <p className="text-sm font-medium text-white truncate">{asset.name}</p>
+                  <p className="text-xs text-gray-500">{asset.size} &middot; {asset.pod}</p>
+                </div>
+                <button onClick={() => toggleFavorite(asset.id)} className="text-gray-500 hover:text-amber-400 transition-colors shrink-0">
+                  <Star size={14} className={asset.favorite ? 'fill-amber-400 text-amber-400' : ''} />
+                </button>
+              </div>
+              <div className="flex flex-wrap gap-1 mt-2">
+                {asset.tags.map((t) => (
+                  <span key={t} className="px-1.5 py-0.5 text-[10px] bg-gray-800 text-gray-400 rounded">{t}</span>
+                ))}
+              </div>
+            </div>
           ))}
-          <div className="flex items-center border border-[#E8E2D9] rounded-lg overflow-hidden ml-1">
-            <button
-              onClick={() => setViewMode('grid')}
-              className={`p-1.5 ${viewMode === 'grid' ? 'bg-[#E8E2D9]' : 'bg-white'} transition-colors`}
-            >
-              <Grid3X3 size={14} className="text-[#6B6560]" />
-            </button>
-            <button
-              onClick={() => setViewMode('list')}
-              className={`p-1.5 ${viewMode === 'list' ? 'bg-[#E8E2D9]' : 'bg-white'} transition-colors`}
-            >
-              <List size={14} className="text-[#6B6560]" />
-            </button>
-          </div>
-        </div>
-      </div>
-
-      {/* Media grid */}
-      {viewMode === 'grid' ? (
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-          {filtered.map((item) => {
-            const Icon = TYPE_ICONS[item.type] || FileImage;
-            return (
-              <div
-                key={item.id}
-                className="bg-white rounded-xl border border-[#E8E2D9] p-4 shadow-premium card-lift group"
-              >
-                <div className={`w-full aspect-square rounded-lg flex items-center justify-center mb-3 ${TYPE_COLORS[item.type]}`}>
-                  <Icon size={32} />
-                </div>
-                <p className="text-xs font-medium text-[#3D3632] truncate">{item.name}</p>
-                <div className="flex items-center justify-between mt-1">
-                  <span className="text-[10px] text-[#9E9484]">{item.size}</span>
-                  <span className="text-[10px] text-[#9E9484]">{item.date}</span>
-                </div>
-                <div className="flex items-center gap-1 mt-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <button className="p-1 rounded hover:bg-[#E8E2D9]/50 transition-colors">
-                    <Download size={12} className="text-[#9E9484]" />
-                  </button>
-                  <button
-                    onClick={() => handleDelete(item.id)}
-                    className="p-1 rounded hover:bg-red-50 transition-colors"
-                  >
-                    <Trash2 size={12} className="text-red-400" />
-                  </button>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      ) : (
-        <div className="bg-white rounded-xl border border-[#E8E2D9] shadow-premium overflow-hidden">
-          {filtered.map((item, i) => {
-            const Icon = TYPE_ICONS[item.type] || FileImage;
-            return (
-              <div
-                key={item.id}
-                className={`flex items-center gap-4 px-4 py-3 ${
-                  i < filtered.length - 1 ? 'border-b border-[#E8E2D9]/50' : ''
-                }`}
-              >
-                <div className={`p-2 rounded-lg ${TYPE_COLORS[item.type]}`}>
-                  <Icon size={16} />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-[#3D3632] truncate">{item.name}</p>
-                  <p className="text-[10px] text-[#9E9484]">{item.type} · {item.size}</p>
-                </div>
-                <span className="text-[10px] text-[#9E9484]">{item.date}</span>
-                <div className="flex items-center gap-1">
-                  <button className="p-1.5 rounded-lg hover:bg-[#E8E2D9]/50 transition-colors">
-                    <Download size={13} className="text-[#9E9484]" />
-                  </button>
-                  <button
-                    onClick={() => handleDelete(item.id)}
-                    className="p-1.5 rounded-lg hover:bg-red-50 transition-colors"
-                  >
-                    <Trash2 size={13} className="text-red-400" />
-                  </button>
-                </div>
-              </div>
-            );
-          })}
         </div>
       )}
 
-      {filtered.length === 0 && (
-        <div className="text-center py-12">
-          <Image size={40} className="mx-auto text-[#E8E2D9] mb-3" />
-          <p className="text-sm text-[#9E9484]">No media found</p>
+      {/* List View */}
+      {view === 'list' && (
+        <div className="pod-card overflow-hidden">
+          <table className="w-full">
+            <thead>
+              <tr className="border-b border-gray-800">
+                <th className="text-left text-xs text-gray-500 uppercase tracking-wider px-4 py-3">Asset</th>
+                <th className="text-left text-xs text-gray-500 uppercase tracking-wider px-4 py-3">Type</th>
+                <th className="text-left text-xs text-gray-500 uppercase tracking-wider px-4 py-3">Size</th>
+                <th className="text-left text-xs text-gray-500 uppercase tracking-wider px-4 py-3">Pod</th>
+                <th className="text-left text-xs text-gray-500 uppercase tracking-wider px-4 py-3">Date</th>
+                <th className="text-left text-xs text-gray-500 uppercase tracking-wider px-4 py-3">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filtered.map((asset) => (
+                <tr key={asset.id} className="border-b border-gray-800/50 hover:bg-white/5 transition-colors">
+                  <td className="px-4 py-3">
+                    <div className="flex items-center gap-3">
+                      <div className={TYPE_COLORS[asset.type]}>{TYPE_ICONS[asset.type]}</div>
+                      <div>
+                        <p className="text-sm font-medium text-white">{asset.name}</p>
+                        <div className="flex flex-wrap gap-1 mt-0.5">
+                          {asset.tags.slice(0, 3).map((t) => (
+                            <span key={t} className="px-1.5 py-0.5 text-[10px] bg-gray-800 text-gray-400 rounded">{t}</span>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+                  <td className="px-4 py-3 text-sm text-gray-300 capitalize">{asset.type}</td>
+                  <td className="px-4 py-3 text-sm text-gray-400">{asset.size}</td>
+                  <td className="px-4 py-3 text-sm text-gray-400">{asset.pod}</td>
+                  <td className="px-4 py-3 text-sm text-gray-400">{asset.date}</td>
+                  <td className="px-4 py-3">
+                    <div className="flex items-center gap-1">
+                      <button onClick={() => toggleFavorite(asset.id)} className="p-1.5 text-gray-400 hover:text-amber-400"><Star size={14} className={asset.favorite ? 'fill-amber-400 text-amber-400' : ''} /></button>
+                      <button className="p-1.5 text-gray-400 hover:text-white"><Download size={14} /></button>
+                      <button className="p-1.5 text-gray-400 hover:text-red-400"><Trash2 size={14} /></button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       )}
     </div>

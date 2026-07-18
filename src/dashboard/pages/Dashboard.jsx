@@ -1,211 +1,171 @@
-import { useState } from 'react';
+/******  DASHBOARD HOME — Overview with KPIs  ******/
+import React from 'react';
 import { Link } from 'react-router-dom';
 import {
-  LayoutDashboard,
-  Globe,
-  PenTool,
-  Image,
-  TrendingUp,
-  Megaphone,
-  Users,
-  ArrowUpRight,
-  ArrowDownRight,
-  Zap,
-  Eye,
-  MousePointer,
-  DollarSign,
+  TrendingUp, Users, Eye, DollarSign, Target, FileText, BarChart3, ArrowUpRight,
+  Sparkles, Clock, Zap, Activity, ChevronRight
 } from 'lucide-react';
+import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip } from 'recharts';
 
-/* ─── Mock data (replace with API calls) ─── */
-const METRICS = [
-  { label: 'Total Websites', value: '12', change: '+3', up: true, icon: Globe },
-  { label: 'Content Pieces', value: '48', change: '+12', up: true, icon: PenTool },
-  { label: 'Media Files', value: '156', change: '+8', up: true, icon: Image },
-  { label: 'Active Campaigns', value: '4', change: '-1', up: false, icon: Megaphone },
+const CHART_DATA = [
+  { day: 'Mon', followers: 2100, engagement: 5.2, reach: 8500 },
+  { day: 'Tue', followers: 2240, engagement: 5.8, reach: 10200 },
+  { day: 'Wed', followers: 2380, engagement: 6.1, reach: 11500 },
+  { day: 'Thu', followers: 2510, engagement: 5.5, reach: 9800 },
+  { day: 'Fri', followers: 2680, engagement: 6.4, reach: 13200 },
+  { day: 'Sat', followers: 2850, engagement: 6.9, reach: 15800 },
+  { day: 'Sun', followers: 3100, engagement: 7.2, reach: 18200 },
 ];
 
 const RECENT_ACTIVITY = [
-  { action: 'Website analyzed', target: 'auroraskincare.com.au', time: '2 min ago' },
-  { action: 'Content generated', target: 'Summer Collection Instagram post', time: '15 min ago' },
-  { action: 'Media uploaded', target: 'beach-lifestyle-hero.jpg', time: '1 hour ago' },
-  { action: 'Campaign launched', target: 'Holiday Special 2025', time: '3 hours ago' },
-  { action: 'Artist submission', target: 'Emma Wilson portfolio', time: '5 hours ago' },
+  { action: 'AI generated 3 captions', pod: 'Fashion Forward', time: '5 min ago', icon: <Sparkles size={14} className="text-purple-400" /> },
+  { action: 'Campaign launched', pod: 'Summer Collection', time: '1 hr ago', icon: <Target size={14} className="text-blue-400" /> },
+  { action: 'Content scheduled', pod: 'Fitness Daily', time: '2 hr ago', icon: <Clock size={14} className="text-green-400" /> },
+  { action: 'Analytics report ready', pod: 'Art Studio', time: '3 hr ago', icon: <BarChart3 size={14} className="text-amber-400" /> },
+  { action: 'New collaboration request', pod: 'Fashion Forward', time: '5 hr ago', icon: <Users size={14} className="text-pink-400" /> },
 ];
 
 const QUICK_ACTIONS = [
-  { label: 'Add Website', icon: Globe, path: '/websites', color: 'bg-[#C9A96E]/10 text-[#C9A96E]' },
-  { label: 'Generate Content', icon: PenTool, path: '/content', color: 'bg-[#9E9484]/10 text-[#9E9484]' },
-  { label: 'Upload Media', icon: Image, path: '/media', color: 'bg-[#6B6560]/10 text-[#6B6560]' },
-  { label: 'View Campaigns', icon: Megaphone, path: '/campaigns', color: 'bg-[#C9A96E]/10 text-[#C9A96E]' },
-  { label: 'Growth Advice', icon: TrendingUp, path: '/advice', color: 'bg-[#9E9484]/10 text-[#9E9484]' },
-  { label: 'Artist Submissions', icon: Users, path: '/artists', color: 'bg-[#6B6560]/10 text-[#6B6560]' },
+  { label: 'Generate Content', icon: <FileText size={16} />, to: '/dashboard/content-engine', color: 'purple' },
+  { label: 'View Campaigns', icon: <Target size={16} />, to: '/dashboard/campaigns', color: 'blue' },
+  { label: 'Check Analytics', icon: <BarChart3 size={16} />, to: '/pods/fashion-forward/analytics', color: 'green' },
+  { label: 'AI Assistant', icon: <Sparkles size={16} />, to: '/pods/fashion-forward/ai-assistant', color: 'pink' },
 ];
-
-const PERFORMANCE_DATA = [
-  { day: 'Mon', impressions: 4200, clicks: 320, spend: 45 },
-  { day: 'Tue', impressions: 5100, clicks: 410, spend: 58 },
-  { day: 'Wed', impressions: 4800, clicks: 380, spend: 52 },
-  { day: 'Thu', impressions: 6200, clicks: 520, spend: 71 },
-  { day: 'Fri', impressions: 7100, clicks: 610, spend: 82 },
-  { day: 'Sat', impressions: 5800, clicks: 490, spend: 65 },
-  { day: 'Sun', impressions: 4500, clicks: 350, spend: 48 },
-];
-
-function StatCard({ metric }) {
-  const Icon = metric.icon;
-  return (
-    <div className="bg-white rounded-xl border border-[#E8E2D9] p-5 shadow-premium card-lift">
-      <div className="flex items-start justify-between mb-3">
-        <div className={`p-2 rounded-lg ${metric.color || 'bg-[#C9A96E]/10'}`}>
-          <Icon size={18} className="text-[#C9A96E]" />
-        </div>
-        <div className={`flex items-center gap-0.5 text-xs font-medium ${metric.up ? 'text-emerald-600' : 'text-red-500'}`}>
-          {metric.up ? <ArrowUpRight size={14} /> : <ArrowDownRight size={14} />}
-          {metric.change}
-        </div>
-      </div>
-      <p className="text-2xl font-semibold text-[#3D3632] font-serif">{metric.value}</p>
-      <p className="text-xs text-[#9E9484] mt-0.5">{metric.label}</p>
-    </div>
-  );
-}
-
-function PerformanceChart() {
-  const maxImpressions = Math.max(...PERFORMANCE_DATA.map(d => d.impressions));
-
-  return (
-    <div className="bg-white rounded-xl border border-[#E8E2D9] p-5 shadow-premium">
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="text-sm font-semibold text-[#3D3632]">Performance Overview</h3>
-        <select className="text-xs border border-[#E8E2D9] rounded-lg px-2 py-1 bg-[#FAF9F7] text-[#6B6560]">
-          <option>Last 7 days</option>
-          <option>Last 30 days</option>
-          <option>This month</option>
-        </select>
-      </div>
-
-      <div className="flex items-end justify-between gap-2 h-40">
-        {PERFORMANCE_DATA.map((d) => (
-          <div key={d.day} className="flex-1 flex flex-col items-center gap-1.5">
-            <div className="w-full flex flex-col gap-1">
-              <div
-                className="w-full bg-[#C9A96E]/20 rounded-t-sm relative group"
-                style={{ height: `${(d.impressions / maxImpressions) * 100}px` }}
-              >
-                <div
-                  className="absolute bottom-0 left-0 right-0 bg-[#C9A96E] rounded-t-sm transition-all"
-                  style={{ height: `${(d.clicks / d.impressions) * 100 * 3}%` }}
-                />
-              </div>
-            </div>
-            <span className="text-[10px] text-[#9E9484] font-medium">{d.day}</span>
-          </div>
-        ))}
-      </div>
-
-      <div className="flex items-center gap-4 mt-3 pt-3 border-t border-[#E8E2D9]">
-        <div className="flex items-center gap-1.5">
-          <Eye size={13} className="text-[#9E9484]" />
-          <span className="text-xs text-[#6B6560]">Impressions</span>
-        </div>
-        <div className="flex items-center gap-1.5">
-          <MousePointer size={13} className="text-[#C9A96E]" />
-          <span className="text-xs text-[#6B6560]">Clicks</span>
-        </div>
-        <div className="flex items-center gap-1.5">
-          <DollarSign size={13} className="text-[#6B6560]" />
-          <span className="text-xs text-[#6B6560]">Spend</span>
-        </div>
-      </div>
-    </div>
-  );
-}
 
 export default function Dashboard() {
   return (
-    <div className="space-y-6 animate-fade-in-up">
+    <div className="p-6 space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-semibold text-[#3D3632] font-serif">Dashboard</h1>
-        <p className="text-sm text-[#9E9484] mt-0.5">Welcome back — here's what's happening.</p>
+        <h1 className="text-2xl font-bold text-white">Dashboard</h1>
+        <p className="text-sm text-gray-400 mt-1">Welcome back! Here's what's happening across your pods.</p>
       </div>
 
-      {/* Metrics grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {METRICS.map((m, i) => (
-          <div key={m.label} className={`stagger-${i + 1} animate-fade-in-up`}>
-            <StatCard metric={m} />
-          </div>
-        ))}
+      {/* KPI Cards */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <KpiCard icon={<Users size={18} />} label="Total Followers" value="3,100" change="+47.6%" changeColor="green" />
+        <KpiCard icon={<TrendingUp size={18} />} label="Engagement Rate" value="7.2%" change="+38.5%" changeColor="green" />
+        <KpiCard icon={<Eye size={18} />} label="Weekly Reach" value="87,200" change="+114.1%" changeColor="green" />
+        <KpiCard icon={<DollarSign size={18} />} label="Ad Spend" value="$4,235" change="68% of budget" changeColor="amber" />
       </div>
 
-      {/* Main content grid */}
+      {/* Main Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Chart */}
-        <div className="lg:col-span-2">
-          <PerformanceChart />
+        {/* Growth Chart */}
+        <div className="lg:col-span-2 pod-card">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-lg font-semibold text-white">Growth Overview</h3>
+            <div className="flex items-center gap-1 text-xs text-gray-400">
+              <Activity size={12} />
+              <span>Last 7 days</span>
+            </div>
+          </div>
+          <ResponsiveContainer width="100%" height={280}>
+            <AreaChart data={CHART_DATA}>
+              <defs>
+                <linearGradient id="colorFollowers" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor="#9F7AEA" stopOpacity={0.3} />
+                  <stop offset="95%" stopColor="#9F7AEA" stopOpacity={0} />
+                </linearGradient>
+              </defs>
+              <XAxis dataKey="day" stroke="#374151" fontSize={12} />
+              <YAxis stroke="#374151" fontSize={12} />
+              <Tooltip contentStyle={{ background: '#1a1a24', border: '1px solid #374151', borderRadius: '8px', color: '#fff' }} />
+              <Area type="monotone" dataKey="followers" stroke="#9F7AEA" fillOpacity={1} fill="url(#colorFollowers)" strokeWidth={2} />
+            </AreaChart>
+          </ResponsiveContainer>
         </div>
 
-        {/* Activity feed */}
-        <div className="bg-white rounded-xl border border-[#E8E2D9] p-5 shadow-premium">
-          <h3 className="text-sm font-semibold text-[#3D3632] mb-4">Recent Activity</h3>
-          <div className="space-y-3">
-            {RECENT_ACTIVITY.map((a, i) => (
-              <div key={i} className="flex items-start gap-3 pb-3 border-b border-[#E8E2D9]/50 last:border-0 last:pb-0">
-                <div className="w-2 h-2 rounded-full bg-[#C9A96E] mt-1.5 flex-shrink-0" />
+        {/* Right Column */}
+        <div className="space-y-4">
+          {/* Quick Actions */}
+          <div className="pod-card">
+            <h3 className="text-sm font-semibold text-white mb-3">Quick Actions</h3>
+            <div className="space-y-2">
+              {QUICK_ACTIONS.map((action) => (
+                <Link
+                  key={action.label}
+                  to={action.to}
+                  className="flex items-center gap-3 p-2.5 rounded-lg hover:bg-white/5 transition-all group"
+                >
+                  <div className={`text-${action.color}-400`}>{action.icon}</div>
+                  <span className="text-sm text-gray-300 group-hover:text-white transition-colors flex-1">{action.label}</span>
+                  <ChevronRight size={14} className="text-gray-600 group-hover:text-gray-400 transition-colors" />
+                </Link>
+              ))}
+            </div>
+          </div>
+
+          {/* Recent Activity */}
+          <div className="pod-card">
+            <h3 className="text-sm font-semibold text-white mb-3">Recent Activity</h3>
+            <div className="space-y-3">
+              {RECENT_ACTIVITY.map((item, i) => (
+                <div key={i} className="flex items-start gap-3">
+                  {item.icon}
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm text-gray-200">{item.action}</p>
+                    <p className="text-xs text-gray-500">{item.pod}</p>
+                  </div>
+                  <span className="text-xs text-gray-600 shrink-0">{item.time}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Pod Performance Summary */}
+      <div className="pod-card">
+        <h3 className="text-lg font-semibold text-white mb-4">Pod Performance</h3>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {[
+            { name: 'Fashion Forward', followers: '2,847', posts: 24, engagement: '6.8%', growth: '+12.5%', color: 'from-purple-600 to-pink-500' },
+            { name: 'Fitness Daily', followers: '1,523', posts: 18, engagement: '8.2%', growth: '+23.1%', color: 'from-blue-500 to-cyan-400' },
+            { name: 'Art Studio', followers: '892', posts: 12, engagement: '5.4%', growth: '+8.7%', color: 'from-amber-500 to-orange-400' },
+          ].map((pod) => (
+            <div key={pod.name} className="bg-[#0a0a0f] border border-gray-800 rounded-xl p-4">
+              <div className="flex items-center gap-2 mb-3">
+                <div className={`w-8 h-8 rounded-lg bg-gradient-to-br ${pod.color} flex items-center justify-center text-white font-bold text-xs`}>
+                  {pod.name.charAt(0)}
+                </div>
+                <span className="text-sm font-semibold text-white">{pod.name}</span>
+              </div>
+              <div className="grid grid-cols-2 gap-3 text-sm">
                 <div>
-                  <p className="text-xs font-medium text-[#3D3632]">{a.action}</p>
-                  <p className="text-[11px] text-[#9E9484]">{a.target}</p>
-                  <p className="text-[10px] text-[#9E9484]/60 mt-0.5">{a.time}</p>
+                  <p className="text-xs text-gray-500">Followers</p>
+                  <p className="text-white font-medium">{pod.followers}</p>
+                </div>
+                <div>
+                  <p className="text-xs text-gray-500">Engagement</p>
+                  <p className="text-white font-medium">{pod.engagement}</p>
+                </div>
+                <div>
+                  <p className="text-xs text-gray-500">Posts</p>
+                  <p className="text-white font-medium">{pod.posts}</p>
+                </div>
+                <div>
+                  <p className="text-xs text-gray-500">Growth</p>
+                  <p className="text-green-400 font-medium">{pod.growth}</p>
                 </div>
               </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* Quick actions */}
-      <div>
-        <h3 className="text-sm font-semibold text-[#3D3632] mb-3">Quick Actions</h3>
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
-          {QUICK_ACTIONS.map((action) => {
-            const Icon = action.icon;
-            return (
-              <Link
-                key={action.label}
-                to={action.path}
-                className="flex flex-col items-center gap-2 p-4 bg-white rounded-xl border border-[#E8E2D9] shadow-premium card-lift hover:border-[#C9A96E]/30 transition-all"
-              >
-                <div className={`p-2.5 rounded-lg ${action.color}`}>
-                  <Icon size={20} />
-                </div>
-                <span className="text-xs font-medium text-[#3D3632] text-center">{action.label}</span>
-              </Link>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* Integration status */}
-      <div className="bg-white rounded-xl border border-[#E8E2D9] p-5 shadow-premium">
-        <div className="flex items-center gap-2 mb-3">
-          <Zap size={16} className="text-[#C9A96E]" />
-          <h3 className="text-sm font-semibold text-[#3D3632]">Connected Services</h3>
-        </div>
-        <div className="flex flex-wrap gap-2">
-          {['Supabase', 'Stripe', 'OpenAI', 'SendGrid', 'Meta Ads'].map((service) => (
-            <span
-              key={service}
-              className="px-3 py-1.5 bg-[#FAF9F7] border border-[#E8E2D9] rounded-lg text-xs font-medium text-[#6B6560]"
-            >
-              {service}
-            </span>
+            </div>
           ))}
         </div>
-        <p className="text-[11px] text-[#9E9484] mt-2">
-          Configure API keys in Settings to activate integrations.
-        </p>
       </div>
+    </div>
+  );
+}
+
+function KpiCard({ icon, label, value, change, changeColor = 'green' }) {
+  return (
+    <div className="pod-card">
+      <div className="flex items-center gap-2 text-gray-500 mb-2">
+        {icon}
+        <span className="text-xs uppercase tracking-wider">{label}</span>
+      </div>
+      <p className="text-2xl font-bold text-white">{value}</p>
+      <p className={`text-xs font-medium mt-1 text-${changeColor}-400`}>{change}</p>
     </div>
   );
 }
