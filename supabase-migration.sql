@@ -128,6 +128,39 @@ CREATE TABLE IF NOT EXISTS ad_analysis (
 
 CREATE INDEX IF NOT EXISTS ad_analysis_pod_id_idx ON ad_analysis(pod_id);
 
+-- Evergreen content library
+CREATE TABLE IF NOT EXISTS evergreen_content (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  pod_id UUID REFERENCES pods(id) ON DELETE CASCADE,
+  user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
+  content_type TEXT NOT NULL,
+  platform TEXT NOT NULL DEFAULT 'general',
+  content TEXT NOT NULL,
+  prompt TEXT,
+  tone TEXT,
+  used_count INTEGER DEFAULT 0,
+  created_at TIMESTAMPTZ DEFAULT now()
+);
+
+CREATE INDEX IF NOT EXISTS evergreen_content_pod_id_idx ON evergreen_content(pod_id);
+CREATE INDEX IF NOT EXISTS evergreen_content_user_id_idx ON evergreen_content(user_id);
+
+-- AI optimizer snapshots (pulse checks)
+CREATE TABLE IF NOT EXISTS ai_optimizer_snapshots (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  pod_id UUID REFERENCES pods(id) ON DELETE CASCADE,
+  user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
+  health_score INTEGER CHECK (health_score >= 0 AND health_score <= 100),
+  summary TEXT,
+  strengths TEXT,
+  weaknesses TEXT,
+  recommendations TEXT,
+  budget_reallocation TEXT,
+  created_at TIMESTAMPTZ DEFAULT now()
+);
+
+CREATE INDEX IF NOT EXISTS ai_optimizer_snapshots_pod_id_idx ON ai_optimizer_snapshots(pod_id);
+
 -- User settings table
 CREATE TABLE IF NOT EXISTS user_settings (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
@@ -149,6 +182,8 @@ ALTER TABLE pod_analysis ENABLE ROW LEVEL SECURITY;
 ALTER TABLE calendar_items ENABLE ROW LEVEL SECURITY;
 ALTER TABLE budgets ENABLE ROW LEVEL SECURITY;
 ALTER TABLE ad_analysis ENABLE ROW LEVEL SECURITY;
+ALTER TABLE evergreen_content ENABLE ROW LEVEL SECURITY;
+ALTER TABLE ai_optimizer_snapshots ENABLE ROW LEVEL SECURITY;
 ALTER TABLE user_settings ENABLE ROW LEVEL SECURITY;
 
 -- Waitlist: anyone can insert
@@ -189,6 +224,16 @@ CREATE POLICY "Users can update own budgets" ON budgets FOR UPDATE USING (EXISTS
 CREATE POLICY "Users can view own ad analysis" ON ad_analysis FOR SELECT USING (EXISTS (SELECT 1 FROM pods WHERE pods.id = ad_analysis.pod_id AND pods.user_id = auth.uid()));
 CREATE POLICY "Users can create ad analysis" ON ad_analysis FOR INSERT WITH CHECK (EXISTS (SELECT 1 FROM pods WHERE pods.id = ad_analysis.pod_id AND pods.user_id = auth.uid()));
 CREATE POLICY "Users can update own ad analysis" ON ad_analysis FOR UPDATE USING (EXISTS (SELECT 1 FROM pods WHERE pods.id = ad_analysis.pod_id AND pods.user_id = auth.uid()));
+
+-- Evergreen content: users can CRUD their own
+CREATE POLICY "Users can view own evergreen" ON evergreen_content FOR SELECT USING (auth.uid() = user_id);
+CREATE POLICY "Users can create evergreen" ON evergreen_content FOR INSERT WITH CHECK (auth.uid() = user_id);
+CREATE POLICY "Users can update own evergreen" ON evergreen_content FOR UPDATE USING (auth.uid() = user_id);
+CREATE POLICY "Users can delete own evergreen" ON evergreen_content FOR DELETE USING (auth.uid() = user_id);
+
+-- AI optimizer snapshots: users can view their own
+CREATE POLICY "Users can view own optimizer snapshots" ON ai_optimizer_snapshots FOR SELECT USING (auth.uid() = user_id);
+CREATE POLICY "Users can create optimizer snapshots" ON ai_optimizer_snapshots FOR INSERT WITH CHECK (auth.uid() = user_id);
 
 -- User settings: users can CRUD their own
 CREATE POLICY "Users can view own settings" ON user_settings FOR SELECT USING (auth.uid() = user_id);

@@ -33,6 +33,16 @@ export async function generateCalendar({ pod_id, user_id, platforms, days, start
   return supabaseFunction('generate-calendar', { pod_id, user_id, platforms, days, start_date }, token);
 }
 
+// Generate Content (ad copy, captions, hashtags, etc.)
+export async function generateContent({ pod_id, user_id, content_type, prompt, platform, tone, token }) {
+  return supabaseFunction('generate-content', { pod_id, user_id, content_type, prompt, platform, tone }, token);
+}
+
+// AI Optimizer — pulse check
+export async function runOptimizer({ pod_id, user_id, token }) {
+  return supabaseFunction('ai-optimizer', { pod_id, user_id }, token);
+}
+
 // Fetch pod analysis from Supabase table
 export async function fetchPodAnalysis(supabase, podId) {
   const { data, error } = await supabase
@@ -51,6 +61,29 @@ export async function fetchCalendarItems(supabase, podId) {
     .select('*')
     .eq('pod_id', podId)
     .order('scheduled_date', { ascending: true });
+  if (error) throw error;
+  return data || [];
+}
+
+// Fetch evergreen content
+export async function fetchEvergreenContent(supabase, podId) {
+  const { data, error } = await supabase
+    .from('evergreen_content')
+    .select('*')
+    .eq('pod_id', podId)
+    .order('created_at', { ascending: false });
+  if (error) throw error;
+  return data || [];
+}
+
+// Fetch optimizer snapshots
+export async function fetchOptimizerSnapshots(supabase, podId) {
+  const { data, error } = await supabase
+    .from('ai_optimizer_snapshots')
+    .select('*')
+    .eq('pod_id', podId)
+    .order('created_at', { ascending: false })
+    .limit(10);
   if (error) throw error;
   return data || [];
 }
