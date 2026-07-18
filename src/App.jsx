@@ -3,7 +3,7 @@ import { HashRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { Loader2 } from 'lucide-react';
 
 /* ── Layouts ── */
-import { DashboardLayout } from './dashboard/components/Layout';
+import DashboardLayout from './dashboard/components/Layout';
 import PodLayout from './pods/PodLayout';
 
 /* ── Direct imports (small pages) ── */

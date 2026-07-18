@@ -1,4 +1,4 @@
-/******  POD TABS VIEW — Meet Millie–style Tabs + AI Chat  ******/
+/******  POD TABS VIEW — Dovroyn–style Tabs + AI Chat  ******/
 import React, { useState, useRef, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { usePod } from '../pods/PodContext';
@@ -10,6 +10,7 @@ import {
   Layout, Type, Image, Hash, FileText, Megaphone, Palette,
   Settings, RefreshCw, Copy, Check, Download, Upload,
   Plus, Trash2, Edit3, CheckCircle2, AlertCircle, Info
+  Search, Link, BookOpen, FolderOpen, Filter, Bell, Mail, Link2, ExternalLink, Inbox as InboxIcon,
 } from 'lucide-react';
 import { askDovroynAI } from '../lib/aiClient';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, LineChart, Line, PieChart, Pie, Cell } from 'recharts';

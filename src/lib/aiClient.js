@@ -1,5 +1,7 @@
 /******  AI CLIENT — Unified interface for OpenAI & local AI  ******/
-import { generateContent, analyzeContent } from '../services/openai';
+import openaiService from '../services/openai';
+
+const { generateContent, analyzeContent } = openaiService;
 
 /**
  * Ask the Dovroyn AI assistant a question.
