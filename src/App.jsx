@@ -10,6 +10,7 @@ import {
   Link,
   useNavigate,
   useParams,
+  useSearchParams,
 } from 'react-router-dom';
 import {
   ArrowRight,
@@ -372,6 +373,20 @@ function App() {
   const [session, setSession] = useState(null);
   const [bootstrapping, setBootstrapping] = useState(true);
   const [subscription, setSubscription] = useState(null);
+  const [checkoutSuccess, setCheckoutSuccess] = useState(false);
+  const [isPolling, setIsPolling] = useState(false);
+
+  // Refetch subscription helper
+  const fetchSubscription = async (userId) => {
+    if (!supabaseConfigured || !userId) return;
+    const { data } = await supabase
+      .from('subscriptions')
+      .select('*')
+      .eq('user_id', userId)
+      .maybeSingle();
+    setSubscription(data || { tier: 'free', status: 'inactive', max_pods: 0, monthly_content_days: 0 });
+    return data;
+  };
 
   useEffect(() => {
     if (!supabaseConfigured) {
@@ -400,18 +415,52 @@ function App() {
     };
   }, []);
 
-  // Load subscription status
+  // Load subscription status on login
   useEffect(() => {
-    if (!supabaseConfigured || !session?.user?.id) return;
-    supabase
-      .from('subscriptions')
-      .select('*')
-      .eq('user_id', session.user.id)
-      .maybeSingle()
-      .then(({ data }) => {
-        setSubscription(data || { tier: 'free', status: 'inactive', max_pods: 0, monthly_content_days: 0 });
-      });
+    if (!session?.user?.id) return;
+    fetchSubscription(session.user.id);
   }, [session?.user?.id]);
+
+  // Handle checkout success redirect + polling
+  useEffect(() => {
+    if (!session?.user?.id) return;
+
+    const url = new URL(window.location.href);
+    const checkoutParam = url.searchParams.get('checkout');
+
+    if (checkoutParam === 'success') {
+      setCheckoutSuccess(true);
+      // Clean URL without reload
+      url.searchParams.delete('checkout');
+      window.history.replaceState({}, '', url.toString());
+
+      // Start polling subscription every 30s for 5 minutes (max 10 polls)
+      setIsPolling(true);
+      let pollCount = 0;
+      const maxPolls = 10;
+      const intervalId = setInterval(async () => {
+        pollCount += 1;
+        const data = await fetchSubscription(session.user.id);
+        // Stop polling if we got an active paid subscription or hit max polls
+        if (data?.status === 'active' && data?.tier !== 'free') {
+          clearInterval(intervalId);
+          setIsPolling(false);
+        } else if (pollCount >= maxPolls) {
+          clearInterval(intervalId);
+          setIsPolling(false);
+        }
+      }, 30000);
+
+      return () => clearInterval(intervalId);
+    }
+  }, [session?.user?.id]);
+
+  // Auto-dismiss checkout success toast after 6s
+  useEffect(() => {
+    if (!checkoutSuccess) return;
+    const timer = setTimeout(() => setCheckoutSuccess(false), 6000);
+    return () => clearTimeout(timer);
+  }, [checkoutSuccess]);
 
   if (bootstrapping) {
     return (
@@ -426,6 +475,28 @@ function App() {
   return (
     <BrowserRouter>
       <Analytics />
+      {checkoutSuccess && (
+        <div
+          style={{
+            position: 'fixed',
+            top: '1rem',
+            right: '1rem',
+            zIndex: 9999,
+            background: 'var(--gold-soft, #E8C87A)',
+            color: 'var(--navy, #07162D)',
+            padding: '1rem 1.5rem',
+            borderRadius: '0.5rem',
+            boxShadow: '0 4px 20px rgba(0,0,0,0.15)',
+            fontWeight: 500,
+            animation: 'slideIn 0.3s ease',
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <CheckCircle size={18} />
+            <span>Payment successful! Your subscription is being activated{isPolling ? '…' : '.'}</span>
+          </div>
+        </div>
+      )}
       <Routes>
         <Route path="/" element={<LandingPage session={session} />} />
         <Route path="/login" element={<AuthPage session={session} defaultMode="login" />} />
