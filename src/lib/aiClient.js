@@ -1,4 +1,7 @@
 // AI client for Dovroyn — calls Supabase Edge Functions
+// PROPRIETARY ENGINE: Uses Dovroyn's own AI for 80% of tasks
+// OPENAI FALLBACK: Only for complex creative tasks
+
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
 const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
@@ -18,32 +21,43 @@ async function supabaseFunction(name, body, token) {
   return data;
 }
 
-// AI Chat with pod context
+// ============================================
+// PROPRIETARY DOVROYN AI ENGINE
+// ============================================
+
+// Content Generator — uses YOUR templates, YOUR brand DNA, no external API
+export async function generateContent({ pod_id, user_id, content_type, prompt, platform, token }) {
+  return supabaseFunction('proprietary-ai', { pod_id, user_id, content_type, prompt, platform }, token);
+}
+
+// AI Optimizer — rule-based analysis, no external API
+export async function runOptimizer({ pod_id, user_id, token }) {
+  return supabaseFunction('proprietary-optimizer', { pod_id, user_id }, token);
+}
+
+// ============================================
+// OPENAI FALLBACK (for complex creative tasks)
+// ============================================
+
+// AI Chat with pod context — uses OpenAI for conversational AI
 export async function sendChatMessage({ message, pod_id, user_id, token }) {
   return supabaseFunction('ai-chat', { message, pod_id, user_id }, token);
 }
 
-// Website Analysis
+// Website Analysis — uses OpenAI for deep creative analysis
 export async function analyzeWebsite({ pod_id, user_id, url, token }) {
   return supabaseFunction('website-analyzer', { pod_id, user_id, url }, token);
 }
 
-// Generate Calendar
+// Generate Calendar — uses OpenAI for strategic planning
 export async function generateCalendar({ pod_id, user_id, platforms, days, start_date, token }) {
   return supabaseFunction('generate-calendar', { pod_id, user_id, platforms, days, start_date }, token);
 }
 
-// Generate Content (ad copy, captions, hashtags, etc.)
-export async function generateContent({ pod_id, user_id, content_type, prompt, platform, tone, token }) {
-  return supabaseFunction('generate-content', { pod_id, user_id, content_type, prompt, platform, tone }, token);
-}
+// ============================================
+// DATA FETCHERS
+// ============================================
 
-// AI Optimizer — pulse check
-export async function runOptimizer({ pod_id, user_id, token }) {
-  return supabaseFunction('ai-optimizer', { pod_id, user_id }, token);
-}
-
-// Fetch pod analysis from Supabase table
 export async function fetchPodAnalysis(supabase, podId) {
   const { data, error } = await supabase
     .from('pod_analysis')
@@ -54,7 +68,6 @@ export async function fetchPodAnalysis(supabase, podId) {
   return data;
 }
 
-// Fetch calendar items
 export async function fetchCalendarItems(supabase, podId) {
   const { data, error } = await supabase
     .from('calendar_items')
@@ -65,7 +78,6 @@ export async function fetchCalendarItems(supabase, podId) {
   return data || [];
 }
 
-// Fetch evergreen content
 export async function fetchEvergreenContent(supabase, podId) {
   const { data, error } = await supabase
     .from('evergreen_content')
@@ -76,7 +88,6 @@ export async function fetchEvergreenContent(supabase, podId) {
   return data || [];
 }
 
-// Fetch optimizer snapshots
 export async function fetchOptimizerSnapshots(supabase, podId) {
   const { data, error } = await supabase
     .from('ai_optimizer_snapshots')

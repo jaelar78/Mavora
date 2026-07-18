@@ -351,7 +351,11 @@ export default function PodTabsView({ pod }) {
       case 'AI Analysis':
         return (
           <div className="pod-section-content">
-            <h4>AI Analysis</h4>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
+              <h4 style={{ margin: 0 }}>AI Analysis</h4>
+              <span className="status-chip-gold" style={{ fontSize: '0.7rem' }}>Deep Analysis</span>
+            </div>
+            <p className="subtle">Deep brand analysis powered by Dovroyn's AI. Extracts brand DNA, tone, audience, and strategy from your website.</p>
             {!analysis && !analyzing && (
               <>
                 <p className="subtle">No AI analysis yet. Run analysis to extract brand insights from your website.</p>
@@ -454,8 +458,11 @@ export default function PodTabsView({ pod }) {
       case 'Calendar':
         return (
           <div className="pod-section-content">
-            <h4>Content Calendar</h4>
-            <p><strong>Calendar strategy:</strong> {analysis?.calendar_strategy || 'Run AI Analysis first'}</p>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
+              <h4 style={{ margin: 0 }}>Content Calendar</h4>
+              <span className="status-chip-gold" style={{ fontSize: '0.7rem' }}>Strategic AI</span>
+            </div>
+            <p className="subtle">AI-generated content calendar with holiday awareness and platform-specific strategy.</p>
             <button
               className="button button-primary"
               onClick={handleGenerateCalendar}
@@ -523,8 +530,11 @@ export default function PodTabsView({ pod }) {
       case 'Content Generator':
         return (
           <div className="pod-section-content">
-            <h4><PenTool size={18} style={{ marginRight: '0.4rem' }} /> Content Generator</h4>
-            <p className="subtle">Generate ad copy, captions, hashtags, headlines, and more with your brand's AI.</p>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
+              <h4 style={{ margin: 0 }}><PenTool size={18} style={{ marginRight: '0.4rem' }} /> Content Generator</h4>
+              <span className="status-chip-gold" style={{ fontSize: '0.7rem' }}>Dovroyn AI Engine</span>
+            </div>
+            <p className="subtle">Generate ad copy, captions, hashtags, headlines, and more — powered by your brand's proprietary AI. No external APIs. Instant. Yours.</p>
             <div style={{ display: 'grid', gap: '0.8rem', marginTop: '1rem' }}>
               <label>
                 Content Type
@@ -567,7 +577,10 @@ export default function PodTabsView({ pod }) {
             </div>
             {generatedContent && (
               <div className="panel" style={{ marginTop: '1rem', background: 'var(--surface)', padding: '1rem' }}>
-                <h5>Generated Content</h5>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
+                  <h5 style={{ margin: 0 }}>Generated Content</h5>
+                  <span className="subtle" style={{ fontSize: '0.75rem' }}>⚡ Dovroyn AI Engine v1.0</span>
+                </div>
                 <pre style={{ whiteSpace: 'pre-wrap', fontFamily: 'inherit', fontSize: '0.9rem', lineHeight: 1.6 }}>
                   {generatedContent}
                 </pre>
@@ -578,8 +591,11 @@ export default function PodTabsView({ pod }) {
       case 'AI Optimizer':
         return (
           <div className="pod-section-content">
-            <h4><TrendingUp size={18} style={{ marginRight: '0.4rem' }} /> AI Optimizer</h4>
-            <p className="subtle">Run a pulse check on your pod's performance and get strategic recommendations.</p>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
+              <h4 style={{ margin: 0 }}><TrendingUp size={18} style={{ marginRight: '0.4rem' }} /> AI Optimizer</h4>
+              <span className="status-chip-gold" style={{ fontSize: '0.7rem' }}>Dovroyn AI Engine</span>
+            </div>
+            <p className="subtle">Run a pulse check on your pod's performance — proprietary analysis engine using your data, your rules. No external APIs.</p>
             <button className="button button-primary" onClick={handleRunOptimizer} disabled={runningOptimizer} style={{ marginTop: '1rem' }}>
               {runningOptimizer ? <><Loader2 size={14} className="animate-spin" /> Analyzing...</> : <><TrendingUp size={14} /> Run Pulse Check</>}
             </button>
