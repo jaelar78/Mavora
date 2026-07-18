@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Inter:wght@300;400;500;600&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,107 +6,38 @@
 
 @layer base {
   body {
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
-    background: #0a0a0f;
-    color: #e0e0e0;
-  }
-  h1, h2, h3, h4, h5, h6 {
-    font-weight: 700;
-    color: #ffffff;
-  }
-  input, textarea {
+    @apply bg-cream text-brown antialiased;
     font-family: 'Inter', sans-serif;
   }
-  ::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
-  }
-  ::-webkit-scrollbar-track {
-    background: transparent;
-  }
-  ::-webkit-scrollbar-thumb {
-    background: #9F7AEA;
-    border-radius: 3px;
-  }
-  ::-webkit-scrollbar-thumb:hover {
-    background: #B794F4;
+  h1, h2, h3, h4, .font-serif {
+    font-family: 'Cormorant Garamond', serif;
   }
 }
 
 @layer components {
-  .pod-gradient {
-    background: linear-gradient(135deg, #0a0a0f 0%, #111118 100%);
+  .noise-bg::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    opacity: 0.025;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
   }
-  .card-gradient {
-    background: linear-gradient(180deg, rgba(159,122,234,0.05) 0%, rgba(10,10,15,0.9) 100%);
+
+  .card-lift {
+    @apply transition-all duration-300;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   }
-  .btn-primary {
-    @apply px-4 py-2 bg-gradient-to-r from-purple-600 to-violet-500 text-white rounded-lg font-medium hover:shadow-lg hover:shadow-purple-500/25 transition-all duration-200;
+  .card-lift:hover {
+    transform: translateY(-2px);
   }
-  .btn-secondary {
-    @apply px-4 py-2 border border-gray-600 text-gray-300 rounded-lg font-medium hover:bg-white/5 transition-all duration-200;
+
+  .transition-premium {
+    @apply transition-all duration-300;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   }
-  .input-field {
-    @apply bg-[#15151d] border border-gray-700 rounded-lg px-3 py-2 text-sm text-gray-200 focus:border-purple-500 focus:outline-none focus:ring-1 focus:ring-purple-500/20 transition-all;
-  }
-  .sidebar-item {
-    @apply flex items-center gap-3 px-3 py-2 text-sm text-gray-400 rounded-lg hover:bg-white/5 hover:text-gray-200 transition-all cursor-pointer;
-  }
-  .sidebar-item.active {
-    @apply bg-purple-500/10 text-purple-400 border-l-2 border-purple-500;
-  }
-  .pod-page-container {
-    @apply flex-1 overflow-auto p-6;
-  }
-  .pod-card {
-    @apply bg-[#111118] border border-gray-800/60 rounded-xl p-5;
-  }
-  .pod-card-hover {
-    @apply pod-card hover:border-purple-500/30 transition-all duration-200;
-  }
-  .pod-stat-card {
-    @apply pod-card flex flex-col gap-1;
-  }
-  .pod-stat-value {
-    @apply text-2xl font-bold text-white;
-  }
-  .pod-stat-label {
-    @apply text-xs text-gray-500 uppercase tracking-wider;
-  }
-  .pod-section-title {
-    @apply text-lg font-semibold text-white mb-1;
-  }
-  .pod-section-subtitle {
-    @apply text-sm text-gray-400 mb-4;
-  }
-  .pod-tab {
-    @apply px-3 py-1.5 text-sm text-gray-400 rounded-lg hover:text-white transition-all cursor-pointer;
-  }
-  .pod-tab.active {
-    @apply bg-purple-500/10 text-purple-400;
-  }
-  .pod-badge {
-    @apply px-2 py-0.5 text-xs font-medium rounded-full;
-  }
-  .pod-badge-purple {
-    @apply pod-badge bg-purple-500/10 text-purple-400;
-  }
-  .pod-badge-green {
-    @apply pod-badge bg-emerald-500/10 text-emerald-400;
-  }
-  .pod-badge-amber {
-    @apply pod-badge bg-amber-500/10 text-amber-400;
-  }
-  .pod-badge-red {
-    @apply pod-badge bg-red-500/10 text-red-400;
-  }
-  .pod-badge-blue {
-    @apply pod-badge bg-blue-500/10 text-blue-400;
-  }
-  .pod-progress-bar {
-    @apply w-full h-2 bg-gray-800 rounded-full overflow-hidden;
-  }
-  .pod-progress-fill {
-    @apply h-full bg-gradient-to-r from-purple-600 to-violet-500 rounded-full transition-all duration-500;
-  }
+
+  .text-gold { color: #C4A265; }
+  .bg-gold { background-color: #C4A265; }
 }
