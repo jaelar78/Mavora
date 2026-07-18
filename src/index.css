@@ -1,43 +1,107 @@
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Inter:wght@300;400;500;600&display=swap');
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
-  body {
-    @apply bg-cream text-brown antialiased;
-    font-family: 'Inter', sans-serif;
-  }
-  h1, h2, h3, h4, .font-serif {
-    font-family: 'Cormorant Garamond', serif;
+  :root {
+    --background: 42 45% 96%;
+    --foreground: 35 14% 15%;
+    --card: 0 0% 100%;
+    --card-foreground: 35 14% 15%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 35 14% 15%;
+    --primary: 38 42% 58%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 40 38% 92%;
+    --secondary-foreground: 35 14% 20%;
+    --muted: 40 30% 93%;
+    --muted-foreground: 35 9% 42%;
+    --accent: 40 45% 90%;
+    --accent-foreground: 35 14% 20%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 40 22% 86%;
+    --input: 40 22% 86%;
+    --ring: 38 42% 58%;
+    --radius: 0.75rem;
   }
 }
 
-@layer components {
-  .noise-bg::before {
-    content: "";
-    position: fixed;
-    inset: 0;
-    opacity: 0.025;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-    pointer-events: none;
-    z-index: 9999;
+@layer base {
+  * {
+    @apply border-border;
   }
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Inter', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  .font-serif-display {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+  }
+}
 
-  .card-lift {
-    @apply transition-all duration-300;
-    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+/* Marquee animation for platform strip */
+@keyframes dovroyn-marquee {
+  from {
+    transform: translateX(0);
   }
-  .card-lift:hover {
-    transform: translateY(-2px);
+  to {
+    transform: translateX(-50%);
   }
+}
+.animate-marquee {
+  animation: dovroyn-marquee 42s linear infinite;
+}
+.animate-marquee:hover {
+  animation-play-state: paused;
+}
 
-  .transition-premium {
-    @apply transition-all duration-300;
-    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+/* Soft float for hero dashboard */
+@keyframes dovroyn-float {
+  0%,
+  100% {
+    transform: translateY(0);
   }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+.animate-float-soft {
+  animation: dovroyn-float 7s ease-in-out infinite;
+}
 
-  .text-gold { color: #C4A265; }
-  .bg-gold { background-color: #C4A265; }
+/* Fade-up on scroll */
+@keyframes dovroyn-fadeup {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.reveal {
+  opacity: 0;
+}
+.reveal.is-visible {
+  animation: dovroyn-fadeup 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* Subtle shimmer dot for "online" status */
+@keyframes dovroyn-pulse-dot {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(74, 157, 93, 0.45);
+  }
+  50% {
+    box-shadow: 0 0 0 5px rgba(74, 157, 93, 0);
+  }
+}
+.pulse-dot {
+  animation: dovroyn-pulse-dot 2s ease-in-out infinite;
 }
