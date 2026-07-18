@@ -682,7 +682,7 @@ export default function PodTabsView({ pod }) {
                       <span className="status-chip-gold">{item.content_type}</span>
                       <span className="subtle">{item.platform}</span>
                     </div>
-                    <pre style={{ whiteSpace: 'pre-wrap', fontFamily: 'inherit', fontSize: '0.85rem', lineHeight: 1.5, margin: 0 }}>
+                    <pre style={{ whiteSpace: 'pre-wrap', fontFamily: 'inherit', FontSize: '0.85rem', lineHeight: 1.5, margin: 0 }}>
                       {item.content}
                     </pre>
                     <p className="subtle" style={{ marginTop: '0.5rem', fontSize: '0.75rem' }}>
