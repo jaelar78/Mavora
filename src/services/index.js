@@ -1,29 +1,17 @@
-// ── Dovroyn unified API service layer ──
-// Each integration can be imported individually or via this barrel file.
+/******  SERVICES INDEX  ******/
+export { default as supabaseService } from './supabase';
+export { default as stripeService } from './stripe';
+export { default as openaiService } from './openai';
+export { default as sendgridService } from './sendgrid';
+export { default as metaAdsService } from './meta-ads';
 
-export * from './supabase';
-export * from './stripe';
-export * from './openai';
-export * from './sendgrid';
-export * from './meta-ads';
-
-// ── Convenience: check all integration health at once ──
-import { isSupabaseConfigured } from './supabase';
-import { isStripeConfigured } from './stripe';
-import { isOpenAIConfigured } from './openai';
-import { isSendGridConfigured } from './sendgrid';
-import { isMetaAdsConfigured } from './meta-ads';
-
-export function getIntegrationStatus() {
+// Service factory for dependency injection
+export function createServices(config = {}) {
   return {
-    supabase: isSupabaseConfigured(),
-    stripe: isStripeConfigured(),
-    openai: isOpenAIConfigured(),
-    sendgrid: isSendGridConfigured(),
-    metaAds: isMetaAdsConfigured(),
+    supabase: supabaseService,
+    stripe: stripeService,
+    openai: openaiService,
+    sendgrid: sendgridService,
+    metaAds: metaAdsService,
   };
-}
-
-export function getConnectedCount() {
-  return Object.values(getIntegrationStatus()).filter(Boolean).length;
 }
