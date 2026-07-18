@@ -1,4 +1,4 @@
-// Stripe checkout helper + portal session creator
+// Stripe checkout helper
 // Redirects user to Stripe Checkout for subscription
 
 const STRIPE_PRICING_LINKS = {
@@ -25,17 +25,6 @@ export function redirectToCheckout(tierKey, billing = 'monthly') {
     // Fallback to waitlist if Stripe not configured
     window.location.href = '/#waitlist';
   }
-}
-
-// Create a Stripe Customer Portal session via Supabase Edge Function
-export async function createPortalSession(supabase, returnUrl) {
-  if (!supabase) throw new Error('Supabase client required');
-  const { data, error } = await supabase.functions.invoke('stripe-portal', {
-    body: { return_url: returnUrl },
-  });
-  if (error) throw error;
-  if (!data?.success || !data?.url) throw new Error(data?.error || 'Failed to create portal session');
-  return data.url;
 }
 
 // Tier limits for subscription gating

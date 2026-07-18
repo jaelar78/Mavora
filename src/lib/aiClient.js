@@ -55,14 +55,6 @@ export async function generateCalendar({ pod_id, user_id, platforms, days, start
 }
 
 // ============================================
-// STRIPE CUSTOMER PORTAL
-// ============================================
-
-export async function createPortalSession(returnUrl, token) {
-  return supabaseFunction('stripe-portal', { return_url: returnUrl }, token);
-}
-
-// ============================================
 // DATA FETCHERS
 // ============================================
 
