@@ -333,7 +333,10 @@ export default function PodTabsView({ pod }) {
       case 'Overview':
         return (
           <div className="pod-section-content">
-            <h4>Pod: {pod?.pod_name || 'Untitled Pod'}</h4>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '0.5rem' }}>
+              <h4>Pod: {pod?.pod_name || 'Untitled Pod'}</h4>
+              <span className="status-chip-gold" style={{ fontSize: '0.7rem' }}>{pod?.target_country}</span>
+            </div>
             <p><strong>Pod type:</strong> {pod?.pod_type || 'Not specified'}</p>
             <p><strong>Status:</strong> {directionAccepted ? 'Direction locked' : 'Awaiting direction approval'}</p>
             <p><strong>Target country:</strong> {pod?.target_country || 'Not set'}</p>

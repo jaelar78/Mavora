@@ -25,6 +25,7 @@ export default function PodsPage({ session, subscription }) {
 
   const tier = subscription?.tier || 'free';
   const maxPods = TIER_LIMITS[tier]?.maxPods || 0;
+  const atLimit = pods.length >= maxPods;
 
   return (
     <div className="page-stack">
@@ -36,9 +37,16 @@ export default function PodsPage({ session, subscription }) {
             Create a dedicated pod for each brand, product, offer, or campaign.
           </p>
         </div>
-        <NavLink className="button button-primary" to="/pods/new">
-          Create Pod
-        </NavLink>
+        {tier !== 'free' && !atLimit && (
+          <NavLink className="button button-primary" to="/pods/new">
+            Create Pod
+          </NavLink>
+        )}
+        {tier !== 'free' && atLimit && (
+          <span className="button button-ghost" style={{ opacity: 0.5, cursor: 'not-allowed' }}>
+            Limit Reached
+          </span>
+        )}
       </header>
 
       {tier === 'free' && (
@@ -49,6 +57,18 @@ export default function PodsPage({ session, subscription }) {
           </p>
           <NavLink className="button button-primary" to="/pricing">
             View Pricing
+          </NavLink>
+        </article>
+      )}
+
+      {atLimit && tier !== 'free' && (
+        <article className="panel detail-card" style={{ borderColor: 'var(--error)' }}>
+          <h4>Pod limit reached</h4>
+          <p className="subtle">
+            Your {tier} plan allows {maxPods} {maxPods === 1 ? 'pod' : 'pods'}. Upgrade to create more.
+          </p>
+          <NavLink className="button button-primary" to="/pricing">
+            Upgrade Plan
           </NavLink>
         </article>
       )}

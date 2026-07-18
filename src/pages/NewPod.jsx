@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { Upload, X } from 'lucide-react';
 import { supabase, supabaseConfigured } from '../lib/supabaseClient';
+import { TIER_LIMITS } from '../lib/stripe';
 
 const CAMPAIGN_TYPES = [
   { value: 'website', label: 'Website URL' },
@@ -27,8 +28,19 @@ export default function NewPodPage({ session, subscription }) {
   const [uploading, setUploading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
+  const [podCount, setPodCount] = useState(0);
 
   const tier = subscription?.tier || 'free';
+  const maxPods = TIER_LIMITS[tier]?.maxPods || 0;
+  const atLimit = podCount >= maxPods;
+
+  useEffect(() => {
+    if (session?.user?.id && supabaseConfigured) {
+      supabase.from('pods').select('id', { count: 'exact' }).eq('user_id', session.user.id)
+        .then(({ count }) => setPodCount(count || 0));
+    }
+  }, [session?.user?.id]);
+
   const needsUrl = ['website', 'app', 'product'].includes(form.campaignType);
   const needsFiles = ['images', 'teaser'].includes(form.campaignType);
 
@@ -78,6 +90,10 @@ export default function NewPodPage({ session, subscription }) {
     e.preventDefault();
     if (tier === 'free') {
       setError('Please subscribe to a plan to create pods.');
+      return;
+    }
+    if (atLimit) {
+      setError(`Your ${tier} plan allows ${maxPods} ${maxPods === 1 ? 'pod' : 'pods'}. Upgrade to create more.`);
       return;
     }
     if (!form.podName.trim()) {
@@ -156,6 +172,25 @@ export default function NewPodPage({ session, subscription }) {
     );
   }
 
+  if (atLimit) {
+    return (
+      <div className="page-stack">
+        <header className="section-header panel">
+          <div>
+            <p className="eyebrow">Create Pod</p>
+            <h3>Pod limit reached</h3>
+            <p className="subtle">
+              Your {tier} plan includes {maxPods} {maxPods === 1 ? 'pod' : 'pods'}. You've used {podCount}.
+            </p>
+          </div>
+        </header>
+        <NavLink className="button button-primary" to="/pricing">
+          Upgrade to {tier === 'starter' ? 'Growth' : tier === 'growth' ? 'Pro' : 'Scale'}
+        </NavLink>
+      </div>
+    );
+  }
+
   return (
     <div className="page-stack">
       <header className="section-header panel">
@@ -164,6 +199,9 @@ export default function NewPodPage({ session, subscription }) {
           <h3>Create a new AI marketing pod</h3>
           <p className="subtle">
             Each pod is a dedicated marketing workspace for one brand, launch, or campaign.
+          </p>
+          <p className="subtle" style={{ marginTop: '0.3rem' }}>
+            Plan: {tier} — {podCount}/{maxPods} pods used
           </p>
         </div>
       </header>
