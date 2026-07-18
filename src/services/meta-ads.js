@@ -59,8 +59,8 @@ const metaAdsService = {
     return {
       id: 'act_123456789',
       name: 'Dovroyn Ad Account',
-      currency: 'USD',
-      timezone: 'America/New_York',
+      currency: 'AUD',
+      timezone: 'Australia/Sydney',
       balance: 1250.00,
     };
   },

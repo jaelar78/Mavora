@@ -53,7 +53,7 @@ const stripeService = {
       currentPeriodEnd: '2026-02-15',
       plan: 'Growth',
       amount: 7900,
-      currency: 'usd',
+      currency: 'aud',
       interval: 'month',
     };
   },
