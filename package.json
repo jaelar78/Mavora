@@ -11,12 +11,20 @@
   "dependencies": {
     "@supabase/supabase-js": "^2.110.0",
     "@vercel/analytics": "^2.0.1",
-    "@vitejs/plugin-react": "latest",
-    "lucide-react": "^1.23.0",
-    "react": "latest",
-    "react-dom": "latest",
+    "@vitejs/plugin-react": "^4.3.4",
+    "autoprefixer": "^10.4.20",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "framer-motion": "^11.15.0",
+    "lucide-react": "^0.460.0",
+    "postcss": "^8.4.49",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
     "react-icons": "^5.7.0",
-    "react-router-dom": "^7.18.1",
-    "vite": "latest"
+    "react-router-dom": "^6.28.0",
+    "recharts": "^2.15.0",
+    "tailwind-merge": "^2.6.0",
+    "tailwindcss": "^3.4.17",
+    "vite": "^5.4.11"
   }
 }
