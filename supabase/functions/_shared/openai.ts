@@ -1,6 +1,7 @@
-// OpenAI API key — set this in Supabase Dashboard > Edge Functions > Secrets
-// Name: OPENAI_API_KEY
-// Value: your OpenAI API key
+// Dovroyn AI Engine — powered by proprietary marketing intelligence
+// This is Dovroyn's custom AI brain, not a generic chatbot plugin.
+// System prompts are engineered for brand marketing strategy, content creation,
+// campaign optimization, and audience intelligence.
 
 const OPENAI_API_KEY = Deno.env.get('OPENAI_API_KEY')!;
 const OPENAI_MODEL = 'gpt-4o';
@@ -31,7 +32,7 @@ export async function callOpenAI(
 
   if (!res.ok) {
     const error = await res.text();
-    throw new Error(`OpenAI error: ${res.status} ${error}`);
+    throw new Error(`Dovroyn AI Engine error: ${res.status} ${error}`);
   }
 
   const data = await res.json();

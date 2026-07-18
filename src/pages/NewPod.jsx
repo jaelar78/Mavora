@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
+import { Upload, X } from 'lucide-react';
 import { supabase, supabaseConfigured } from '../lib/supabaseClient';
 
 const CAMPAIGN_TYPES = [
@@ -22,11 +23,56 @@ export default function NewPodPage({ session, subscription }) {
     sourceUrl: '',
     targetCountry: 'Australia',
   });
+  const [files, setFiles] = useState([]);
+  const [uploading, setUploading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
 
   const tier = subscription?.tier || 'free';
   const needsUrl = ['website', 'app', 'product'].includes(form.campaignType);
+  const needsFiles = ['images', 'teaser'].includes(form.campaignType);
+
+  const handleFileChange = (e) => {
+    const selected = Array.from(e.target.files);
+    if (selected.length + files.length > 10) {
+      setError('Maximum 10 files allowed.');
+      return;
+    }
+    setFiles((prev) => [...prev, ...selected]);
+    setError('');
+  };
+
+  const removeFile = (index) => {
+    setFiles((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  const uploadFiles = async (podId) => {
+    if (!files.length || !supabaseConfigured) return [];
+
+    const uploaded = [];
+    for (const file of files) {
+      const filePath = `${session.user.id}/${podId}/${Date.now()}_${file.name}`;
+      const { error: uploadError } = await supabase.storage
+        .from('app-uploads')
+        .upload(filePath, file);
+
+      if (uploadError) {
+        console.error('Upload error:', uploadError);
+        continue;
+      }
+
+      const { data: urlData } = supabase.storage
+        .from('app-uploads')
+        .getPublicUrl(filePath);
+
+      uploaded.push({
+        name: file.name,
+        url: urlData?.publicUrl,
+        path: filePath,
+      });
+    }
+    return uploaded;
+  };
 
   const handleCreate = async (e) => {
     e.preventDefault();
@@ -62,7 +108,21 @@ export default function NewPodPage({ session, subscription }) {
         return;
       }
 
-      if (form.sourceUrl.trim() || form.description.trim()) {
+      // Upload files if any
+      if (files.length > 0) {
+        setUploading(true);
+        const uploaded = await uploadFiles(data.id);
+        setUploading(false);
+
+        if (uploaded.length > 0) {
+          await supabase.from('pod_sources').insert({
+            pod_id: data.id,
+            source_type: form.campaignType,
+            source_url: uploaded[0]?.url || null,
+            notes: `${form.description.trim() || ''}\n\nUploaded files: ${uploaded.map((f) => f.name).join(', ')}`,
+          });
+        }
+      } else if (form.sourceUrl.trim() || form.description.trim()) {
         await supabase.from('pod_sources').insert({
           pod_id: data.id,
           source_type: form.campaignType,
@@ -158,6 +218,41 @@ export default function NewPodPage({ session, subscription }) {
             </label>
           )}
 
+          {needsFiles && (
+            <label>
+              Upload Images
+              <input
+                type="file"
+                accept="image/*"
+                multiple
+                onChange={handleFileChange}
+                style={{ display: 'none' }}
+                id="pod-file-upload"
+              />
+              <button
+                type="button"
+                className="button button-ghost"
+                onClick={() => document.getElementById('pod-file-upload').click()}
+                style={{ width: '100%', justifyContent: 'center', gap: '0.5rem' }}
+              >
+                <Upload size={18} />
+                {files.length > 0 ? `${files.length} file(s) selected` : 'Select images'}
+              </button>
+              {files.length > 0 && (
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginTop: '0.5rem' }}>
+                  {files.map((file, i) => (
+                    <div key={i} className="panel" style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', padding: '0.3rem 0.6rem', fontSize: '0.85rem' }}>
+                      <span>{file.name}</span>
+                      <button type="button" onClick={() => removeFile(i)} style={{ background: 'none', border: 'none', cursor: 'pointer' }}>
+                        <X size={14} />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </label>
+          )}
+
           <label>
             Brief Description (optional)
             <textarea
@@ -184,8 +279,8 @@ export default function NewPodPage({ session, subscription }) {
           </label>
         </div>
 
-        <button className="button button-primary" type="submit" disabled={saving}>
-          {saving ? 'Creating pod...' : 'Create Pod'}
+        <button className="button button-primary" type="submit" disabled={saving || uploading}>
+          {uploading ? 'Uploading files...' : saving ? 'Creating pod...' : 'Create Pod'}
         </button>
       </form>
     </div>

@@ -959,16 +959,33 @@ function PrivacyPage() {
   return (
     <LegalPageShell
       eyebrow="Privacy"
-      title="Privacy policy"
-      description="How Dovroyn handles information submitted through the website and product."
+      title="Privacy Policy"
+      description="How Dovroyn handles your information with transparency and care."
     >
-      <article className="stack" style={{ gap: '0.9rem' }}>
-        <h2 className="waitlist-heading" style={{ marginBottom: '0.4rem' }}>What we collect</h2>
-        <p className="subtle">We collect the details you voluntarily provide (such as email addresses submitted through waitlist or contact forms) and essential usage data needed to operate the site.</p>
-        <h3>How we use it</h3>
-        <p className="subtle">Information is used to provide support, respond to enquiries, improve the product, and share product updates when requested.</p>
-        <h3>Contact about privacy</h3>
-        <p className="subtle">For privacy enquiries, email <a href="mailto:support@dovroyn.com">support@dovroyn.com</a>.</p>
+      <article className="stack" style={{ gap: '1.2rem' }}>
+        <h2 className="waitlist-heading" style={{ marginBottom: '0.4rem' }}>1. Information We Collect</h2>
+        <p className="subtle">We collect information you provide directly: name, email address, billing information, and any content you upload to your marketing pods (including brand descriptions, website URLs, and campaign materials). We also collect usage data to improve the service.</p>
+
+        <h2 className="waitlist-heading" style={{ marginBottom: '0.4rem' }}>2. How We Use Your Information</h2>
+        <p className="subtle">Your information is used exclusively to provide Dovroyn's services: creating and managing your marketing pods, processing payments through Stripe, generating AI-powered marketing analysis, and communicating with you about your account. We do not sell your data to third parties.</p>
+
+        <h2 className="waitlist-heading" style={{ marginBottom: '0.4rem' }}>3. AI and Data Processing</h2>
+        <p className="subtle">Dovroyn uses its proprietary AI engine to analyze your brand content and generate marketing strategies. Your data is processed securely through our infrastructure. We do not use your brand data to train external AI models or share it with other users.</p>
+
+        <h2 className="waitlist-heading" style={{ marginBottom: '0.4rem' }}>4. Payment Processing</h2>
+        <p className="subtle">All payments are processed securely through Stripe. We do not store your credit card details. Stripe's privacy policy and security practices apply to payment processing.</p>
+
+        <h2 className="waitlist-heading" style={{ marginBottom: '0.4rem' }}>5. Data Storage and Security</h2>
+        <p className="subtle">Your data is stored securely using Supabase infrastructure with encryption at rest and in transit. We implement Row Level Security (RLS) policies so you can only access your own data. Regular backups are performed.</p>
+
+        <h2 className="waitlist-heading" style={{ marginBottom: '0.4rem' }}>6. Your Rights</h2>
+        <p className="subtle">You can request access to your data, request deletion of your account and associated data, and update your information at any time through your Account Settings or by contacting us directly.</p>
+
+        <h2 className="waitlist-heading" style={{ marginBottom: '0.4rem' }}>7. Cookies and Tracking</h2>
+        <p className="subtle">We use essential cookies to maintain your session and authentication. We may use analytics to understand how the product is used and improve features. You can control cookie preferences through your browser settings.</p>
+
+        <h2 className="waitlist-heading" style={{ marginBottom: '0.4rem' }}>8. Contact</h2>
+        <p className="subtle">For privacy enquiries or data requests, email <a href="mailto:support@dovroyn.com">support@dovroyn.com</a>. We are committed to responding within 48 hours.</p>
       </article>
     </LegalPageShell>
   );

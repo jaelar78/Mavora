@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Sparkles, Loader2, CheckCircle, Globe, Calendar } from 'lucide-react';
+import { Sparkles, Loader2, CheckCircle, Globe, Calendar, Upload, X, FileImage } from 'lucide-react';
 import { analyzeWebsite, generateCalendar, fetchPodAnalysis, fetchCalendarItems } from '../lib/aiClient';
 import { supabase } from '../lib/supabaseClient';
 
@@ -8,6 +8,138 @@ const POD_TABS = [
   'Campaign Strategy', 'Content Ideas', 'Ad Angles', 'Socials', 'Calendar',
   'Holidays', 'Budget', 'Ad Analysis', 'AI Notes', 'Next Moves',
 ];
+
+function SourceTab({ pod }) {
+  const [files, setFiles] = useState([]);
+  const [uploading, setUploading] = useState(false);
+  const [podSources, setPodSources] = useState([]);
+
+  useEffect(() => {
+    if (pod?.id) {
+      supabase.from('pod_sources').select('*').eq('pod_id', pod.id).then(({ data }) => {
+        if (data) setPodSources(data);
+      });
+    }
+  }, [pod?.id]);
+
+  const handleFileChange = (e) => {
+    const selected = Array.from(e.target.files);
+    if (selected.length + files.length > 10) {
+      alert('Maximum 10 files allowed.');
+      return;
+    }
+    setFiles((prev) => [...prev, ...selected]);
+  };
+
+  const removeFile = (index) => {
+    setFiles((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  const uploadFiles = async () => {
+    if (!files.length || !pod?.id) return;
+    setUploading(true);
+    const session = await supabase.auth.getSession();
+    const userId = session.data.session?.user?.id;
+    if (!userId) return;
+
+    const uploaded = [];
+    for (const file of files) {
+      const filePath = `${userId}/${pod.id}/${Date.now()}_${file.name}`;
+      const { error: uploadError } = await supabase.storage
+        .from('app-uploads')
+        .upload(filePath, file);
+
+      if (uploadError) continue;
+
+      const { data: urlData } = supabase.storage
+        .from('app-uploads')
+        .getPublicUrl(filePath);
+
+      uploaded.push({ name: file.name, url: urlData?.publicUrl, path: filePath });
+    }
+
+    if (uploaded.length > 0) {
+      await supabase.from('pod_sources').insert({
+        pod_id: pod.id,
+        source_type: 'uploaded_image',
+        source_url: uploaded[0]?.url,
+        notes: `Uploaded files: ${uploaded.map((f) => f.name).join(', ')}`,
+      });
+      // Refresh
+      const { data } = await supabase.from('pod_sources').select('*').eq('pod_id', pod.id);
+      if (data) setPodSources(data);
+    }
+    setFiles([]);
+    setUploading(false);
+  };
+
+  return (
+    <div className="pod-section-content">
+      <h4>Source / Intake</h4>
+      <p><strong>Website URL:</strong> {pod?.source_url || 'Not provided'}</p>
+      <p><strong>Pod type:</strong> {pod?.pod_type}</p>
+      <p><strong>Target country:</strong> {pod?.target_country}</p>
+      {pod?.source_url && (
+        <a href={pod.source_url} target="_blank" rel="noopener noreferrer" className="button button-ghost">
+          <Globe size={14} /> Visit Website
+        </a>
+      )}
+
+      <div style={{ marginTop: '1.5rem', borderTop: '1px solid var(--border)', paddingTop: '1rem' }}>
+        <h5 style={{ marginBottom: '0.6rem' }}>Upload Files</h5>
+        <input
+          type="file"
+          accept="image/*,application/pdf"
+          multiple
+          onChange={handleFileChange}
+          style={{ display: 'none' }}
+          id="source-file-upload"
+        />
+        <button
+          type="button"
+          className="button button-ghost"
+          onClick={() => document.getElementById('source-file-upload').click()}
+          style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}
+        >
+          <Upload size={16} /> Select files
+        </button>
+        {files.length > 0 && (
+          <div style={{ marginTop: '0.6rem' }}>
+            {files.map((file, i) => (
+              <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.85rem', padding: '0.2rem 0' }}>
+                <FileImage size={14} />
+                <span>{file.name}</span>
+                <button type="button" onClick={() => removeFile(i)} style={{ background: 'none', border: 'none', cursor: 'pointer' }}>
+                  <X size={14} />
+                </button>
+              </div>
+            ))}
+            <button className="button button-primary" onClick={uploadFiles} disabled={uploading} style={{ marginTop: '0.5rem' }}>
+              {uploading ? 'Uploading...' : 'Upload to Pod'}
+            </button>
+          </div>
+        )}
+      </div>
+
+      {podSources.length > 0 && (
+        <div style={{ marginTop: '1.5rem', borderTop: '1px solid var(--border)', paddingTop: '1rem' }}>
+          <h5 style={{ marginBottom: '0.6rem' }}>Uploaded Sources</h5>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.6rem' }}>
+            {podSources.map((source, i) => (
+              <div key={i} className="panel" style={{ padding: '0.6rem', fontSize: '0.85rem' }}>
+                <strong>{source.source_type}</strong>
+                {source.source_url && (
+                  <div><a href={source.source_url} target="_blank" rel="noopener noreferrer">View</a></div>
+                )}
+                {source.notes && <p className="subtle" style={{ marginTop: '0.3rem' }}>{source.notes}</p>}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
 
 export default function PodTabsView({ pod }) {
   const [activeTab, setActiveTab] = useState('Overview');
@@ -131,19 +263,7 @@ export default function PodTabsView({ pod }) {
           </div>
         );
       case 'Source':
-        return (
-          <div className="pod-section-content">
-            <h4>Source / Intake</h4>
-            <p><strong>Website URL:</strong> {pod?.source_url || 'Not provided'}</p>
-            <p><strong>Pod type:</strong> {pod?.pod_type}</p>
-            <p><strong>Target country:</strong> {pod?.target_country}</p>
-            {pod?.source_url && (
-              <a href={pod.source_url} target="_blank" rel="noopener noreferrer" className="button button-ghost">
-                <Globe size={14} /> Visit Website
-              </a>
-            )}
-          </div>
-        );
+        return <SourceTab pod={pod} />;
       case 'AI Analysis':
         return (
           <div className="pod-section-content">
