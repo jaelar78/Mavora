@@ -68,6 +68,15 @@ import WaitlistPage from './pages/Waitlist';
 import PodsPage from './pages/Pods';
 import NewPodPage from './pages/NewPod';
 import AccountPage from './pages/Account';
+import { DashboardLayout } from './dashboard/components/Layout';
+import AnglowDashboard from './dashboard/pages/Dashboard';
+import AnglowWebsites from './dashboard/pages/Websites';
+import AnglowContent from './dashboard/pages/ContentEngine';
+import AnglowMedia from './dashboard/pages/MediaLibrary';
+import AnglowGrowth from './dashboard/pages/GrowthAdvice';
+import AnglowCampaigns from './dashboard/pages/Campaigns';
+import AnglowArtists from './dashboard/pages/ArtistSubmissions';
+import AnglowSettings from './dashboard/pages/Settings';
 
 const APP_NAME = 'Dovroyn';
 const APP_DOMAIN = 'dovroyn.com';
@@ -531,6 +540,18 @@ function App() {
           </Route>
         </Route>
 
+        {/* ─── ANGLOW DASHBOARD ─── */}
+        <Route path="/app" element={<DashboardLayout />}>
+          <Route index element={<AnglowDashboard />} />
+          <Route path="websites" element={<AnglowWebsites />} />
+          <Route path="content" element={<AnglowContent />} />
+          <Route path="media" element={<AnglowMedia />} />
+          <Route path="growth" element={<AnglowGrowth />} />
+          <Route path="campaigns" element={<AnglowCampaigns />} />
+          <Route path="artists" element={<AnglowArtists />} />
+          <Route path="settings" element={<AnglowSettings />} />
+        </Route>
+
         <Route path="*" element={<Navigate to={session ? '/dashboard' : '/'} replace />} />
       </Routes>
     </BrowserRouter>
@@ -750,7 +771,7 @@ function LandingPage({ session }) {
               <ul className="pricing-features">
                 {tier.features.map((f) => <li key={f}>{f}</li>)}
               </ul>
-              <a className="button button-primary" href={STRIPE_PRICING_LINKS[`${tier.stripeKey}_${billing}`] || '#waitlist'}>
+              <a className="button button-primary" href={STRIPE_PRICING_LINKS[`${tier.stripeKey}_${billing}`] || '/#waitlist'}>
                 {STRIPE_PRICING_LINKS[`${tier.stripeKey}_${billing}`] ? 'Subscribe' : 'Join Early Access'}
               </a>
             </article>
@@ -798,7 +819,7 @@ function DemoPodPage() {
 
       <section className="hero-block panel" style={{ padding: '1.5rem' }}>
         <p className="eyebrow">Demo Pod</p>
-        <h2 style={{ fontFamily: "'Playfair Display', serif" }}>Aurora Skincare \u2014 AI Marketing Pod</h2>
+        <h2 style={{ fontFamily: "'Playfair Display', serif" }}>Aurora Skincare — AI Marketing Pod</h2>
         <p className="subtle">This demo shows how Dovroyn analyses a website and builds a complete marketing direction inside one pod.</p>
       </section>
 
@@ -876,7 +897,7 @@ function AppLayout({ user, subscription, onSignOut }) {
       </aside>
       <section className="content">
         <header className="content-header panel">
-          <p className="eyebrow">Dovroyn \u2014 Luxury AI Marketing Pods</p>
+          <p className="eyebrow">Dovroyn — Luxury AI Marketing Pods</p>
           <h2>{user?.email}</h2>
         </header>
         <Outlet />
@@ -942,7 +963,7 @@ function PodDashboardPage({ session }) {
         <div>
           <p className="eyebrow">Pod Dashboard</p>
           <h3>{pod?.pod_name || 'Pod'}</h3>
-          <p className="subtle">{pod?.pod_type} pod \u2014 {pod?.target_country}</p>
+          <p className="subtle">{pod?.pod_type} pod — {pod?.target_country}</p>
         </div>
         <span className="status-tag">{pod?.status || 'created'}</span>
       </header>
