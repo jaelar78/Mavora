@@ -1,96 +1,108 @@
-import { useState } from 'react';
-import Header from '../components/Header';
-import Footer from '../components/Footer';
-import { supabase, supabaseConfigured } from '../lib/supabaseClient';
+/******  WAITLIST / SUBSCRIBE PAGE  ******/
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { ArrowLeft, Check, Sparkles, Zap, Crown } from 'lucide-react';
 
-async function saveWaitlistEmail(email, source) {
-  if (!supabaseConfigured || !supabase) {
-    // Supabase not configured — silently succeed so the UI can still show the success state
-    return { success: true };
-  }
-  const { error } = await supabase
-    .from('waitlist')
-    .insert({ email: email.trim(), source: source || 'waitlist-page' });
-  if (error) return { success: false, error: error.message };
-  return { success: true };
-}
+const TIERS = [
+  {
+    name: 'Starter', price: '$29', period: '/mo',
+    features: ['1 Pod', '50 AI credits/mo', 'Basic analytics', 'Content calendar', 'Email support'],
+  },
+  {
+    name: 'Growth', price: '$79', period: '/mo',
+    features: ['3 Pods', '200 AI credits/mo', 'Advanced analytics', 'AI assistant', 'Collaboration tools', 'Priority support'],
+    popular: true,
+  },
+  {
+    name: 'Pro', price: '$199', period: '/mo',
+    features: ['Unlimited Pods', 'Unlimited AI credits', 'Team collaboration', 'API access', 'White-label', 'Dedicated account manager'],
+  },
+];
 
-export default function WaitlistPage() {
+export default function Waitlist() {
   const [email, setEmail] = useState('');
-  const [status, setStatus] = useState('idle'); // 'idle' | 'loading' | 'success' | 'error'
-  const [errorMsg, setErrorMsg] = useState('');
+  const [submitted, setSubmitted] = useState(false);
+  const [selectedTier, setSelectedTier] = useState(1);
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    if (!email.trim()) return;
-    setStatus('loading');
-    setErrorMsg('');
-    const result = await saveWaitlistEmail(email.trim(), 'waitlist-page');
-    if (result.success) {
-      setStatus('success');
-      setEmail('');
-    } else {
-      setStatus('error');
-      setErrorMsg(result.error || 'Something went wrong. Please try again.');
-    }
+    if (!email) return;
+    setSubmitted(true);
   };
 
   return (
-    <main className="landing-shell">
-      <Header />
+    <div className="min-h-screen bg-[#0a0a0f] px-4 py-12">
+      <div className="max-w-4xl mx-auto">
+        <Link to="/" className="inline-flex items-center gap-1 text-gray-400 hover:text-white transition-colors text-sm mb-8">
+          <ArrowLeft size={16} /> Back to home
+        </Link>
 
-      <section className="hero-block panel">
-        <p className="eyebrow">Early Access</p>
-        <h1>
-          Your AI marketing pods are almost ready.
-        </h1>
-        <p className="lede">
-          Dovroyn lets you create 1–12 dedicated AI pods, each built for a specific brand, offer, campaign, or business. Every pod analyses its source, understands the audience, shapes the strategy, and prepares content before anything goes live.
-        </p>
-      </section>
+        <div className="text-center mb-10">
+          <h1 className="text-3xl font-bold text-white mb-2">Subscribe to Dovroyn</h1>
+          <p className="text-gray-400">Choose the plan that's right for your creative journey</p>
+        </div>
 
-      <section className="waitlist-section panel" id="waitlist">
-        {status === 'success' ? (
-          <div style={{ textAlign: 'center', padding: '2rem 0' }}>
-            <p className="eyebrow">You are on the list</p>
-            <h2 className="waitlist-heading">Thank you for joining.</h2>
-            <p className="lede">
-              You will receive early access updates and founder pricing information soon.
-            </p>
-          </div>
-        ) : (
-          <>
-            <p className="eyebrow">Coming Soon</p>
-            <h2 className="waitlist-heading">See one of Dovroyn's AI pods.</h2>
-            <p className="lede">
-              This preview shows one dedicated Dovroyn AI pod after it has analysed a brand. Each pod has its own AI brain, brand memory, content calendar, platform strategy, ad view, files, and budget tracker.
-            </p>
-            <form className="waitlist-form" onSubmit={handleSubmit}>
+        {/* Pricing Tiers */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-10">
+          {TIERS.map((tier, i) => (
+            <div
+              key={tier.name}
+              onClick={() => setSelectedTier(i)}
+              className={`p-6 rounded-xl border cursor-pointer transition-all ${
+                selectedTier === i
+                  ? 'border-purple-500 bg-purple-500/5 shadow-lg shadow-purple-500/10'
+                  : 'border-gray-800 bg-[#111118] hover:border-gray-700'
+              }`}
+            >
+              {tier.popular && (
+                <div className="inline-block px-2 py-0.5 bg-purple-500/20 text-purple-400 text-xs font-medium rounded-full mb-3">
+                  Most Popular
+                </div>
+              )}
+              <h3 className="text-lg font-semibold text-white mb-1">{tier.name}</h3>
+              <div className="flex items-baseline gap-1 mb-4">
+                <span className="text-3xl font-bold text-white">{tier.price}</span>
+                <span className="text-gray-500 text-sm">{tier.period}</span>
+              </div>
+              <ul className="space-y-2">
+                {tier.features.map((f) => (
+                  <li key={f} className="flex items-center gap-2 text-sm text-gray-300">
+                    <Check size={14} className="text-green-400 shrink-0" /> {f}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+
+        {/* Email Form */}
+        {!submitted ? (
+          <form onSubmit={handleSubmit} className="max-w-md mx-auto">
+            <div className="flex gap-2">
               <input
                 type="email"
-                placeholder="Enter your email to get early access"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                placeholder="Enter your email"
+                className="flex-1 input-field"
                 required
-                disabled={status === 'loading'}
               />
-              <button
-                className="button button-primary"
-                type="submit"
-                disabled={status === 'loading'}
-              >
-                {status === 'loading' ? 'Joining...' : 'Join Early Access'}
+              <button type="submit" className="btn-primary whitespace-nowrap">
+                Subscribe
               </button>
-            </form>
-            {status === 'error' && <p className="form-error">{errorMsg}</p>}
-            <p className="waitlist-note">
-              Free to join. No card required. Unsubscribe any time.
-            </p>
-          </>
+            </div>
+            <p className="text-xs text-gray-500 mt-2 text-center">No credit card required. Cancel anytime.</p>
+          </form>
+        ) : (
+          <div className="text-center">
+            <div className="w-16 h-16 mx-auto bg-green-500/10 border border-green-500/20 rounded-full flex items-center justify-center mb-4">
+              <Check size={32} className="text-green-400" />
+            </div>
+            <h3 className="text-xl font-semibold text-white mb-2">You're subscribed!</h3>
+            <p className="text-gray-400">Welcome to Dovroyn {TIERS[selectedTier].name}. Check your email for next steps.</p>
+          </div>
         )}
-      </section>
-
-      <Footer variant="full" />
-    </main>
+      </div>
+    </div>
   );
 }

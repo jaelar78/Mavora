@@ -1,48 +1,81 @@
-// Stripe checkout helper
-// Redirects user to Stripe Checkout for subscription
+/******  STRIPE CLIENT  ******/
+import { loadStripe } from '@stripe/stripe-js';
 
-const STRIPE_PRICING_LINKS = {
-  starter_monthly: import.meta.env.VITE_STRIPE_STARTER_MONTHLY || null,
-  starter_yearly: import.meta.env.VITE_STRIPE_STARTER_YEARLY || null,
-  growth_monthly: import.meta.env.VITE_STRIPE_GROWTH_MONTHLY || null,
-  growth_yearly: import.meta.env.VITE_STRIPE_GROWTH_YEARLY || null,
-  pro_monthly: import.meta.env.VITE_STRIPE_PRO_MONTHLY || null,
-  pro_yearly: import.meta.env.VITE_STRIPE_PRO_YEARLY || null,
-  scale_monthly: import.meta.env.VITE_STRIPE_SCALE_MONTHLY || null,
-  scale_yearly: import.meta.env.VITE_STRIPE_SCALE_YEARLY || null,
-};
+const STRIPE_PUBLIC_KEY = import.meta.env.VITE_STRIPE_PUBLIC_KEY;
 
-export function getCheckoutUrl(tierKey, billing = 'monthly') {
-  const key = `${tierKey}_${billing}`;
-  return STRIPE_PRICING_LINKS[key] || null;
+let stripePromise;
+
+export function getStripe() {
+  if (!stripePromise) {
+    stripePromise = loadStripe(STRIPE_PUBLIC_KEY);
+  }
+  return stripePromise;
 }
 
-export function redirectToCheckout(tierKey, billing = 'monthly') {
-  const url = getCheckoutUrl(tierKey, billing);
-  if (url) {
-    window.location.href = url;
-  } else {
-    // Fallback to waitlist if Stripe not configured
-    window.location.href = '/#waitlist';
+export async function createCheckoutSession(priceId, customerEmail) {
+  try {
+    const response = await fetch('/api/create-checkout-session', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ priceId, customerEmail }),
+    });
+    const { sessionId } = await response.json();
+    const stripe = await getStripe();
+    const { error } = await stripe.redirectToCheckout({ sessionId });
+    if (error) throw error;
+  } catch (error) {
+    console.error('Checkout error:', error);
+    throw error;
   }
 }
 
-// Tier limits for subscription gating
-// weeklyPostingDays = campaign posting days allowed per week (not per platform)
-export const TIER_LIMITS = {
-  free:    { maxPods: 0,  monthlyContentDays: 0,  weeklyPostingDays: 0 },
-  starter: { maxPods: 1,  monthlyContentDays: 10, weeklyPostingDays: 2 },
-  growth:  { maxPods: 3,  monthlyContentDays: 20, weeklyPostingDays: 3 },
-  pro:     { maxPods: 7,  monthlyContentDays: 30, weeklyPostingDays: 6 },
-  scale:   { maxPods: 12, monthlyContentDays: 30, weeklyPostingDays: 7 },
-};
-
-export function canCreatePod(tier, currentPodCount) {
-  const limits = TIER_LIMITS[tier] || TIER_LIMITS.free;
-  return currentPodCount < limits.maxPods;
+export async function createPortalSession(customerId) {
+  try {
+    const response = await fetch('/api/create-portal-session', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ customerId }),
+    });
+    const { url } = await response.json();
+    window.location.href = url;
+  } catch (error) {
+    console.error('Portal error:', error);
+    throw error;
+  }
 }
 
-export function getContentDays(tier) {
-  const limits = TIER_LIMITS[tier] || TIER_LIMITS.free;
-  return limits.monthlyContentDays;
+export const PRICING_TIERS = [
+  {
+    id: 'starter',
+    name: 'Starter',
+    price: 29,
+    description: 'Perfect for creators just getting started',
+    features: ['1 Pod', '50 AI credits/mo', 'Basic analytics', 'Content calendar', 'Email support'],
+    priceId: 'price_starter',
+  },
+  {
+    id: 'growth',
+    name: 'Growth',
+    price: 79,
+    description: 'For serious creators ready to scale',
+    features: ['3 Pods', '200 AI credits/mo', 'Advanced analytics', 'AI assistant', 'Collaboration tools', 'Priority support'],
+    priceId: 'price_growth',
+    popular: true,
+  },
+  {
+    id: 'pro',
+    name: 'Pro',
+    price: 199,
+    description: 'For teams and agencies',
+    features: ['Unlimited Pods', 'Unlimited AI credits', 'Team collaboration', 'API access', 'White-label', 'Dedicated account manager'],
+    priceId: 'price_pro',
+  },
+];
+
+export function getTierById(id) {
+  return PRICING_TIERS.find((t) => t.id === id);
+}
+
+export function getTierByPriceId(priceId) {
+  return PRICING_TIERS.find((t) => t.priceId === priceId);
 }
