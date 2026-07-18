@@ -11,6 +11,7 @@ import {
   Settings, RefreshCw, Copy, Check, Download, Upload,
   Plus, Trash2, Edit3, CheckCircle2, AlertCircle, Info
   Search, Link, BookOpen, FolderOpen, Filter, Bell, Mail, Link2, ExternalLink, Inbox as InboxIcon,
+  Search, Link, BookOpen, FolderOpen, Filter, Bell, Mail, Link2, ExternalLink, Inbox as InboxIcon,
 } from 'lucide-react';
 import { askDovroynAI } from '../lib/aiClient';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, LineChart, Line, PieChart, Pie, Cell } from 'recharts';
@@ -28,6 +29,13 @@ const TABS = [
   { id: 'budget', label: 'Budget', icon: DollarSign },
   { id: 'website', label: 'Website', icon: Globe },
   { id: 'settings', label: 'Settings', icon: Settings },
+  { id: 'niche', label: 'Niche Scanner', icon: Search },
+  { id: 'crossposting', label: 'Crossposting', icon: Share2 },
+  { id: 'playbooks', label: 'Playbooks', icon: BookOpen },
+  { id: 'collections', label: 'Collections', icon: FolderOpen },
+  { id: 'links', label: 'Links', icon: Link },
+  { id: 'inbox', label: 'Inbox', icon: InboxIcon },
+  { id: 'collaborations', label: 'Collaborations', icon: Users },
 ];
 
 const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
@@ -92,6 +100,54 @@ export default function PodTabsView() {
   const [aiInput, setAiInput] = useState('');
   const [aiTyping, setAiTyping] = useState(false);
   const aiScrollRef = useRef(null);
+
+  // ─── New Tab State ───
+  // Niche Scanner
+  const [nicheUrl, setNicheUrl] = useState('');
+  const [nicheAnalyzing, setNicheAnalyzing] = useState(false);
+  const [nicheResult, setNicheResult] = useState(null);
+  const [nicheHistory, setNicheHistory] = useState([]);
+  // Crossposting
+  const [crosspostRoutes, setCrosspostRoutes] = useState([
+    { id: 1, from: 'Instagram', to: ['Facebook', 'Twitter'], enabled: true },
+    { id: 2, from: 'Twitter', to: ['LinkedIn'], enabled: true },
+    { id: 3, from: 'Blog', to: ['Twitter', 'LinkedIn', 'Facebook'], enabled: false },
+  ]);
+  const [bulkDateRange, setBulkDateRange] = useState({ start: '2026-07-19', end: '2026-07-26' });
+  const [bulkScheduled, setBulkScheduled] = useState(false);
+  // Playbooks
+  const [expandedPlaybook, setExpandedPlaybook] = useState('product-launch');
+  const [completedSteps, setCompletedSteps] = useState({});
+  // Collections
+  const [collections, setCollections] = useState([
+    { id: 1, name: 'Product Launches', posts: 24, platforms: ['Instagram', 'Facebook'], updated: '2h ago' },
+    { id: 2, name: 'Weekly Tips', posts: 56, platforms: ['LinkedIn', 'Twitter'], updated: '1d ago' },
+    { id: 3, name: 'Behind the Scenes', posts: 18, platforms: ['Instagram', 'YouTube'], updated: '3d ago' },
+  ]);
+  const [showCollectionModal, setShowCollectionModal] = useState(false);
+  const [collectionName, setCollectionName] = useState('');
+  const [collectionDesc, setCollectionDesc] = useState('');
+  // Links
+  const [shortLinks, setShortLinks] = useState([
+    { id: 1, url: 'https://dovroyn.com/blog/batch-content', short: 'dovroyn.com/bc24', clicks: 1247, created: 'Jun 10' },
+    { id: 2, url: 'https://dovroyn.com/pricing', short: 'dovroyn.com/plan', clicks: 3892, created: 'Jun 8' },
+  ]);
+  const [showLinkModal, setShowLinkModal] = useState(false);
+  const [linkUrl, setLinkUrl] = useState('');
+  const [copiedLinkId, setCopiedLinkId] = useState(null);
+  // Inbox
+  const [inboxItems, setInboxItems] = useState([
+    { id: 1, platform: 'Instagram', user: 'sarah_content', message: 'Love this post! What tool do you use?', time: '2m ago', read: false },
+    { id: 2, platform: 'Twitter', user: 'growth_gary', message: 'This feature is exactly what I needed', time: '5m ago', read: false },
+    { id: 3, platform: 'LinkedIn', user: 'jane_marketer', message: 'Great insights on batch content creation.', time: '15m ago', read: true },
+  ]);
+  const [inboxFilter, setInboxFilter] = useState('all');
+  // Collaborations
+  const [collabs, setCollabs] = useState([
+    { id: 1, name: 'Alex Chen', email: 'alex@design.com', type: 'Digital Art', status: 'pending', message: 'I have 50+ pieces ready.', submitted: 'Jun 18' },
+    { id: 2, name: 'Maya Johnson', email: 'maya@creative.io', type: 'Creator', status: 'approved', message: 'Specializing in character design.', submitted: 'Jun 15' },
+  ]);
+  const [collabFilter, setCollabFilter] = useState('all');
 
   useEffect(() => {
     if (aiScrollRef.current) aiScrollRef.current.scrollTop = aiScrollRef.current.scrollHeight;
@@ -190,6 +246,13 @@ export default function PodTabsView() {
         {activeTab === 'budget' && <BudgetTab pod={pod} />}
         {activeTab === 'website' && <WebsiteTab pod={pod} />}
         {activeTab === 'settings' && <SettingsTab pod={pod} updatePod={updatePod} />}
+        {activeTab === 'niche' && <NicheScannerTab url={nicheUrl} setUrl={setNicheUrl} analyzing={nicheAnalyzing} setAnalyzing={setNicheAnalyzing} result={nicheResult} setResult={setNicheResult} history={nicheHistory} setHistory={setNicheHistory} />}
+        {activeTab === 'crossposting' && <CrosspostingTab routes={crosspostRoutes} setRoutes={setCrosspostRoutes} dateRange={bulkDateRange} setDateRange={setBulkDateRange} scheduled={bulkScheduled} setScheduled={setBulkScheduled} />}
+        {activeTab === 'playbooks' && <PlaybooksTab expanded={expandedPlaybook} setExpanded={setExpandedPlaybook} completed={completedSteps} setCompleted={setCompletedSteps} />}
+        {activeTab === 'collections' && <CollectionsTab collections={collections} setCollections={setCollections} showModal={showCollectionModal} setShowModal={setShowCollectionModal} name={collectionName} setName={setCollectionName} desc={collectionDesc} setDesc={setCollectionDesc} />}
+        {activeTab === 'links' && <LinksTab links={shortLinks} setLinks={setShortLinks} showModal={showLinkModal} setShowModal={setShowLinkModal} url={linkUrl} setUrl={setLinkUrl} copiedId={copiedLinkId} setCopiedId={setCopiedLinkId} />}
+        {activeTab === 'inbox' && <InboxTab items={inboxItems} setItems={setInboxItems} filter={inboxFilter} setFilter={setInboxFilter} />}
+        {activeTab === 'collaborations' && <CollaborationsTab collabs={collabs} setCollabs={setCollabs} filter={collabFilter} setFilter={setCollabFilter} />}
       </div>
 
       {/* ─── AI Assistant Panel ─── */}
@@ -824,6 +887,573 @@ function StatCard({ icon, label, value, change }) {
       </div>
       <span className="pod-stat-value">{value}</span>
       {change && <span className={`text-xs font-medium ${isPositive ? 'text-green-400' : 'text-red-400'}`}>{change}</span>}
+    </div>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  NEW TABS (ported from meet-millie)
+// ═══════════════════════════════════════════════════════════════
+
+function NicheScannerTab({ url, setUrl, analyzing, setAnalyzing, result, setResult, history, setHistory }) {
+  const analyze = () => {
+    if (!url.trim()) return;
+    setAnalyzing(true);
+    setResult(null);
+    setTimeout(() => {
+      setResult({
+        niche: 'Sustainable Fashion Accessories',
+        competitors: ['EcoChic Co', 'GreenThread', 'VeraVibe'],
+        platforms: ['Instagram', 'Pinterest', 'TikTok'],
+        score: 82,
+        recommendations: [
+          'Focus on visual storytelling on Instagram and Pinterest',
+          'Use TikTok for behind-the-scenes and UGC content',
+          'Partner with micro-influencers in eco-lifestyle niche',
+          'Create educational content about sustainable materials',
+        ],
+      });
+      setHistory((h) => [{ url, date: new Date().toLocaleDateString() }, ...h].slice(0, 5));
+      setAnalyzing(false);
+    }, 2000);
+  };
+
+  return (
+    <div className="space-y-6">
+      <h3 className="text-lg font-semibold text-white">Niche Scanner</h3>
+      <p className="text-sm text-gray-400">Analyze any website or niche to find competitors and recommended platforms.</p>
+      <div className="flex gap-3">
+        <input
+          value={url}
+          onChange={(e) => setUrl(e.target.value)}
+          placeholder="Enter website URL or niche..."
+          className="flex-1 input-field"
+        />
+        <button
+          onClick={analyze}
+          disabled={!url.trim() || analyzing}
+          className="btn-primary flex items-center gap-2 disabled:opacity-50"
+        >
+          {analyzing ? <Loader2 size={16} className="animate-spin" /> : <Search size={16} />}
+          Analyze
+        </button>
+      </div>
+
+      {result && (
+        <div className="space-y-4 animate-in fade-in duration-500">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="pod-card text-center">
+              <div className="text-3xl font-bold text-purple-400 mb-1">{result.score}</div>
+              <p className="text-xs text-gray-500">Niche Score</p>
+            </div>
+            <div className="pod-card">
+              <p className="text-xs text-gray-500 mb-1">Niche</p>
+              <p className="text-sm text-white font-medium">{result.niche}</p>
+            </div>
+            <div className="pod-card">
+              <p className="text-xs text-gray-500 mb-1">Top Platforms</p>
+              <div className="flex flex-wrap gap-1">
+                {result.platforms.map((p) => (
+                  <span key={p} className="pod-badge-purple">{p}</span>
+                ))}
+              </div>
+            </div>
+            <div className="pod-card">
+              <p className="text-xs text-gray-500 mb-1">Competitors</p>
+              <div className="flex flex-wrap gap-1">
+                {result.competitors.map((c) => (
+                  <span key={c} className="pod-badge-amber">{c}</span>
+                ))}
+              </div>
+            </div>
+          </div>
+          <div className="pod-card">
+            <h4 className="text-sm font-semibold text-white mb-3">Recommendations</h4>
+            <ul className="space-y-2">
+              {result.recommendations.map((r, i) => (
+                <li key={i} className="flex items-start gap-2 text-sm text-gray-300">
+                  <CheckCircle2 size={14} className="text-green-400 shrink-0 mt-0.5" />
+                  {r}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      )}
+
+      {history.length > 0 && (
+        <div className="pod-card">
+          <h4 className="text-sm font-semibold text-white mb-3">Recent Scans</h4>
+          <div className="space-y-2">
+            {history.map((h, i) => (
+              <div key={i} className="flex items-center justify-between p-2 rounded-lg hover:bg-white/5 transition-colors">
+                <span className="text-sm text-gray-300">{h.url}</span>
+                <span className="text-xs text-gray-500">{h.date}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function CrosspostingTab({ routes, setRoutes, dateRange, setDateRange, scheduled, setScheduled }) {
+  const [csvPreview, setCsvPreview] = useState(null);
+
+  const toggleRoute = (id) => {
+    setRoutes((r) => r.map((route) => (route.id === id ? { ...route, enabled: !route.enabled } : route)));
+  };
+
+  const handleCsvUpload = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      const lines = ev.target.result.split('\n').slice(0, 5);
+      setCsvPreview(lines);
+    };
+    reader.readAsText(file);
+  };
+
+  const schedule = () => {
+    setScheduled(true);
+    setTimeout(() => setScheduled(false), 3000);
+  };
+
+  return (
+    <div className="space-y-6">
+      <h3 className="text-lg font-semibold text-white">Crossposting</h3>
+      <p className="text-sm text-gray-400">Schedule posts across multiple platforms in bulk.</p>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="pod-card">
+          <h4 className="text-sm font-semibold text-white mb-3">Crossposting Routes</h4>
+          <div className="space-y-3">
+            {routes.map((route) => (
+              <div key={route.id} className="flex items-center justify-between p-3 bg-[#0a0a0f] rounded-lg">
+                <div className="flex items-center gap-2">
+                  <span className="text-sm text-white font-medium">{route.from}</span>
+                  <span className="text-gray-500">→</span>
+                  <span className="text-sm text-gray-300">{route.to.join(', ')}</span>
+                </div>
+                <button
+                  onClick={() => toggleRoute(route.id)}
+                  className={`w-10 h-5 rounded-full transition-all ${route.enabled ? 'bg-purple-500' : 'bg-gray-700'}`}
+                >
+                  <div className={`w-4 h-4 rounded-full bg-white transition-all ${route.enabled ? 'translate-x-5' : 'translate-x-0.5'}`} />
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="pod-card">
+          <h4 className="text-sm font-semibold text-white mb-3">Date Range</h4>
+          <div className="space-y-3">
+            <div>
+              <label className="block text-xs text-gray-500 mb-1">Start Date</label>
+              <input
+                type="date"
+                value={dateRange.start}
+                onChange={(e) => setDateRange((d) => ({ ...d, start: e.target.value }))}
+                className="w-full input-field"
+              />
+            </div>
+            <div>
+              <label className="block text-xs text-gray-500 mb-1">End Date</label>
+              <input
+                type="date"
+                value={dateRange.end}
+                onChange={(e) => setDateRange((d) => ({ ...d, end: e.target.value }))}
+                className="w-full input-field"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="pod-card">
+        <h4 className="text-sm font-semibold text-white mb-3">Bulk Upload (CSV)</h4>
+        <div className="border-2 border-dashed border-gray-700 rounded-xl p-6 text-center">
+          <Upload size={24} className="text-gray-500 mx-auto mb-2" />
+          <p className="text-sm text-gray-400 mb-2">Drop a CSV file or click to upload</p>
+          <input type="file" accept=".csv" onChange={handleCsvUpload} className="hidden" id="csv-upload" />
+          <label htmlFor="csv-upload" className="btn-secondary inline-block cursor-pointer">Choose File</label>
+        </div>
+        {csvPreview && (
+          <div className="mt-3 bg-[#0a0a0f] rounded-lg p-3">
+            <p className="text-xs text-gray-500 mb-2">Preview (first 5 lines):</p>
+            <pre className="text-xs text-gray-300 whitespace-pre-wrap">{csvPreview.join('\n')}</pre>
+          </div>
+        )}
+      </div>
+
+      <button onClick={schedule} className="btn-primary flex items-center gap-2">
+        <Calendar size={16} />
+        {scheduled ? 'Scheduled!' : 'Schedule Posts'}
+      </button>
+      {scheduled && (
+        <p className="text-sm text-green-400">✓ Posts scheduled successfully across enabled platforms!</p>
+      )}
+    </div>
+  );
+}
+
+function PlaybooksTab({ expanded, setExpanded, completed, setCompleted }) {
+  const playbooks = [
+    {
+      id: 'product-launch',
+      name: 'Product Launch',
+      desc: 'Complete strategy for launching a new product',
+      steps: [
+        'Define target audience and messaging',
+        'Create teaser content (7 days before)',
+        'Build email waitlist and landing page',
+        'Launch day: social blitz + influencer seeding',
+        'Post-launch: UGC collection and retargeting',
+      ],
+    },
+    {
+      id: 'holiday-campaign',
+      name: 'Holiday Campaign',
+      desc: 'Maximize seasonal sales with timed content',
+      steps: [
+        'Map holiday calendar and key dates',
+        'Create themed visual assets and copy',
+        'Set up promotional landing pages',
+        'Run countdown and early-bird campaigns',
+        'Post-holiday: thank you + retarget non-buyers',
+      ],
+    },
+    {
+      id: 're-engagement',
+      name: 'Re-engagement',
+      desc: 'Win back inactive followers and customers',
+      steps: [
+        'Identify inactive segments (30+ days)',
+        'Craft "we miss you" messaging',
+        'Offer exclusive discount or content',
+        'Run retargeting ads to lapsed users',
+        'Measure reactivation rate and iterate',
+      ],
+    },
+  ];
+
+  const toggleStep = (playbookId, stepIndex) => {
+    const key = `${playbookId}-${stepIndex}`;
+    setCompleted((c) => ({ ...c, [key]: !c[key] }));
+  };
+
+  return (
+    <div className="space-y-6">
+      <h3 className="text-lg font-semibold text-white">Playbooks</h3>
+      <p className="text-sm text-gray-400">Strategy templates you can apply to this pod.</p>
+      <div className="space-y-3">
+        {playbooks.map((pb) => (
+          <div key={pb.id} className="pod-card">
+            <button
+              onClick={() => setExpanded(expanded === pb.id ? null : pb.id)}
+              className="w-full flex items-center justify-between text-left"
+            >
+              <div>
+                <h4 className="text-sm font-semibold text-white">{pb.name}</h4>
+                <p className="text-xs text-gray-500">{pb.desc}</p>
+              </div>
+              <ChevronRight
+                size={16}
+                className={`text-gray-400 transition-transform ${expanded === pb.id ? 'rotate-90' : ''}`}
+              />
+            </button>
+            {expanded === pb.id && (
+              <div className="mt-4 pt-4 border-t border-gray-800 space-y-2">
+                {pb.steps.map((step, i) => {
+                  const key = `${pb.id}-${i}`;
+                  const done = completed[key];
+                  return (
+                    <div
+                      key={i}
+                      onClick={() => toggleStep(pb.id, i)}
+                      className={`flex items-center gap-3 p-3 rounded-lg cursor-pointer transition-all ${
+                        done ? 'bg-green-500/10' : 'bg-[#0a0a0f] hover:bg-white/5'
+                      }`}
+                    >
+                      <div
+                        className={`w-5 h-5 rounded border flex items-center justify-center ${
+                          done ? 'bg-green-500 border-green-500' : 'border-gray-600'
+                        }`}
+                      >
+                        {done && <Check size={12} className="text-white" />}
+                      </div>
+                      <span className={`text-sm ${done ? 'text-green-400 line-through' : 'text-gray-300'}`}>{step}</span>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function CollectionsTab({ collections, setCollections, showModal, setShowModal, name, setName, desc, setDesc }) {
+  const createCollection = () => {
+    if (!name.trim()) return;
+    setCollections((c) => [
+      ...c,
+      { id: c.length + 1, name, posts: 0, platforms: [], updated: 'Just now' },
+    ]);
+    setName('');
+    setDesc('');
+    setShowModal(false);
+  };
+
+  return (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <h3 className="text-lg font-semibold text-white">Collections</h3>
+          <p className="text-sm text-gray-400">Organize your content into themed collections.</p>
+        </div>
+        <button onClick={() => setShowModal(true)} className="btn-primary flex items-center gap-2">
+          <Plus size={16} /> New Collection
+        </button>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {collections.map((col) => (
+          <div key={col.id} className="pod-card hover:border-purple-500/30 transition-all cursor-pointer">
+            <div className="flex items-center justify-between mb-2">
+              <h4 className="text-sm font-semibold text-white">{col.name}</h4>
+              <span className="text-xs text-gray-500">{col.posts} posts</span>
+            </div>
+            <div className="flex flex-wrap gap-1 mb-3">
+              {col.platforms.map((p) => (
+                <span key={p} className="pod-badge-purple">{p}</span>
+              ))}
+            </div>
+            <p className="text-xs text-gray-500">Updated {col.updated}</p>
+          </div>
+        ))}
+      </div>
+
+      {showModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70" onClick={() => setShowModal(false)}>
+          <div className="bg-[#111118] border border-gray-800 rounded-xl p-6 w-full max-w-md" onClick={(e) => e.stopPropagation()}>
+            <h4 className="text-lg font-semibold text-white mb-4">New Collection</h4>
+            <div className="space-y-3">
+              <input value={name} onChange={(e) => setName(e.target.value)} placeholder="Collection name..." className="w-full input-field" />
+              <textarea value={desc} onChange={(e) => setDesc(e.target.value)} placeholder="Description (optional)..." rows={3} className="w-full input-field resize-none" />
+              <div className="flex gap-2 justify-end">
+                <button onClick={() => setShowModal(false)} className="btn-secondary">Cancel</button>
+                <button onClick={createCollection} className="btn-primary">Create</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function LinksTab({ links, setLinks, showModal, setShowModal, url, setUrl, copiedId, setCopiedId }) {
+  const createLink = () => {
+    if (!url.trim()) return;
+    const slug = Math.random().toString(36).substring(2, 8);
+    setLinks((l) => [
+      ...l,
+      { id: l.length + 1, url, short: `dovroyn.com/${slug}`, clicks: 0, created: 'Just now' },
+    ]);
+    setUrl('');
+    setShowModal(false);
+  };
+
+  const copyLink = (id, short) => {
+    navigator.clipboard.writeText(short);
+    setCopiedId(id);
+    setTimeout(() => setCopiedId(null), 2000);
+  };
+
+  return (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <h3 className="text-lg font-semibold text-white">Links</h3>
+          <p className="text-sm text-gray-400">Short link manager and click tracking.</p>
+        </div>
+        <button onClick={() => setShowModal(true)} className="btn-primary flex items-center gap-2">
+          <Plus size={16} /> New Link
+        </button>
+      </div>
+
+      <div className="space-y-3">
+        {links.map((link) => (
+          <div key={link.id} className="pod-card flex items-center gap-4">
+            <div className="flex-1 min-w-0">
+              <p className="text-sm text-white truncate">{link.url}</p>
+              <p className="text-xs text-purple-400">{link.short}</p>
+            </div>
+            <div className="text-right">
+              <p className="text-sm font-medium text-white">{link.clicks.toLocaleString()}</p>
+              <p className="text-xs text-gray-500">clicks</p>
+            </div>
+            <button
+              onClick={() => copyLink(link.id, link.short)}
+              className="p-2 hover:bg-white/5 rounded-lg text-gray-400 hover:text-purple-400 transition-colors"
+            >
+              {copiedId === link.id ? <Check size={16} className="text-green-400" /> : <Copy size={16} />}
+            </button>
+          </div>
+        ))}
+      </div>
+
+      {showModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70" onClick={() => setShowModal(false)}>
+          <div className="bg-[#111118] border border-gray-800 rounded-xl p-6 w-full max-w-md" onClick={(e) => e.stopPropagation()}>
+            <h4 className="text-lg font-semibold text-white mb-4">Create Short Link</h4>
+            <div className="space-y-3">
+              <input value={url} onChange={(e) => setUrl(e.target.value)} placeholder="Enter long URL..." className="w-full input-field" />
+              <div className="flex gap-2 justify-end">
+                <button onClick={() => setShowModal(false)} className="btn-secondary">Cancel</button>
+                <button onClick={createLink} className="btn-primary">Create</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function InboxTab({ items, setItems, filter, setFilter }) {
+  const filtered = items.filter((item) => {
+    if (filter === 'all') return true;
+    if (filter === 'unread') return !item.read;
+    return item.platform === filter;
+  });
+
+  const markAsRead = (id) => {
+    setItems((items) => items.map((item) => (item.id === id ? { ...item, read: true } : item)));
+  };
+
+  const reply = (user) => {
+    alert(`Replying to ${user}... (mock)`);
+  };
+
+  return (
+    <div className="space-y-6">
+      <h3 className="text-lg font-semibold text-white">Inbox</h3>
+      <p className="text-sm text-gray-400">Social media mentions, DMs, and comments.</p>
+
+      <div className="flex gap-2 flex-wrap">
+        {['all', 'unread', 'Instagram', 'Twitter', 'LinkedIn'].map((f) => (
+          <button
+            key={f}
+            onClick={() => setFilter(f)}
+            className={`px-3 py-1.5 text-sm rounded-lg transition-all ${
+              filter === f ? 'bg-purple-500/10 text-purple-400 border border-purple-500/20' : 'text-gray-400 hover:text-gray-200 hover:bg-white/5'
+            }`}
+          >
+            {f === 'all' ? 'All' : f}
+          </button>
+        ))}
+      </div>
+
+      <div className="space-y-2">
+        {filtered.map((item) => (
+          <div
+            key={item.id}
+            onClick={() => markAsRead(item.id)}
+            className={`pod-card cursor-pointer transition-all ${!item.read ? 'border-purple-500/30' : ''}`}
+          >
+            <div className="flex items-start gap-3">
+              <div
+                className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold"
+                style={{ backgroundColor: PLATFORM_COLORS[item.platform] || '#9F7AEA', color: '#fff' }}
+              >
+                {item.platform[0]}
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="text-sm font-medium text-white">{item.user}</span>
+                  <span className="text-xs text-gray-500">{item.platform}</span>
+                  {!item.read && <span className="w-2 h-2 bg-purple-500 rounded-full" />}
+                </div>
+                <p className="text-sm text-gray-300">{item.message}</p>
+                <p className="text-xs text-gray-500 mt-1">{item.time}</p>
+              </div>
+              <button onClick={() => reply(item.user)} className="btn-secondary text-xs">Reply</button>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function CollaborationsTab({ collabs, setCollabs, filter, setFilter }) {
+  const filtered = collabs.filter((c) => (filter === 'all' ? true : c.status === filter));
+
+  const updateStatus = (id, status) => {
+    setCollabs((c) => c.map((collab) => (collab.id === id ? { ...collab, status } : collab)));
+  };
+
+  return (
+    <div className="space-y-6">
+      <h3 className="text-lg font-semibold text-white">Collaborations</h3>
+      <p className="text-sm text-gray-400">Manage UGC submissions, partnerships, and collabs.</p>
+
+      <div className="flex gap-2 flex-wrap">
+        {['all', 'pending', 'approved', 'published'].map((f) => (
+          <button
+            key={f}
+            onClick={() => setFilter(f)}
+            className={`px-3 py-1.5 text-sm rounded-lg transition-all capitalize ${
+              filter === f ? 'bg-purple-500/10 text-purple-400 border border-purple-500/20' : 'text-gray-400 hover:text-gray-200 hover:bg-white/5'
+            }`}
+          >
+            {f}
+          </button>
+        ))}
+      </div>
+
+      <div className="space-y-3">
+        {filtered.map((c) => (
+          <div key={c.id} className="pod-card">
+            <div className="flex items-start justify-between gap-4">
+              <div className="flex-1">
+                <div className="flex items-center gap-2 mb-1">
+                  <h4 className="text-sm font-semibold text-white">{c.name}</h4>
+                  <span
+                    className={`text-xs px-2 py-0.5 rounded-full ${
+                      c.status === 'approved'
+                        ? 'bg-green-500/10 text-green-400'
+                        : c.status === 'pending'
+                        ? 'bg-amber-500/10 text-amber-400'
+                        : 'bg-blue-500/10 text-blue-400'
+                    }`}
+                  >
+                    {c.status}
+                  </span>
+                </div>
+                <p className="text-xs text-gray-500">{c.email} · {c.type} · Submitted {c.submitted}</p>
+                <p className="text-sm text-gray-300 mt-2">{c.message}</p>
+              </div>
+              <div className="flex gap-2">
+                {c.status === 'pending' && (
+                  <button onClick={() => updateStatus(c.id, 'approved')} className="btn-primary text-xs">Approve</button>
+                )}
+                {c.status === 'approved' && (
+                  <button onClick={() => updateStatus(c.id, 'published')} className="btn-primary text-xs">Publish</button>
+                )}
+                <button onClick={() => updateStatus(c.id, 'pending')} className="btn-secondary text-xs">Reset</button>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
