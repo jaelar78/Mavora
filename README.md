@@ -1,48 +1,55 @@
-# Dovroyn
+# Dovroyn — AI Social Media Manager
 
-Dovroyn is a deploy-ready React + Vite application for AI ad-intelligence pods, with:
+Marketing landing site for Dovroyn (dovroyn.com) with a live AI chatbot preview powered by an LLM backend.
 
-- Dedicated pod-first landing and navigation experience
-- Login and signup with Supabase Auth
-- Pod dashboards, website analysis, campaigns, competitor watch, content planner, and pricing pages
-- Early access modal on the landing page that captures waitlist signups in Supabase
-- Responsive premium dark luxury UI
-- Supabase-backed settings persistence and placeholder states for upcoming integrations
+## Stack
 
-## Setup
+- **Frontend**: React 19 + TypeScript + Vite + Tailwind CSS + shadcn/ui
+- **Backend**: Hono + tRPC 11 (type-safe API)
+- **AI**: OpenAI-compatible chat completions (configured via env vars)
+- **DB**: Drizzle ORM + MySQL (optional, scaffolded)
 
-1. Install dependencies:
-   ```bash
-   npm install
-   ```
-2. Copy environment variables:
-   ```bash
-   cp .env.example .env
-   ```
-3. Add your Supabase values to `.env`:
-   - `VITE_SUPABASE_URL`
-   - `VITE_SUPABASE_ANON_KEY`
-4. Run locally:
-   ```bash
-   npm run dev
-   ```
-
-## Build
+## Develop
 
 ```bash
-npm run build
+npm install
+npm run dev        # http://localhost:3000 (frontend + API with HMR)
 ```
 
-## Supabase tables
+## Build & run (self-hosted / Docker)
 
-Create this table with a `user_id` column tied to `auth.users.id`:
+```bash
+npm run build      # outputs dist/public (frontend) + dist/boot.js (server)
+npm start          # NODE_ENV=production node dist/boot.js on :3000
+```
 
-- `user_settings` (`timezone`, `email_notifications`, `weekly_digest`, `workspace_name`, `theme`, `updated_at`)
+A `Dockerfile` is included for containerized deployment.
 
-Enable row-level security and policies so users can only access their own rows.
+## Deploy to Vercel
 
-Also create this table for early access signups collected by the landing page modal:
+`vercel.json` configures two builds:
+- `serverless/handler.ts` → serverless function serving `/api/*`
+- static frontend from `dist/public`
 
-- `waitlist` (`email`, `source`, plus an `id` primary key and `created_at` timestamp)
+Required environment variables (Vercel → Settings → Environment Variables):
 
-Enable row-level security with a policy that allows anonymous inserts, since visitors join the waitlist before signing up.
+| Key | Purpose |
+| --- | --- |
+| `APP_ID` | Application ID |
+| `APP_SECRET` | JWT/session secret |
+| `DATABASE_URL` | MySQL connection string |
+| `DEFAULT_AI_API_KEY` | LLM API key (homepage chatbot) |
+| `DEFAULT_AI_BASE_URL` | LLM base URL, e.g. `https://agent-gw.kimi.com/coding/v1` |
+| `DEFAULT_AI_MODEL` | LLM model, e.g. `kimi:kimi-k2.5` |
+
+## Project layout
+
+```
+api/            Hono + tRPC backend (chat.send = AI chatbot)
+contracts/      Shared types between frontend and backend
+serverless/     Vercel serverless entry
+db/             Drizzle schema (MySQL)
+src/
+  sections/     Landing page sections (Hero, Pricing, FAQ, ...)
+  components/   UI components (dovroyn/ = brand components, ui/ = shadcn)
+```
